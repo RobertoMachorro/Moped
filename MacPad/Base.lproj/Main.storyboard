@@ -723,6 +723,13 @@
                                             <size key="minSize" width="465" height="270"/>
                                             <size key="maxSize" width="465" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <connections>
+                                                <binding destination="5gI-5U-AMq" name="value" keyPath="self.representedObject.textString" id="5vQ-H6-2Kl">
+                                                    <dictionary key="options">
+                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                    </dictionary>
+                                                </binding>
+                                            </connections>
                                         </textView>
                                     </subviews>
                                 </clipView>
