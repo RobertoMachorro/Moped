@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
+		E98D58AA2300BE7B003E964A /* StringModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A92300BE7B003E964A /* StringModel.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420E2300A9FE00382715 /* ViewController.swift */; };
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		E98D58A72300BB4D003E964A /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		E98D58A92300BE7B003E964A /* StringModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringModel.swift; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				E9D0420C2300A9FE00382715 /* AppDelegate.swift */,
 				E98D58A72300BB4D003E964A /* WindowController.swift */,
 				E9D0420E2300A9FE00382715 /* ViewController.swift */,
+				E98D58A92300BE7B003E964A /* StringModel.swift */,
 				E9D042102300A9FE00382715 /* Document.swift */,
 				E9D042122300A9FE00382715 /* Assets.xcassets */,
 				E9D042142300A9FE00382715 /* Main.storyboard */,
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */,
+				E98D58AA2300BE7B003E964A /* StringModel.swift in Sources */,
 				E98D58A82300BB4D003E964A /* WindowController.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
 				E9D042112300A9FE00382715 /* Document.swift in Sources */,
