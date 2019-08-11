@@ -729,6 +729,7 @@
                                                         <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                                     </dictionary>
                                                 </binding>
+                                                <outlet property="delegate" destination="5gI-5U-AMq" id="KYk-XV-zxa"/>
                                             </connections>
                                         </textView>
                                     </subviews>

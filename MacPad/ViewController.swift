@@ -20,7 +20,7 @@
 
 import Cocoa
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSTextViewDelegate {
 
 	@IBOutlet var textView: NSTextView!
 
@@ -37,6 +37,29 @@ class ViewController: NSViewController {
 				child.representedObject = representedObject
 			}
 		}
+	}
+
+	// MARK: - Accessor Helpers
+
+	weak var windowController: WindowController? {
+		return view.window?.windowController as? WindowController
+	}
+
+	weak var document: Document? {
+		if let window = windowController, let doc = window.document as? Document {
+			return doc
+		}
+		return nil
+	}
+
+	// MARK: - NSTextViewDelegate
+
+	func textDidBeginEditing(_ notification: Notification) {
+		document?.objectDidBeginEditing(self)
+	}
+
+	func textDidEndEditing(_ notification: Notification) {
+		document?.objectDidEndEditing(self)
 	}
 
 }
