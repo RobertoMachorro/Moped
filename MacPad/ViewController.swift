@@ -26,6 +26,8 @@ class ViewController: NSViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		textView.font = NSFont(name: "Menlo", size: 12)
+		textView.isAutomaticQuoteSubstitutionEnabled = false
 	}
 
 	override var representedObject: Any? {
