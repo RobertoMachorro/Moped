@@ -23,6 +23,8 @@ While you can install the best text editors on your macOS system ([BBEdit](https
 
 General developer audience has been loosing interest in macOS development and gained interest in [iOS cross platform development like Apple Marzipan](https://techcrunch.com/2018/06/04/apple-is-bringing-the-best-of-ios-to-macos/). Yet, macOS has gotten more powerful and feature rich, which makes it still an enticing platform to develop on. The big problem is that documentation, tutorials and QA/Forums materials are getting stale, with older API that no longer applies, it's getting harder as a developer to find up-to-date macOS support.
 
+Most of the technology used in this App comes straight from Apple, we are just re-using the built-in stuff in a smart, clean way. If you scroll through the commit history, you'll (hopefully) understand how it was all pieced together. Please check the *Resources* section here for references and links.
+
 *MacPad* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
 
 ## Contributing
