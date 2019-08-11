@@ -7,17 +7,19 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>LSTypeIsPackage</key>
+			<false/>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>*.txt</string>
+				<string>txt</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string></string>
 			<key>CFBundleTypeName</key>
-			<string>DocumentType</string>
+			<string>Text File</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>????</string>
+				<string>public.plain-text</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
