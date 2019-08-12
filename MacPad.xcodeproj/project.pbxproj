@@ -14,6 +14,7 @@
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		E9D042162300A9FE00382715 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9D042142300A9FE00382715 /* Main.storyboard */; };
+		E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC082C230115B800A1EE3D /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		E9D042152300A9FE00382715 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
+		E9FC082C230115B800A1EE3D /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				E9D0420E2300A9FE00382715 /* ViewController.swift */,
 				E98D58A92300BE7B003E964A /* StringModel.swift */,
 				E9D042102300A9FE00382715 /* Document.swift */,
+				E9FC082C230115B800A1EE3D /* AboutViewController.swift */,
 				E9D042122300A9FE00382715 /* Assets.xcassets */,
 				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
@@ -147,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */,
 				E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */,
 				E98D58AA2300BE7B003E964A /* StringModel.swift in Sources */,
 				E98D58A82300BB4D003E964A /* WindowController.swift in Sources */,
