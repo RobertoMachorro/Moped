@@ -27,6 +27,11 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 *MacPad* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
 
+## In the Works
+
+* Syntax highlight (optional for end user), ideally supporting TextMate files
+* Command line launcher tool, with support for waiting (usable as $EDITOR)
+
 ## Contributing
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
