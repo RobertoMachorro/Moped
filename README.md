@@ -29,8 +29,15 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 ## In the Works
 
-* Syntax highlight (optional for end user), ideally supporting TextMate files
+* Status bar with word/paragraph count, etc.
 * Command line launcher tool, with support for waiting (usable as $EDITOR)
+* [Comprehensive Help File](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OnlineHelp/Tasks/SpecifyHelpFile.html#//apple_ref/doc/uid/20000020)
+
+## Potential Features
+
+* Syntax highlight (optional for end user), ideally supporting TextMate files
+* Line number column(s)
+* Code folding support
 
 ## Contributing
 
