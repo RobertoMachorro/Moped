@@ -33,7 +33,7 @@ class StringModel: NSObject {
 extension StringModel {
 
 	func read(from data: Data) {
-		textString = String(data: data, encoding: .utf8)!
+		textString = String(data: data, encoding: .utf8) ?? "** UNRECOGNIZED TEXT FILE **"
 	}
 
 	func data() -> Data? {
