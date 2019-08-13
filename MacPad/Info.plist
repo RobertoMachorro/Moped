@@ -7,17 +7,77 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>txt</string>
-			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string></string>
 			<key>CFBundleTypeName</key>
 			<string>Text File</string>
-			<key>CFBundleTypeOSTypes</key>
+			<key>LSItemContentTypes</key>
 			<array>
+				<string>net.daringfireball.markdown</string>
+				<string>public.assembly-source</string>
+				<string>public.c-header</string>
+				<string>public.c-plus-plus-source</string>
+				<string>public.c-source</string>
+				<string>public.csh-script</string>
+				<string>public.css</string>
+				<string>public.html</string>
+				<string>public.lex-source</string>
+				<string>public.json</string>
+				<string>public.mig-source</string>
+				<string>public.nasm-assembly-source</string>
+				<string>public.objective-c-plus-plus-source</string>
+				<string>public.objective-c-source</string>
+				<string>public.perl-script</string>
+				<string>public.php-script</string>
 				<string>public.plain-text</string>
+				<string>public.precompiled-c-header</string>
+				<string>public.precompiled-c-plus-plus-header</string>
+				<string>public.python-script</string>
+				<string>public.rtf</string>
+				<string>public.ruby-script</string>
+				<string>public.script</string>
+				<string>public.shell-script</string>
+				<string>public.source-code</string>
+				<string>public.swift-source</string>
+				<string>public.text</string>
+				<string>public.utf16-external-plain-text</string>
+				<string>public.utf16-plain-text</string>
+				<string>public.utf8-plain-text</string>
+				<string>public.xml</string>
+				<string>com.apple.binary-property-list</string>
+				<string>com.apple.crashreport</string>
+				<string>com.apple.dashcode.css</string>
+				<string>com.apple.dashcode.javascript</string>
+				<string>com.apple.dashcode.json</string>
+				<string>com.apple.dashcode.manifest</string>
+				<string>com.apple.dt.document.ascii-property-list</string>
+				<string>com.apple.dt.document.script-suite-property-list</string>
+				<string>com.apple.dt.document.script-terminology-property-list</string>
+				<string>com.apple.property-list</string>
+				<string>com.apple.rez-source</string>
+				<string>com.apple.scripting-definition</string>
+				<string>com.apple.symbol-export</string>
+				<string>com.apple.xcode.ada-source</string>
+				<string>com.apple.xcode.bash-script</string>
+				<string>com.apple.xcode.colortheme</string>
+				<string>com.apple.xcode.commands</string>
+				<string>com.apple.xcode.configsettings</string>
+				<string>com.apple.xcode.csh-script</string>
+				<string>com.apple.xcode.diff</string>
+				<string>com.apple.xcode.fortran-source</string>
+				<string>com.apple.xcode.glsl-source</string>
+				<string>com.apple.xcode.ksh-script</string>
+				<string>com.apple.xcode.lex-source</string>
+				<string>com.apple.xcode.make-script</string>
+				<string>com.apple.xcode.mig-source</string>
+				<string>com.apple.xcode.pascal-source</string>
+				<string>com.apple.xcode.strings-text</string>
+				<string>com.apple.xcode.tcsh-script</string>
+				<string>com.apple.xcode.yacc-source</string>
+				<string>com.apple.xcode.zsh-script</string>
+				<string>com.apple.xml-property-list</string>
+				<string>com.netscape.javascript-source</string>
+				<string>com.sun.java-source</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
