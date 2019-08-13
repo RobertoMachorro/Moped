@@ -24,7 +24,11 @@ class AboutViewController: NSViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.title = ""
+		title = ""
+	}
+
+	override func viewDidAppear() {
+		view.window?.styleMask.remove(.resizable)
 	}
 
 }
