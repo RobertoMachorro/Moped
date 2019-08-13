@@ -660,6 +660,30 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
+                                        <menuItem title="Read License" id="dRG-XX-gms">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="linkToLicense:" target="Voe-Tx-rLC" id="Okz-so-kAF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Get Source Code" id="Ur3-pO-8xF">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="linkToSources:" target="Voe-Tx-rLC" id="ikM-tT-uwm"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Report an Issue" id="2M8-u7-2c1">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="linkToIssues:" target="Voe-Tx-rLC" id="e7y-VI-4cB"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Icons by Arnoud" id="Rvy-PZ-Bky">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="linkToIconSite:" target="Voe-Tx-rLC" id="jWK-wS-O7x"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="MacPad Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>

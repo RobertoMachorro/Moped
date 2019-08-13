@@ -35,4 +35,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return .terminateNow
 	}
 
+	// MARK: - Help Menu Actions
+
+	@IBAction func linkToLicense(_ sender: Any) {
+		if let url = URL(string: "https://www.gnu.org/licenses/") {
+			NSWorkspace.shared.open(url)
+		}
+	}
+
+	@IBAction func linkToSources(_ sender: Any) {
+		if let url = URL(string: "https://github.com/RobertoMachorro/MacPad") {
+			NSWorkspace.shared.open(url)
+		}
+	}
+
+	@IBAction func linkToIssues(_ sender: Any) {
+		if let url = URL(string: "https://github.com/RobertoMachorro/MacPad/issues") {
+			NSWorkspace.shared.open(url)
+		}
+	}
+
+	@IBAction func linkToIconSite(_ sender: Any) {
+		if let url = URL(string: "http://www.iconarchive.com/show/small-n-flat-icons-by-paomedia/notepad-icon.html") {
+			NSWorkspace.shared.open(url)
+		}
+	}
+
 }
