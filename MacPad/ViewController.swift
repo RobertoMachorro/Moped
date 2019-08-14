@@ -19,15 +19,25 @@
 //
 
 import Cocoa
+import Highlightr
 
 class ViewController: NSViewController, NSTextViewDelegate {
 
 	@IBOutlet var textView: NSTextView!
 
+	let highlightrTextStorage = CodeAttributedString()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		textView.font = NSFont(name: "Menlo", size: 12)
+
 		textView.isAutomaticQuoteSubstitutionEnabled = false
+		highlightrTextStorage.addLayoutManager(textView.layoutManager!)
+
+		highlightrTextStorage.language = "Swift"
+		highlightrTextStorage.highlightr.setTheme(to: "Docco")
+		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: "Menlo", size: 12)
+		textView.backgroundColor = (highlightrTextStorage.highlightr.theme.themeBackgroundColor)!
+		textView.insertionPointColor = NSColor.white
 	}
 
 	override var representedObject: Any? {
