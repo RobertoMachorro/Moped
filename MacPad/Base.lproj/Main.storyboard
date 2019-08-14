@@ -820,17 +820,17 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nlf-e6-r1G">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                                <rect key="frame" x="0.0" y="18" width="480" height="252"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
-                                    <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="465" height="252"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
-                                            <rect key="frame" x="0.0" y="0.0" width="465" height="270"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="465" height="252"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="465" height="270"/>
+                                            <size key="minSize" width="465" height="252"/>
                                             <size key="maxSize" width="480" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <connections>
@@ -849,16 +849,80 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="hJU-wx-eep">
-                                    <rect key="frame" x="465" y="0.0" width="15" height="270"/>
+                                    <rect key="frame" x="465" y="0.0" width="15" height="252"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <gridView xPlacement="leading" yPlacement="fill" rowAlignment="none" rowSpacing="0.0" columnSpacing="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="3nw-OB-2I3">
+                                <rect key="frame" x="10" y="0.0" width="460" height="18"/>
+                                <rows>
+                                    <gridRow id="ZLl-Ac-mLu"/>
+                                </rows>
+                                <columns>
+                                    <gridColumn id="ox2-Af-L9k"/>
+                                    <gridColumn width="100" id="UzX-yN-Lgt"/>
+                                    <gridColumn width="100" id="znV-ka-p1b"/>
+                                </columns>
+                                <gridCells>
+                                    <gridCell row="ZLl-Ac-mLu" column="ox2-Af-L9k" id="tGB-10-3rY">
+                                        <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9hz-wy-Toe">
+                                            <rect key="frame" x="-2" y="0.0" width="43" height="18"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Status" id="2hk-1M-1MS">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </gridCell>
+                                    <gridCell row="ZLl-Ac-mLu" column="UzX-yN-Lgt" id="4PU-vD-6ty">
+                                        <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9DN-wE-Xc2">
+                                            <rect key="frame" x="260" y="-1" width="100" height="19"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="100" id="q2V-cb-0jr"/>
+                                            </constraints>
+                                            <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MrM-bl-3L2">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                <font key="font" metaFont="systemBold" size="12"/>
+                                                <menu key="menu" id="zNs-h2-mrO">
+                                                    <items>
+                                                        <menuItem title="Item 1" id="Gab-8l-qiB"/>
+                                                        <menuItem title="Item 2" id="SUC-u4-EXw"/>
+                                                        <menuItem title="Item 3" id="0H7-ZR-MsG"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                    </gridCell>
+                                    <gridCell row="ZLl-Ac-mLu" column="znV-ka-p1b" id="Pv3-yk-olZ">
+                                        <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AJ2-1H-anJ">
+                                            <rect key="frame" x="360" y="-1" width="100" height="19"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="100" id="1AE-E8-CrG"/>
+                                            </constraints>
+                                            <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" alignment="center" lineBreakMode="truncatingTail" borderStyle="border" inset="2" id="xIP-tq-gOP">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                                <font key="font" metaFont="systemBold" size="12"/>
+                                                <menu key="menu" id="ok5-19-RFq">
+                                                    <items>
+                                                        <menuItem title="Item 1" id="UVz-Pf-Xhq"/>
+                                                        <menuItem title="Item 2" id="tgj-ch-Hzb"/>
+                                                        <menuItem title="Item 3" id="eND-8r-mJW"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                    </gridCell>
+                                </gridCells>
+                            </gridView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="Nlf-e6-r1G" secondAttribute="trailing" id="P9u-74-qLj"/>
-                            <constraint firstItem="Nlf-e6-r1G" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="j71-bi-SZB"/>
-                            <constraint firstItem="Nlf-e6-r1G" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="qSr-NV-3s5"/>
-                            <constraint firstAttribute="bottom" secondItem="Nlf-e6-r1G" secondAttribute="bottom" id="sIs-i8-TP9"/>
+                            <constraint firstItem="3nw-OB-2I3" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" constant="10" id="Ptu-tB-NMG"/>
+                            <constraint firstItem="Nlf-e6-r1G" firstAttribute="leading" secondItem="ERx-hH-rdd" secondAttribute="leading" id="QUu-ai-NOi"/>
+                            <constraint firstAttribute="trailing" secondItem="3nw-OB-2I3" secondAttribute="trailing" constant="10" id="QoC-j7-3YQ"/>
+                            <constraint firstItem="3nw-OB-2I3" firstAttribute="top" secondItem="Nlf-e6-r1G" secondAttribute="bottom" id="bAe-Xz-kzL"/>
+                            <constraint firstAttribute="bottom" secondItem="3nw-OB-2I3" secondAttribute="bottom" id="npf-ll-AmU"/>
+                            <constraint firstItem="Nlf-e6-r1G" firstAttribute="top" secondItem="ERx-hH-rdd" secondAttribute="top" id="ohv-fI-sqq"/>
+                            <constraint firstAttribute="trailing" secondItem="Nlf-e6-r1G" secondAttribute="trailing" id="z2b-QG-Co0"/>
                         </constraints>
                     </view>
                     <connections>
