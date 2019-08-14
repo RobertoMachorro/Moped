@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
 		E98D58AA2300BE7B003E964A /* StringModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A92300BE7B003E964A /* StringModel.swift */; };
+		E990B6EB230263440010CF5D /* Highlightr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E990B6EA230263440010CF5D /* Highlightr.framework */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420E2300A9FE00382715 /* ViewController.swift */; };
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		E98D58A72300BB4D003E964A /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		E98D58A92300BE7B003E964A /* StringModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringModel.swift; sourceTree = "<group>"; };
+		E990B6EA230263440010CF5D /* Highlightr.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Highlightr.framework; path = Carthage/Build/Mac/Highlightr.framework; sourceTree = SOURCE_ROOT; };
 		E9D042092300A9FE00382715 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -36,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E990B6EB230263440010CF5D /* Highlightr.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +74,7 @@
 				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
 				E9D042182300A9FE00382715 /* MacPad.entitlements */,
+				E990B6EA230263440010CF5D /* Highlightr.framework */,
 			);
 			path = MacPad;
 			sourceTree = "<group>";
@@ -85,6 +89,7 @@
 				E9D042052300A9FE00382715 /* Sources */,
 				E9D042062300A9FE00382715 /* Frameworks */,
 				E9D042072300A9FE00382715 /* Resources */,
+				E990B6EC230263880010CF5D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -144,6 +149,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E990B6EC230263880010CF5D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/Mac/Highlightr.framework",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Highlightr.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E9D042052300A9FE00382715 /* Sources */ = {
@@ -295,6 +322,10 @@
 				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = MacPad/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,6 +344,10 @@
 				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = MacPad/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
