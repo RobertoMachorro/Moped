@@ -23,21 +23,44 @@ import Highlightr
 
 class ViewController: NSViewController, NSTextViewDelegate {
 
+	// TextView Editor
 	@IBOutlet var textView: NSTextView!
+	// Status bar components
+	@IBOutlet weak var statusLabel: NSTextFieldCell!
+	@IBOutlet weak var languagePopup: NSPopUpButtonCell!
+	@IBOutlet weak var themePopup: NSPopUpButtonCell!
 
 	let highlightrTextStorage = CodeAttributedString()
+
+	// TODO: These will go into Preferences
+	let defaultLanguage = "plaintext"
+	let defaultTheme = "xcode"
+	let defaultFont = "Menlo"
+	let defaultFontSize = CGFloat(11)
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		textView.isAutomaticSpellingCorrectionEnabled = false
 		textView.isAutomaticQuoteSubstitutionEnabled = false
-		highlightrTextStorage.addLayoutManager(textView.layoutManager!)
+		textView.isAutomaticDashSubstitutionEnabled = false
 
-		highlightrTextStorage.language = "Swift"
-		highlightrTextStorage.highlightr.setTheme(to: "Docco")
-		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: "Menlo", size: 12)
-		textView.backgroundColor = (highlightrTextStorage.highlightr.theme.themeBackgroundColor)!
-		textView.insertionPointColor = NSColor.white
+		statusLabel.stringValue = ""
+
+		highlightrTextStorage.addLayoutManager(textView.layoutManager!)
+		highlightrTextStorage.language = defaultLanguage
+		highlightrTextStorage.highlightr.setTheme(to: defaultTheme)
+		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: defaultFont, size: defaultFontSize)
+
+		languagePopup.removeAllItems()
+		languagePopup.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
+		languagePopup.selectItem(withTitle: defaultLanguage)
+
+		themePopup.removeAllItems()
+		themePopup.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
+		themePopup.selectItem(withTitle: defaultTheme)
+
+		updateTextViewColors()
 	}
 
 	override var representedObject: Any? {
@@ -47,6 +70,30 @@ class ViewController: NSViewController, NSTextViewDelegate {
 				child.representedObject = representedObject
 			}
 		}
+	}
+
+	// MARK: - Language / Popup Theme Changes
+
+	@IBAction func languagePopupAction(_ sender: NSPopUpButtonCell) {
+		highlightrTextStorage.language = sender.titleOfSelectedItem ?? defaultLanguage
+	}
+
+	@IBAction func themePopupAction(_ sender: NSPopUpButtonCell) {
+		highlightrTextStorage.highlightr.setTheme(to: sender.titleOfSelectedItem ?? defaultTheme)
+		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: defaultFont, size: defaultFontSize)
+		updateTextViewColors()
+	}
+
+	func updateTextViewColors() {
+		textView.backgroundColor = highlightrTextStorage.highlightr.theme.themeBackgroundColor
+		textView.insertionPointColor = invertColor(textView.backgroundColor)
+	}
+
+	func invertColor(_ color: NSColor) -> NSColor {
+		var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0
+		// FIXME: Fix/convert colorspace (not valid for the NSColor Generic Gray Gamma 2.2)
+		color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		return NSColor(red:1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 
 	// MARK: - Accessor Helpers
