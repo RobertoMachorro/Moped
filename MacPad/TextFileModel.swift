@@ -22,12 +22,12 @@ import Foundation
 
 class TextFileModel: NSObject {
 
-	@objc dynamic var textString: String
+	@objc dynamic var content: String
 	@objc dynamic var docTypeName: String
 	@objc dynamic var docTypeLanguage: String
 
-	public init(textString: String, typeName: String, typeLanguage: String) {
-		self.textString = textString
+	public init(content: String, typeName: String, typeLanguage: String) {
+		self.content = content
 		self.docTypeName = typeName
 		self.docTypeLanguage = typeLanguage
 	}
@@ -39,13 +39,13 @@ extension TextFileModel {
 	func read(from data: Data, ofType typeName: String) {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		textString = String(data: data, encoding: .utf8) ?? "** UNRECOGNIZED FILE **"
+		content = String(data: data, encoding: .utf8) ?? "** UNRECOGNIZED FILE **"
 	}
 
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		return textString.data(using: .utf8)
+		return content.data(using: .utf8)
 	}
 
 }

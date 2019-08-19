@@ -22,7 +22,7 @@ import Cocoa
 
 class Document: NSDocument {
 
-	@objc let model = TextFileModel(textString: "", typeName: "public.plain-text", typeLanguage: "plaintext")
+	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
 		super.init()
@@ -107,7 +107,7 @@ class Document: NSDocument {
 		textView.appearance = NSAppearance(named: .aqua)
 
 		// Copy the attributed string.
-		textView.textStorage?.append(NSAttributedString(string: model.textString))
+		textView.textStorage?.append(NSAttributedString(string: model.content))
 
 		let printOperation = NSPrintOperation(view: textView)
 		printOperation.runModal(for: windowControllers[0].window!, delegate: self, didRun: #selector(printOperationDidRun(_:success:contextInfo:)), contextInfo: nil)

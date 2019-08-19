@@ -683,7 +683,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                             <size key="maxSize" width="480" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <connections>
-                                                <binding destination="5gI-5U-AMq" name="value" keyPath="self.representedObject.textString" id="5vQ-H6-2Kl">
+                                                <binding destination="5gI-5U-AMq" name="value" keyPath="self.representedObject.content" id="SCt-Gk-Iy6">
                                                     <dictionary key="options">
                                                         <bool key="NSContinuouslyUpdatesValue" value="YES"/>
                                                     </dictionary>
