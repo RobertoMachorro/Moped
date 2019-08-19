@@ -22,13 +22,14 @@ import Foundation
 
 class TextFileModel: NSObject {
 
-	@objc dynamic var textString = ""
+	@objc dynamic var textString: String
+	@objc dynamic var docTypeName: String
+	@objc dynamic var docTypeLanguage: String
 
-	var docTypeName: String?
-
-	public init(textString: String) {
+	public init(textString: String, typeName: String, typeLanguage: String) {
 		self.textString = textString
-		self.docTypeName = nil
+		self.docTypeName = typeName
+		self.docTypeLanguage = typeLanguage
 	}
 
 }
@@ -37,11 +38,13 @@ extension TextFileModel {
 
 	func read(from data: Data, ofType typeName: String) {
 		docTypeName = typeName
+		docTypeLanguage = getLanguageForType(typeName: docTypeName)
 		textString = String(data: data, encoding: .utf8) ?? "** UNRECOGNIZED FILE **"
 	}
 
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
+		docTypeLanguage = getLanguageForType(typeName: docTypeName)
 		return textString.data(using: .utf8)
 	}
 
@@ -49,13 +52,14 @@ extension TextFileModel {
 
 extension TextFileModel {
 
-	var docTypeLanguage: String {
-		guard let docTypeName = docTypeName else {
-			return "plaintext"
-		}
+	func getLanguageForType(typeName: String) -> String {
 		switch docTypeName {
+		case "public.plain-text":
+			return "plaintext"
 		case "net.daringfireball.markdown":
 			return "markdown"
+		case "public.php-script":
+			return "php"
 		default:
 			print("TextFileModel new doctTypeName: \(docTypeName)")
 			return "plaintext"

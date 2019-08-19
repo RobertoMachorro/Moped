@@ -22,7 +22,7 @@ import Cocoa
 
 class Document: NSDocument {
 
-	@objc let model = StringModel(textString: "")
+	@objc let model = TextFileModel(textString: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
 		super.init()
@@ -64,11 +64,13 @@ class Document: NSDocument {
 	// MARK: - Reading and Writing
 
 	override func read(from data: Data, ofType typeName: String) throws {
-		model.read(from: data)
+		NSLog("Doc Type Read: %@", typeName)
+		model.read(from: data, ofType: typeName)
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
-		return model.data()!
+		NSLog("Doc Type Write: %@", typeName)
+		return model.data(ofType: typeName)!
 	}
 
 	// MARK: - Printing
