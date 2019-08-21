@@ -24,7 +24,7 @@
 		E990B6EA230263440010CF5D /* Highlightr.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Highlightr.framework; path = Carthage/Build/Mac/Highlightr.framework; sourceTree = SOURCE_ROOT; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
-		E9D042092300A9FE00382715 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E9D042102300A9FE00382715 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 		E9D0420A2300A9FE00382715 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E9D042092300A9FE00382715 /* MacPad.app */,
+				E9D042092300A9FE00382715 /* Moped.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E9D042082300A9FE00382715 /* MacPad */ = {
+		E9D042082300A9FE00382715 /* Moped */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "MacPad" */;
+			buildConfigurationList = E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "Moped" */;
 			buildPhases = (
 				E9D042052300A9FE00382715 /* Sources */,
 				E9D042062300A9FE00382715 /* Frameworks */,
@@ -98,9 +98,9 @@
 			);
 			dependencies = (
 			);
-			name = MacPad;
+			name = Moped;
 			productName = MacPad;
-			productReference = E9D042092300A9FE00382715 /* MacPad.app */;
+			productReference = E9D042092300A9FE00382715 /* Moped.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -123,7 +123,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E9D042042300A9FE00382715 /* Build configuration list for PBXProject "MacPad" */;
+			buildConfigurationList = E9D042042300A9FE00382715 /* Build configuration list for PBXProject "Moped" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -136,7 +136,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E9D042082300A9FE00382715 /* MacPad */,
+				E9D042082300A9FE00382715 /* Moped */,
 			);
 		};
 /* End PBXProject section */
@@ -366,7 +366,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E9D042042300A9FE00382715 /* Build configuration list for PBXProject "MacPad" */ = {
+		E9D042042300A9FE00382715 /* Build configuration list for PBXProject "Moped" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E9D042192300A9FE00382715 /* Debug */,
@@ -375,7 +375,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "MacPad" */ = {
+		E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "Moped" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E9D0421C2300A9FE00382715 /* Debug */,

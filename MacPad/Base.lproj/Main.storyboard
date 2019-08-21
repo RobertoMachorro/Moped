@@ -11,11 +11,11 @@
                 <application id="hnw-xV-0zn" sceneMemberID="viewController">
                     <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
                         <items>
-                            <menuItem title="MacPad" id="1Xt-HY-uBw">
+                            <menuItem title="Moped" id="1Xt-HY-uBw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="MacPad" systemMenu="apple" id="uQy-DD-JDr">
+                                <menu key="submenu" title="Moped" systemMenu="apple" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem title="About MacPad" id="5kV-Vb-QxS">
+                                        <menuItem title="About Moped" id="5kV-Vb-QxS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <segue destination="IFu-Pt-8ns" kind="modal" id="XPv-LQ-T4C"/>
@@ -29,7 +29,7 @@
                                             <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
-                                        <menuItem title="Hide MacPad" keyEquivalent="h" id="Olw-nP-bQN">
+                                        <menuItem title="Hide Moped" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
                                             </connections>
@@ -47,7 +47,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
-                                        <menuItem title="Quit MacPad" keyEquivalent="q" id="4sb-4s-VLi">
+                                        <menuItem title="Quit Moped" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
                                             </connections>
@@ -533,7 +533,7 @@
                                                 <action selector="linkToIconSite:" target="Voe-Tx-rLC" id="jWK-wS-O7x"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="MacPad Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                        <menuItem title="Moped Help" keyEquivalent="?" id="FKE-Sm-Kum">
                                             <connections>
                                                 <action selector="showHelp:" target="Ady-hI-5gd" id="y7X-2Q-9no"/>
                                             </connections>
@@ -608,8 +608,8 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iSV-B0-bct">
-                                <rect key="frame" x="137" y="211" width="66" height="19"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="MacPad" id="0if-l1-acO">
+                                <rect key="frame" x="141" y="211" width="58" height="19"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Moped" id="0if-l1-acO">
                                     <font key="font" metaFont="systemBold" size="16"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -672,7 +672,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                 <rect key="frame" x="0.0" y="16" width="480" height="254"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
                                     <rect key="frame" x="0.0" y="0.0" width="465" height="254"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
                                             <rect key="frame" x="0.0" y="0.0" width="465" height="254"/>

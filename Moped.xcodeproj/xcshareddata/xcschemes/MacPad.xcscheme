@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E9D042082300A9FE00382715"
-               BuildableName = "MacPad.app"
-               BlueprintName = "MacPad"
-               ReferencedContainer = "container:MacPad.xcodeproj">
+               BuildableName = "Moped.app"
+               BlueprintName = "Moped"
+               ReferencedContainer = "container:Moped.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9D042082300A9FE00382715"
-            BuildableName = "MacPad.app"
-            BlueprintName = "MacPad"
-            ReferencedContainer = "container:MacPad.xcodeproj">
+            BuildableName = "Moped.app"
+            BlueprintName = "Moped"
+            ReferencedContainer = "container:Moped.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -56,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9D042082300A9FE00382715"
-            BuildableName = "MacPad.app"
-            BlueprintName = "MacPad"
-            ReferencedContainer = "container:MacPad.xcodeproj">
+            BuildableName = "Moped.app"
+            BlueprintName = "Moped"
+            ReferencedContainer = "container:Moped.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -75,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9D042082300A9FE00382715"
-            BuildableName = "MacPad.app"
-            BlueprintName = "MacPad"
-            ReferencedContainer = "container:MacPad.xcodeproj">
+            BuildableName = "Moped.app"
+            BlueprintName = "Moped"
+            ReferencedContainer = "container:Moped.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
