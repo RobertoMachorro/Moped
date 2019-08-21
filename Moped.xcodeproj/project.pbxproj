@@ -31,7 +31,7 @@
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9D042152300A9FE00382715 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E9D042182300A9FE00382715 /* MacPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacPad.entitlements; sourceTree = "<group>"; };
+		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
 		E9FC082C230115B800A1EE3D /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,7 +76,7 @@
 				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
-				E9D042182300A9FE00382715 /* MacPad.entitlements */,
+				E9D042182300A9FE00382715 /* Moped.entitlements */,
 				E990B6EA230263440010CF5D /* Highlightr.framework */,
 			);
 			path = Moped;
@@ -330,7 +330,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
-				INFOPLIST_FILE = MacPad/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -352,7 +352,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
-				INFOPLIST_FILE = MacPad/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
