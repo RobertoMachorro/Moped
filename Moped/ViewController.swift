@@ -1,7 +1,7 @@
 //
 //  ViewController.swift
 //
-//  MacPad - A general purpose text editor, small and light.
+//  Moped - A general purpose text editor, small and light.
 //  Copyright © 2019 Roberto Machorro. All rights reserved.
 //
 //	This program is free software: you can redistribute it and/or modify
