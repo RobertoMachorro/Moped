@@ -22,7 +22,7 @@ import Cocoa
 
 class Document: NSDocument {
 
-	@objc let model = StringModel(textString: "")
+	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
 		super.init()
@@ -64,11 +64,13 @@ class Document: NSDocument {
 	// MARK: - Reading and Writing
 
 	override func read(from data: Data, ofType typeName: String) throws {
-		model.read(from: data)
+		NSLog("Doc Type Read: %@", typeName)
+		model.read(from: data, ofType: typeName)
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
-		return model.data()!
+		NSLog("Doc Type Write: %@", typeName)
+		return model.data(ofType: typeName)!
 	}
 
 	// MARK: - Printing
@@ -105,7 +107,7 @@ class Document: NSDocument {
 		textView.appearance = NSAppearance(named: .aqua)
 
 		// Copy the attributed string.
-		textView.textStorage?.append(NSAttributedString(string: model.textString))
+		textView.textStorage?.append(NSAttributedString(string: model.content))
 
 		let printOperation = NSPrintOperation(view: textView)
 		printOperation.runModal(for: windowControllers[0].window!, delegate: self, didRun: #selector(printOperationDidRun(_:success:contextInfo:)), contextInfo: nil)

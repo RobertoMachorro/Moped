@@ -46,10 +46,6 @@
 				<string>public.xml</string>
 				<string>com.apple.binary-property-list</string>
 				<string>com.apple.crashreport</string>
-				<string>com.apple.dashcode.css</string>
-				<string>com.apple.dashcode.javascript</string>
-				<string>com.apple.dashcode.json</string>
-				<string>com.apple.dashcode.manifest</string>
 				<string>com.apple.dt.document.ascii-property-list</string>
 				<string>com.apple.dt.document.script-suite-property-list</string>
 				<string>com.apple.dt.document.script-terminology-property-list</string>
@@ -57,20 +53,12 @@
 				<string>com.apple.rez-source</string>
 				<string>com.apple.scripting-definition</string>
 				<string>com.apple.symbol-export</string>
-				<string>com.apple.xcode.ada-source</string>
 				<string>com.apple.xcode.bash-script</string>
-				<string>com.apple.xcode.colortheme</string>
-				<string>com.apple.xcode.commands</string>
 				<string>com.apple.xcode.configsettings</string>
 				<string>com.apple.xcode.csh-script</string>
-				<string>com.apple.xcode.diff</string>
-				<string>com.apple.xcode.fortran-source</string>
-				<string>com.apple.xcode.glsl-source</string>
 				<string>com.apple.xcode.ksh-script</string>
-				<string>com.apple.xcode.lex-source</string>
 				<string>com.apple.xcode.make-script</string>
 				<string>com.apple.xcode.mig-source</string>
-				<string>com.apple.xcode.pascal-source</string>
 				<string>com.apple.xcode.strings-text</string>
 				<string>com.apple.xcode.tcsh-script</string>
 				<string>com.apple.xcode.yacc-source</string>

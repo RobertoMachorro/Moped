@@ -35,7 +35,7 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 ## Potential Features
 
-* Syntax highlight (optional for end user), ideally supporting TextMate files
+* Native Syntax highlight, ideally supporting TextMate files - this could be a nice Framework for the community
 * Line number column(s)
 * Code folding support
 

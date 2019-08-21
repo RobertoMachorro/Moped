@@ -27,8 +27,4 @@ class WindowController: NSWindowController {
 		shouldCascadeWindows = true
 	}
 
-	override func windowDidLoad() {
-		super.windowDidLoad()
-	}
-
 }

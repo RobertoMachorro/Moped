@@ -28,6 +28,7 @@ class AboutViewController: NSViewController {
 	}
 
 	override func viewDidAppear() {
+		super.viewDidAppear()
 		view.window?.styleMask.remove(.resizable)
 	}
 
