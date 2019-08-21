@@ -527,7 +527,7 @@
                                                 <action selector="linkToIssues:" target="Voe-Tx-rLC" id="e7y-VI-4cB"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Icons by Arnoud" id="Rvy-PZ-Bky">
+                                        <menuItem title="Logo by BSGStudio" id="Rvy-PZ-Bky" userLabel="Logo by BSGStudio">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="linkToIconSite:" target="Voe-Tx-rLC" id="jWK-wS-O7x"/>

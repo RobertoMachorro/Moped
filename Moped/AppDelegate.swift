@@ -46,19 +46,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@IBAction func linkToSources(_ sender: Any) {
-		if let url = URL(string: "https://github.com/RobertoMachorro/MacPad") {
+		if let url = URL(string: "https://github.com/RobertoMachorro/Moped") {
 			NSWorkspace.shared.open(url)
 		}
 	}
 
 	@IBAction func linkToIssues(_ sender: Any) {
-		if let url = URL(string: "https://github.com/RobertoMachorro/MacPad/issues") {
+		if let url = URL(string: "https://github.com/RobertoMachorro/Moped/issues") {
 			NSWorkspace.shared.open(url)
 		}
 	}
 
 	@IBAction func linkToIconSite(_ sender: Any) {
-		if let url = URL(string: "http://www.iconarchive.com/show/small-n-flat-icons-by-paomedia/notepad-icon.html") {
+		if let url = URL(string: "https://all-free-download.com/free-vector/download/scooter-icons-collection-classical-colored-sketch_6832617.html") {
 			NSWorkspace.shared.open(url)
 		}
 	}
