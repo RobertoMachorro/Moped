@@ -53,17 +53,13 @@ extension TextFileModel {
 extension TextFileModel {
 
 	func getLanguageForType(typeName: String) -> String {
-		switch docTypeName {
-		case "public.plain-text":
-			return "plaintext"
-		case "net.daringfireball.markdown":
-			return "markdown"
-		case "public.php-script":
-			return "php"
-		default:
-			print("TextFileModel new doctTypeName: \(docTypeName)")
+		guard let plistPath = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
+			let languagesFromUTI = NSDictionary(contentsOfFile: plistPath),
+			let language = languagesFromUTI[typeName] as? String else {
+			print("Unknown doctTypeName: \(docTypeName)")
 			return "plaintext"
 		}
+		return language
 	}
 
 }
