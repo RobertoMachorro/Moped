@@ -50,7 +50,7 @@
 		E9D042002300A9FE00382715 = {
 			isa = PBXGroup;
 			children = (
-				E9D0420B2300A9FE00382715 /* MacPad */,
+				E9D0420B2300A9FE00382715 /* Moped */,
 				E9D0420A2300A9FE00382715 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,7 +63,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E9D0420B2300A9FE00382715 /* MacPad */ = {
+		E9D0420B2300A9FE00382715 /* Moped */ = {
 			isa = PBXGroup;
 			children = (
 				E9D0420C2300A9FE00382715 /* AppDelegate.swift */,
@@ -79,7 +79,7 @@
 				E9D042182300A9FE00382715 /* MacPad.entitlements */,
 				E990B6EA230263440010CF5D /* Highlightr.framework */,
 			);
-			path = MacPad;
+			path = Moped;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,7 +323,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Moped/Moped.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -345,7 +345,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MacPad/MacPad.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Moped/Moped.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
