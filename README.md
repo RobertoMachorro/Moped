@@ -11,7 +11,7 @@ If you come from the Windows world, you may be missing a small utility: [Notepad
 
 It kind of feels heavier than it should and in the way. There are [known settings](https://www.techjunkie.com/textedit-plain-text-mode/) to make it look and feel lighter, but inside it's still the same. You can [get the source](https://developer.apple.com/library/archive/samplecode/TextEdit/Introduction/Intro.html) and peek inside. It's bigger and with older code than it needs to be.
 
-*Moped* intends on feeling like Notepad, while being a full native of macOS.
+*Moped* intends on feeling like Notepad, while being a full native of macOS, with a touch of modern syntax highlight and themes.
 
 ## Manifesto - Advanced Users
 
@@ -27,14 +27,11 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 *Moped* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
 
-## In the Works
+## Wanted Features
 
 * Status bar with word/paragraph count, etc.
 * Command line launcher tool, with support for waiting (usable as $EDITOR)
 * [Comprehensive Help File](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OnlineHelp/Tasks/SpecifyHelpFile.html#//apple_ref/doc/uid/20000020)
-
-## Potential Features
-
 * Native Syntax highlight, ideally supporting TextMate files - this could be a nice Framework for the community
 * Line number column(s)
 * Code folding support
