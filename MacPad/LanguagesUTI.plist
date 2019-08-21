@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>public.shell-script</key>
+	<string>shell</string>
+	<key>com.apple.xcode.make-script</key>
+	<string>makefile</string>
+	<key>com.apple.xcode.diff</key>
+	<string>diff</string>
+	<key>public.perl-script</key>
+	<string>perl</string>
+	<key>com.apple.xcode.bash-script</key>
+	<string>bash</string>
+	<key>com.apple.xml-property-list</key>
+	<string>xml</string>
+	<key>public.c-plus-plus-source</key>
+	<string>cpp</string>
+	<key>public.objective-c-source</key>
+	<string>objectivec</string>
+	<key>public.ruby-script</key>
+	<string>ruby</string>
+	<key>public.python-script</key>
+	<string>python</string>
+	<key>com.netscape.javascript-source</key>
+	<string>javascript</string>
+	<key>public.text</key>
+	<string>plaintext</string>
+	<key>public.css</key>
+	<string>css</string>
+	<key>public.json</key>
+	<string>json</string>
+	<key>public.xml</key>
+	<string>xml</string>
+	<key>com.sun.java-source</key>
+	<string>java</string>
+	<key>com.apple.property-list</key>
+	<string>xml</string>
+	<key>public.php-script</key>
+	<string>php</string>
+	<key>public.swift-source</key>
+	<string>swift</string>
+	<key>public.plain-text</key>
+	<string>plaintext</string>
+	<key>net.daringfireball.markdown</key>
+	<string>markdown</string>
+</dict>
+</plist>

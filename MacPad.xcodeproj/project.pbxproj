@@ -10,6 +10,7 @@
 		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
 		E990B6EB230263440010CF5D /* Highlightr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E990B6EA230263440010CF5D /* Highlightr.framework */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
+		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420E2300A9FE00382715 /* ViewController.swift */; };
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
@@ -22,6 +23,7 @@
 		E98D58A72300BB4D003E964A /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		E990B6EA230263440010CF5D /* Highlightr.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Highlightr.framework; path = Carthage/Build/Mac/Highlightr.framework; sourceTree = SOURCE_ROOT; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
+		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* MacPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				E9D042122300A9FE00382715 /* Assets.xcassets */,
 				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
+				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
 				E9D042182300A9FE00382715 /* MacPad.entitlements */,
 				E990B6EA230263440010CF5D /* Highlightr.framework */,
 			);
@@ -143,6 +146,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */,
 				E9D042132300A9FE00382715 /* Assets.xcassets in Resources */,
 				E9D042162300A9FE00382715 /* Main.storyboard in Resources */,
 			);
