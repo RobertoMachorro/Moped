@@ -48,7 +48,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		statusLabel.stringValue = ""
 
 		highlightrTextStorage.addLayoutManager(textView.layoutManager!)
-		highlightrTextStorage.language = defaultLanguage
 		highlightrTextStorage.highlightr.setTheme(to: defaultTheme)
 		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: defaultFont, size: defaultFontSize)
 
@@ -61,6 +60,14 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		themePopup.selectItem(withTitle: defaultTheme)
 
 		updateTextViewColors()
+	}
+
+	override func viewWillAppear() {
+		super.viewWillAppear()
+		if let language = document?.model.docTypeLanguage {
+			languagePopup.selectItem(withTitle: language)
+			highlightrTextStorage.language = language
+		}
 	}
 
 	override var representedObject: Any? {
