@@ -721,6 +721,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
+                                            <connections>
+                                                <binding destination="5gI-5U-AMq" name="value" keyPath="self.representedObject.docTypeName" id="Kz4-ZY-Dxb"/>
+                                            </connections>
                                         </textField>
                                     </gridCell>
                                     <gridCell row="ZLl-Ac-mLu" column="UzX-yN-Lgt" id="4PU-vD-6ty">
