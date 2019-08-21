@@ -1,9 +1,9 @@
-# MacPad
+# Moped
 A general purpose text editor, small and light.
 
 ## License
 
-This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/MacPad/master/LICENSE) file for details.
+This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
 
 ## Manifesto - General Audience
 
@@ -11,13 +11,13 @@ If you come from the Windows world, you may be missing a small utility: [Notepad
 
 It kind of feels heavier than it should and in the way. There are [known settings](https://www.techjunkie.com/textedit-plain-text-mode/) to make it look and feel lighter, but inside it's still the same. You can [get the source](https://developer.apple.com/library/archive/samplecode/TextEdit/Introduction/Intro.html) and peek inside. It's bigger and with older code than it needs to be.
 
-*MacPad* intends on feeling like Notepad, while being a full native of macOS.
+*Moped* intends on feeling like Notepad, while being a full native of macOS.
 
 ## Manifesto - Advanced Users
 
 While you can install the best text editors on your macOS system ([BBEdit](https://www.barebones.com/products/bbedit), [TextMate](https://macromates.com), [VIM](https://www.vim.org), [Emacs](http://www.gnu.org/software/emacs/), etc) - big and powerful, sometimes, you need just a small and light editor for that one file or note that you need to work on. It has to be light on resources and get out of the way.
 
-*MacPad* intends on getting the job done, with all the basics and standard macOS-like keyboard shortcuts.
+*Moped* intends on getting the job done, with all the basics and standard macOS-like keyboard shortcuts.
 
 ## Manifesto - Developers
 
@@ -25,7 +25,7 @@ General developer audience has been loosing interest in macOS development and ga
 
 Most of the technology used in this App comes straight from Apple, we are just re-using the built-in stuff in a smart, clean way. If you scroll through the commit history, you'll (hopefully) understand how it was all pieced together. Please check the *Resources* section here for references and links.
 
-*MacPad* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
+*Moped* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
 
 ## In the Works
 
