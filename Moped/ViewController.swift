@@ -32,9 +32,13 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 	let highlightrTextStorage = CodeAttributedString()
 
-	// TODO: These will go into Preferences
-	let defaultLanguage = "plaintext"
-	let defaultTheme = "xcode"
+	// TODO: These will go into Preferences and a model
+	var defaultLanguage: String {
+		return UserDefaults.standard.string(forKey: "defaultLanguage") ?? "plaintext"
+	}
+	var defaultTheme: String {
+		return UserDefaults.standard.string(forKey: "defaultTheme") ?? "xcode"
+	}
 	let defaultFont = "Menlo"
 	let defaultFontSize = CGFloat(11)
 

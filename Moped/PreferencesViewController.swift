@@ -19,6 +19,7 @@
 //
 
 import Cocoa
+import Highlightr
 
 class PreferencesViewController: NSViewController {
 
@@ -28,6 +29,15 @@ class PreferencesViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Preferences"
+
+		let highlightrTextStorage = CodeAttributedString()
+		languages.removeAllItems()
+		languages.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
+		languages.selectItem(withTitle: UserDefaults.standard.string(forKey: "defaultLanguage") ?? "plaintext")
+
+		themes.removeAllItems()
+		themes.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
+		themes.selectItem(withTitle: UserDefaults.standard.string(forKey: "defaultTheme") ?? "xcode")
 	}
 
 	override func viewDidAppear() {
@@ -36,6 +46,10 @@ class PreferencesViewController: NSViewController {
 	}
 
 	@IBAction func actionOK(_ sender: Any) {
+		// FIXME: Preferences should be handled with a Model
+		UserDefaults.standard.set(languages.titleOfSelectedItem ?? "plaintext", forKey: "defaultLanguage")
+		UserDefaults.standard.set(themes.titleOfSelectedItem ?? "xcode", forKey: "defaultTheme")
+		view.window?.close()
 	}
 
 }
