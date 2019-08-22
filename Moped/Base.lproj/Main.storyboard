@@ -5,6 +5,161 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Window Controller-->
+        <scene sceneID="DMo-gb-OTg">
+            <objects>
+                <windowController id="mFW-oj-LrQ" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="Ish-er-nHh">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="294" y="313" width="345" height="197"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+                        <connections>
+                            <outlet property="delegate" destination="mFW-oj-LrQ" id="X6s-je-ABr"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="Z4S-xF-pOK" kind="relationship" relationship="window.shadowedContentViewController" id="Qae-AJ-6Mf"/>
+                    </connections>
+                </windowController>
+                <customObject id="c1J-v9-pLN" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-548" y="208"/>
+        </scene>
+        <!--Preferences View Controller-->
+        <scene sceneID="Qbg-AZ-2bM">
+            <objects>
+                <viewController id="Z4S-xF-pOK" customClass="PreferencesViewController" customModule="Moped" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="DGv-bH-Q23">
+                        <rect key="frame" x="0.0" y="0.0" width="280" height="125"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <gridView xPlacement="leading" yPlacement="fill" rowAlignment="none" rowSpacing="0.0" columnSpacing="31" translatesAutoresizingMaskIntoConstraints="NO" id="Q8L-an-2mA">
+                                <rect key="frame" x="66" y="20" width="148" height="21"/>
+                                <rows>
+                                    <gridRow id="Tex-Qq-OHC"/>
+                                </rows>
+                                <columns>
+                                    <gridColumn id="bOw-J1-cTH"/>
+                                    <gridColumn id="flY-YC-gGW"/>
+                                </columns>
+                                <gridCells>
+                                    <gridCell row="Tex-Qq-OHC" column="bOw-J1-cTH" id="oWQ-yX-VME">
+                                        <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mz5-Lc-b5I">
+                                            <rect key="frame" x="-6" y="-7" width="59" height="32"/>
+                                            <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RL5-LR-hle">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="actionOK:" target="Z4S-xF-pOK" id="JNs-Mo-YSx"/>
+                                            </connections>
+                                        </button>
+                                    </gridCell>
+                                    <gridCell row="Tex-Qq-OHC" column="flY-YC-gGW" id="220-eI-zKB">
+                                        <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="B6T-bH-Pws">
+                                            <rect key="frame" x="72" y="-7" width="82" height="32"/>
+                                            <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aMp-0O-L2g">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                                <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="dismissController:" target="Z4S-xF-pOK" id="n8h-qp-NGl"/>
+                                            </connections>
+                                        </button>
+                                    </gridCell>
+                                </gridCells>
+                            </gridView>
+                            <gridView xPlacement="leading" yPlacement="fill" rowAlignment="none" columnSpacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="3m0-p3-pLN">
+                                <rect key="frame" x="20" y="57" width="240" height="48"/>
+                                <rows>
+                                    <gridRow id="YCE-oe-7r6"/>
+                                    <gridRow id="pgs-QM-oEl"/>
+                                </rows>
+                                <columns>
+                                    <gridColumn id="kDX-se-S7D"/>
+                                    <gridColumn xPlacement="fill" id="a6i-Zz-8cW"/>
+                                </columns>
+                                <gridCells>
+                                    <gridCell row="YCE-oe-7r6" column="kDX-se-S7D" id="8D7-RK-shC">
+                                        <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cTu-3c-4bK">
+                                            <rect key="frame" x="-2" y="27" width="115" height="21"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Default Language:" id="6tD-x0-ZnJ">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </gridCell>
+                                    <gridCell row="YCE-oe-7r6" column="a6i-Zz-8cW" id="SXT-9x-r57">
+                                        <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2dY-J4-SRI">
+                                            <rect key="frame" x="166" y="24" width="77" height="25"/>
+                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="aV7-zw-vsc" id="TMb-0P-F1r">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="menu"/>
+                                                <menu key="menu" id="Ho5-nB-Tqb">
+                                                    <items>
+                                                        <menuItem title="Item 1" state="on" id="aV7-zw-vsc"/>
+                                                        <menuItem title="Item 2" id="8Ly-NI-lDp"/>
+                                                        <menuItem title="Item 3" id="v0M-3w-XP6"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                    </gridCell>
+                                    <gridCell row="pgs-QM-oEl" column="kDX-se-S7D" id="ZDg-10-y5o">
+                                        <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dFO-ke-MZc">
+                                            <rect key="frame" x="-2" y="0.0" width="97" height="21"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Default Theme:" id="sCD-Ee-gPj">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </gridCell>
+                                    <gridCell row="pgs-QM-oEl" column="a6i-Zz-8cW" id="W56-0D-t04">
+                                        <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bqI-AD-gSS">
+                                            <rect key="frame" x="166" y="-3" width="77" height="25"/>
+                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Wvx-YL-e26" id="95w-rx-cmk">
+                                                <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="menu"/>
+                                                <menu key="menu" id="Az0-C7-o5F">
+                                                    <items>
+                                                        <menuItem title="Item 1" state="on" id="Wvx-YL-e26"/>
+                                                        <menuItem title="Item 2" id="LKc-qf-OfJ"/>
+                                                        <menuItem title="Item 3" id="ZSW-Uy-gki"/>
+                                                    </items>
+                                                </menu>
+                                            </popUpButtonCell>
+                                        </popUpButton>
+                                    </gridCell>
+                                </gridCells>
+                            </gridView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="3m0-p3-pLN" secondAttribute="trailing" constant="20" id="9KU-aH-CPu"/>
+                            <constraint firstItem="Q8L-an-2mA" firstAttribute="top" secondItem="3m0-p3-pLN" secondAttribute="bottom" constant="16" id="MGg-rI-kwI"/>
+                            <constraint firstItem="Q8L-an-2mA" firstAttribute="centerX" secondItem="DGv-bH-Q23" secondAttribute="centerX" id="Ojg-pv-d4n"/>
+                            <constraint firstAttribute="bottom" secondItem="Q8L-an-2mA" secondAttribute="bottom" constant="20" id="aVc-G9-yZR"/>
+                            <constraint firstItem="3m0-p3-pLN" firstAttribute="leading" secondItem="DGv-bH-Q23" secondAttribute="leading" constant="20" id="cFO-NW-Y6Q"/>
+                            <constraint firstItem="3m0-p3-pLN" firstAttribute="top" secondItem="DGv-bH-Q23" secondAttribute="top" constant="20" id="fsU-sw-OF6"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="languages" destination="2dY-J4-SRI" id="VRc-ia-UTo"/>
+                        <outlet property="themes" destination="bqI-AD-gSS" id="rk0-zP-BZL"/>
+                    </connections>
+                </viewController>
+                <customObject id="nWN-3F-47N" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-548" y="584.5"/>
+        </scene>
         <!--Application-->
         <scene sceneID="JPo-4y-FX3">
             <objects>
@@ -22,7 +177,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                            <connections>
+                                                <segue destination="mFW-oj-LrQ" kind="modal" id="LKJ-S5-6cS"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
