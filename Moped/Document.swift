@@ -31,7 +31,7 @@ class Document: NSDocument {
 	// MARK: - Enablers
 
 	override class var autosavesInPlace: Bool {
-		return true // FALSE: Enables Save As, disables versioning
+		return false // FALSE: Enables Save As, disables versioning
 	}
 
 	override func canAsynchronouslyWrite(to url: URL, ofType typeName: String, for saveOperation: NSDocument.SaveOperationType) -> Bool {
@@ -39,12 +39,7 @@ class Document: NSDocument {
 	}
 
 	override class func canConcurrentlyReadDocuments(ofType: String) -> Bool {
-		switch ofType {
-		case "public.plain-text", "public.source-code", "public.script":
-			return true
-		default:
-			return false
-		}
+		return true
 	}
 
 	// MARK: - User Interface
