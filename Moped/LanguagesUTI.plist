@@ -6,8 +6,6 @@
 	<string>shell</string>
 	<key>com.apple.xcode.make-script</key>
 	<string>makefile</string>
-	<key>com.apple.xcode.diff</key>
-	<string>diff</string>
 	<key>public.perl-script</key>
 	<string>perl</string>
 	<key>com.apple.xcode.bash-script</key>
