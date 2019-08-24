@@ -25,31 +25,32 @@ class PreferencesViewController: NSViewController {
 
 	@IBOutlet weak var languages: NSPopUpButton!
 	@IBOutlet weak var themes: NSPopUpButton!
+	@IBOutlet weak var fonts: NSPopUpButton!
+	@IBOutlet weak var fontSizes: NSPopUpButton!
+
+	@objc let userPreferences = Preferences.userShared
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Preferences"
 
 		let highlightrTextStorage = CodeAttributedString()
-		languages.removeAllItems()
-		languages.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
-		languages.selectItem(withTitle: UserDefaults.standard.string(forKey: "defaultLanguage") ?? "plaintext")
 
-		themes.removeAllItems()
+		languages.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
 		themes.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
-		themes.selectItem(withTitle: UserDefaults.standard.string(forKey: "defaultTheme") ?? "xcode")
+		// FIXME: Pull this from the Font API - get all monospaced fonts
+		fonts.addItems(withTitles: ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"])
+		fontSizes.addItems(withTitles: ["10", "12", "13", "14", "15"])
 	}
 
 	override func viewDidAppear() {
 		super.viewDidAppear()
 		view.window?.styleMask.remove(.resizable)
-	}
 
-	@IBAction func actionOK(_ sender: Any) {
-		// FIXME: Preferences should be handled with a Model
-		UserDefaults.standard.set(languages.titleOfSelectedItem ?? "plaintext", forKey: "defaultLanguage")
-		UserDefaults.standard.set(themes.titleOfSelectedItem ?? "xcode", forKey: "defaultTheme")
-		view.window?.close()
+		languages.selectItem(withTitle: userPreferences.language)
+		themes.selectItem(withTitle: userPreferences.theme)
+		fonts.selectItem(withTitle: userPreferences.font)
+		fontSizes.selectItem(withTitle: userPreferences.fontSize)
 	}
 
 }
