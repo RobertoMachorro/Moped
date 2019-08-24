@@ -31,7 +31,7 @@ class Document: NSDocument {
 	// MARK: - Enablers
 
 	override class var autosavesInPlace: Bool {
-		return false // FALSE: Enables Save As, disables versioning
+		return true // FALSE: Enables Save As, disables versioning
 	}
 
 	override func canAsynchronouslyWrite(to url: URL, ofType typeName: String, for saveOperation: NSDocument.SaveOperationType) -> Bool {
