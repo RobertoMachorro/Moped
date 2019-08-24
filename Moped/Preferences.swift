@@ -69,6 +69,15 @@ class Preferences: NSObject {
 
 	// MARK: - UserDefaults Helpers
 
+	var fontSizeFloat: CGFloat {
+		get {
+			guard let number = NumberFormatter().number(from: fontSize) else {
+				return CGFloat(9)
+			}
+			return CGFloat(truncating: number)
+		}
+	}
+
 	func getStringValue(forKey key: String, otherwiseUse backup: String) -> String {
 		return UserDefaults.standard.string(forKey: key) ?? backup
 	}
