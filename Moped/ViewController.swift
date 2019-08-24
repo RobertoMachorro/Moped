@@ -30,17 +30,8 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	@IBOutlet weak var languagePopup: NSPopUpButtonCell!
 	@IBOutlet weak var themePopup: NSPopUpButtonCell!
 
-	let highlightrTextStorage = CodeAttributedString()
-
-	// TODO: These will go into Preferences and a model
-	var defaultLanguage: String {
-		return UserDefaults.standard.string(forKey: "defaultLanguage") ?? "plaintext"
-	}
-	var defaultTheme: String {
-		return UserDefaults.standard.string(forKey: "defaultTheme") ?? "xcode"
-	}
-	let defaultFont = "Menlo"
-	let defaultFontSize = CGFloat(11)
+	let userPreferences = Preferences.userShared
+	let highlightrTextStorage: CodeAttributedString? = CodeAttributedString()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -51,26 +42,29 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 		statusLabel.stringValue = ""
 
-		highlightrTextStorage.addLayoutManager(textView.layoutManager!)
-		highlightrTextStorage.highlightr.setTheme(to: defaultTheme)
-		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: defaultFont, size: defaultFontSize)
+		if let storage = highlightrTextStorage {
+			storage.addLayoutManager(textView.layoutManager!)
+			updateViewTo(theme: userPreferences.theme)
 
-		languagePopup.removeAllItems()
-		languagePopup.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
-		languagePopup.selectItem(withTitle: defaultLanguage)
+			languagePopup.removeAllItems()
+			languagePopup.addItems(withTitles: storage.highlightr.supportedLanguages().sorted())
+			languagePopup.selectItem(withTitle: userPreferences.language)
 
-		themePopup.removeAllItems()
-		themePopup.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
-		themePopup.selectItem(withTitle: defaultTheme)
+			themePopup.removeAllItems()
+			themePopup.addItems(withTitles: storage.highlightr.availableThemes().sorted())
+			themePopup.selectItem(withTitle: userPreferences.theme)
+		} else {
+			textView.font = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
+		}
 
-		updateTextViewColors()
+		setupPreferencesObserver()
 	}
 
 	override func viewWillAppear() {
 		super.viewWillAppear()
-		if let language = document?.model.docTypeLanguage {
+		if let storage = highlightrTextStorage, let language = document?.model.docTypeLanguage {
 			languagePopup.selectItem(withTitle: language)
-			highlightrTextStorage.language = language
+			storage.language = language
 		}
 	}
 
@@ -86,25 +80,13 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	// MARK: - Language / Popup Theme Changes
 
 	@IBAction func languagePopupAction(_ sender: NSPopUpButtonCell) {
-		highlightrTextStorage.language = sender.titleOfSelectedItem ?? defaultLanguage
+		if let storage = highlightrTextStorage {
+			storage.language = sender.titleOfSelectedItem ?? userPreferences.language
+		}
 	}
 
 	@IBAction func themePopupAction(_ sender: NSPopUpButtonCell) {
-		highlightrTextStorage.highlightr.setTheme(to: sender.titleOfSelectedItem ?? defaultTheme)
-		highlightrTextStorage.highlightr.theme.codeFont = NSFont(name: defaultFont, size: defaultFontSize)
-		updateTextViewColors()
-	}
-
-	func updateTextViewColors() {
-		textView.backgroundColor = highlightrTextStorage.highlightr.theme.themeBackgroundColor
-		textView.insertionPointColor = invertColor(textView.backgroundColor)
-	}
-
-	func invertColor(_ color: NSColor) -> NSColor {
-		var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0
-		// FIXME: Fix/convert colorspace (not valid for the NSColor Generic Gray Gamma 2.2)
-		color.getRed(&r, green: &g, blue: &b, alpha: nil)
-		return NSColor(red:1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
+		updateViewTo(theme: sender.titleOfSelectedItem ?? userPreferences.theme)
 	}
 
 	// MARK: - Accessor Helpers
@@ -128,6 +110,35 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 	func textDidEndEditing(_ notification: Notification) {
 		document?.objectDidEndEditing(self)
+	}
+
+}
+
+extension ViewController {
+
+	func setupPreferencesObserver() {
+		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
+		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
+			// TODO: Check for self referencing ARC leak
+			self.updateViewTo(theme: self.userPreferences.theme)
+//			self.themePopup.selectItem(withTitle: self.defaultTheme)
+		}
+	}
+
+	func updateViewTo(theme: String) {
+		if let storage = highlightrTextStorage {
+			storage.highlightr.setTheme(to: theme)
+			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
+			textView.backgroundColor = storage.highlightr.theme.themeBackgroundColor
+			textView.insertionPointColor = invertColor(textView.backgroundColor)
+		}
+	}
+
+	func invertColor(_ color: NSColor) -> NSColor {
+		var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0
+		// FIXME: Fix/convert colorspace (not valid for the NSColor Generic Gray Gamma 2.2)
+		color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		return NSColor(red:1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 
 }
