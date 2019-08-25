@@ -1,6 +1,3 @@
-# Moped
-A general purpose text editor, small and light.
-
 ## License
 
 This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
@@ -9,7 +6,7 @@ This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0
 
 Pre-compiled versions are available directly from [GitHub](https://github.com/RobertoMachorro/Moped/releases) or the [AppStore](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12).
 
-![Moped Screenshot](screenshot.png)
+![Moped Screenshot](Designs/screenshot.png)
 
 ## Manifesto - General Audience
 
