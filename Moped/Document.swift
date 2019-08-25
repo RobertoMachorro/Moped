@@ -59,12 +59,10 @@ class Document: NSDocument {
 	// MARK: - Reading and Writing
 
 	override func read(from data: Data, ofType typeName: String) throws {
-		NSLog("Doc Type Read: %@", typeName)
 		model.read(from: data, ofType: typeName)
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
-		NSLog("Doc Type Write: %@", typeName)
 		return model.data(ofType: typeName)!
 	}
 
