@@ -1,5 +1,18 @@
 os: osx
+osx_image: xcode11
 language: swift
 xcode_project: Moped.xcodeproj
 xcode_scheme: Moped
 xcode_destination: platform=macOS
+
+cache:
+  directories:
+  - Carthage
+
+before_install:
+  - brew install carthage || true
+  - brew outdated carthage || brew upgrade carthage
+  - gem install xcpretty-travis-formatter --no-rdoc --no-ri --no-document --quiet
+
+before_script:
+  - carthage bootstrap --platform macOS --cache-builds
