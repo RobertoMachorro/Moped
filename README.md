@@ -1,4 +1,6 @@
 [![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped)
+![GitHub](https://img.shields.io/github/license/RobertoMachorro/Moped)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/RobertoMachorro/Moped)
 
 ## License
 
@@ -44,6 +46,8 @@ Most of the technology used in this App comes straight from Apple, we are just r
 ## Contributing
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
+
+All Pull Requests are automatically evaluated using [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master) and [Travis CI](https://travis-ci.org/RobertoMachorro/Moped).
 
 ## Resources
 
