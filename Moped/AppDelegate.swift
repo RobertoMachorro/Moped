@@ -37,28 +37,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return .terminateNow
 	}
 
+}
+
+extension AppDelegate {
+
 	// MARK: - Help Menu Actions
 
 	@IBAction func linkToLicense(_ sender: Any) {
-		if let url = URL(string: "https://www.gnu.org/licenses/") {
-			NSWorkspace.shared.open(url)
-		}
+		showWebsite(using: "https://www.gnu.org/licenses/")
 	}
 
 	@IBAction func linkToSources(_ sender: Any) {
-		if let url = URL(string: "https://github.com/RobertoMachorro/Moped") {
-			NSWorkspace.shared.open(url)
-		}
+		showWebsite(using: "https://github.com/RobertoMachorro/Moped")
 	}
 
 	@IBAction func linkToIssues(_ sender: Any) {
-		if let url = URL(string: "https://github.com/RobertoMachorro/Moped/issues") {
-			NSWorkspace.shared.open(url)
-		}
+		showWebsite(using: "https://github.com/RobertoMachorro/Moped/issues")
 	}
 
 	@IBAction func linkToIconSite(_ sender: Any) {
-		if let url = URL(string: "https://all-free-download.com/free-vector/download/scooter-icons-collection-classical-colored-sketch_6832617.html") {
+		showWebsite(using: "https://all-free-download.com/free-vector/download/scooter-icons-collection-classical-colored-sketch_6832617.html")
+	}
+
+	func showWebsite(using address: String) {
+		if let url = URL(string: address) {
 			NSWorkspace.shared.open(url)
 		}
 	}
