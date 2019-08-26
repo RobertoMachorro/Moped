@@ -1,4 +1,4 @@
-[![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped)
+[![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped) ![GitHub](https://img.shields.io/github/license/RobertoMachorro/Moped)
 
 ## License
 
