@@ -1,0 +1,2 @@
+language: swift
+xcode_project: Moped.xcodeproj
