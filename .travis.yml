@@ -1,3 +1,5 @@
+os: osx
 language: swift
 xcode_project: Moped.xcodeproj
 xcode_scheme: Moped
+xcode_destination: platform=macOS
