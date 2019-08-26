@@ -1,3 +1,5 @@
+![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)
+
 ## License
 
 This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
