@@ -16,4 +16,4 @@ before_install:
 before_script:
   - carthage bootstrap --platform macOS --cache-builds
 
-script: true
+script: xcodebuild -scheme Moped build
