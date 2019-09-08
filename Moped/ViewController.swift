@@ -112,6 +112,16 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		document?.objectDidEndEditing(self)
 	}
 
+	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+		/* TODO: Setup Preferences for this option, autodectect from file as well
+		if (commandSelector == #selector(NSResponder.insertTab(_:))) {
+			textView.insertText("  ", replacementRange: textView.selectedRange())
+			return true
+		}
+		*/
+		return false
+	}
+
 }
 
 extension ViewController {
