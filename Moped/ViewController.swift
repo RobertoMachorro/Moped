@@ -117,6 +117,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		if (commandSelector == #selector(NSResponder.insertTab(_:))) {
 			textView.insertText("  ", replacementRange: textView.selectedRange())
 			return true
+		} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
 		}
 		*/
 		return false
