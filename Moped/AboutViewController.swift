@@ -22,9 +22,15 @@ import Cocoa
 
 class AboutViewController: NSViewController {
 
+	@IBOutlet weak var versionLabel: NSTextField!
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = ""
+		
+		let versionNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+		let buildNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+		versionLabel.stringValue = "v\(versionNumber) (\(buildNumber))"
 	}
 
 	override func viewDidAppear() {

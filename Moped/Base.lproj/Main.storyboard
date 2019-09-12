@@ -776,8 +776,8 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GzM-Dc-iyl">
-                                <rect key="frame" x="135" y="186" width="70" height="17"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Version 1.5" id="Fcf-KE-W6p">
+                                <rect key="frame" x="132" y="186" width="77" height="17"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Version ?.??" id="Fcf-KE-W6p">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -815,6 +815,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                             <constraint firstItem="GzM-Dc-iyl" firstAttribute="centerX" secondItem="Z0v-2F-Utf" secondAttribute="centerX" id="lyE-Um-m7p"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="versionLabel" destination="GzM-Dc-iyl" id="Ea1-pw-cL5"/>
+                    </connections>
                 </viewController>
                 <customObject id="ui2-oC-hnd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
