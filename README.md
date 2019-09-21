@@ -7,6 +7,8 @@
 
 This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
 
+![GNU GPLv3 Logo](https://www.gnu.org/graphics/gplv3-127x51.png)
+
 ## Download Binary App
 
 Pre-compiled versions are available directly from [GitHub](https://github.com/RobertoMachorro/Moped/releases) or the [AppStore](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12).
