@@ -2,12 +2,16 @@
 [![codebeat badge](https://codebeat.co/badges/208843e4-4d01-4cb5-8543-d04103288e2d)](https://codebeat.co/projects/github-com-robertomachorro-moped-master)
 ![GitHub](https://img.shields.io/github/license/RobertoMachorro/Moped)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/RobertoMachorro/Moped)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped?ref=badge_shield)
 
 ## License
 
 This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
 
 ![GNU GPLv3 Logo](https://www.gnu.org/graphics/gplv3-127x51.png)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped?ref=badge_large)
 
 ## Download Binary App
 
