@@ -132,7 +132,6 @@ extension ViewController {
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
 			// TODO: Check for self referencing ARC leak
 			self.updateViewTo(theme: self.userPreferences.theme)
-//			self.themePopup.selectItem(withTitle: self.defaultTheme)
 		}
 	}
 
