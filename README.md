@@ -1,7 +1,7 @@
-[![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped)
-[![codebeat badge](https://codebeat.co/badges/208843e4-4d01-4cb5-8543-d04103288e2d)](https://codebeat.co/projects/github-com-robertomachorro-moped-master)
 ![GitHub](https://img.shields.io/github/license/RobertoMachorro/Moped)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/RobertoMachorro/Moped)
+[![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped)
+[![codebeat badge](https://codebeat.co/badges/208843e4-4d01-4cb5-8543-d04103288e2d)](https://codebeat.co/projects/github-com-robertomachorro-moped-master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped?ref=badge_shield)
 
 ## License
@@ -9,9 +9,6 @@
 This software is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). Please see the [LICENSE](https://raw.githubusercontent.com/RobertoMachorro/Moped/master/LICENSE) file for details.
 
 ![GNU GPLv3 Logo](https://www.gnu.org/graphics/gplv3-127x51.png)
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped?ref=badge_large)
 
 ## Download Binary App
 
@@ -54,7 +51,9 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
 
-All Pull Requests are automatically evaluated using [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master) and [Travis CI](https://travis-ci.org/RobertoMachorro/Moped).
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FRobertoMachorro%2FMoped?ref=badge_large)
+
+All Pull Requests are automatically evaluated using [Travis CI](https://travis-ci.org/RobertoMachorro/Moped), Codacy/PR Quality Review, Hound and [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master).
 
 ## Resources
 
