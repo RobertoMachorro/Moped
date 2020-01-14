@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>com.textadept.nim-source</key>
+	<string>nimrod</string>
+	<key>org.iso.sql</key>
+	<string>sql</string>
+	<key>public.patch-file</key>
+	<string>diff</string>
 	<key>public.shell-script</key>
 	<string>shell</string>
 	<key>com.apple.xcode.make-script</key>
