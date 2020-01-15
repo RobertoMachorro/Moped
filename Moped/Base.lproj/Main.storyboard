@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -62,7 +63,7 @@
                                             <rect key="frame" x="210" y="78" width="38" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="TMb-0P-F1r">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="system"/>
                                                 <menu key="menu" id="Ho5-nB-Tqb"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -85,7 +86,7 @@
                                             <rect key="frame" x="210" y="51" width="38" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="95w-rx-cmk">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="system"/>
                                                 <menu key="menu" id="Az0-C7-o5F"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -108,7 +109,7 @@
                                             <rect key="frame" x="210" y="24" width="38" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="2sU-N1-J0K">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="system"/>
                                                 <menu key="menu" id="Zde-v0-9el"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -131,7 +132,7 @@
                                             <rect key="frame" x="210" y="-3" width="38" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="eId-NU-gHf">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="system"/>
                                                 <menu key="menu" id="L3n-wT-xkQ"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -776,7 +777,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GzM-Dc-iyl">
-                                <rect key="frame" x="132" y="186" width="77" height="17"/>
+                                <rect key="frame" x="132" y="187" width="77" height="16"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Version ?.??" id="Fcf-KE-W6p">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -786,13 +787,13 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="NJe-oe-CPt">
                                 <rect key="frame" x="18" y="20" width="304" height="132"/>
                                 <textFieldCell key="cell" selectable="YES" allowsUndo="NO" alignment="justified" id="n1N-rx-b5p">
-                                    <font key="font" metaFont="miniSystem"/>
-                                    <string key="title">A general purpose text editor, small and light.
-Copyright (C) 2019 Roberto Machorro. All rights reserved.
+                                    <font key="font" metaFont="label" size="9"/>
+                                    <mutableString key="title">A general purpose text editor, small and light.
+Copyright (C) 2019-2020 Roberto Machorro. All rights reserved.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</string>
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</mutableString>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -880,7 +881,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9hz-wy-Toe">
                                             <rect key="frame" x="-2" y="0.0" width="38" height="16"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Status" id="2hk-1M-1MS">
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -894,7 +895,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                             <rect key="frame" x="240" y="-1" width="60" height="17"/>
                                             <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" imagePosition="overlaps" alignment="center" controlSize="small" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MrM-bl-3L2">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <menu key="menu" id="zNs-h2-mrO">
                                                     <items>
                                                         <menuItem title="Item 1" id="Gab-8l-qiB"/>
@@ -913,7 +914,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                             <rect key="frame" x="350" y="-1" width="60" height="17"/>
                                             <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" alignment="center" controlSize="small" lineBreakMode="truncatingTail" borderStyle="border" inset="2" id="xIP-tq-gOP">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                <font key="font" metaFont="smallSystem"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <menu key="menu" id="ok5-19-RFq">
                                                     <items>
                                                         <menuItem title="Item 1" id="UVz-Pf-Xhq"/>
