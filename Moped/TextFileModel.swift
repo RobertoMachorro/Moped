@@ -25,11 +25,13 @@ class TextFileModel: NSObject {
 	@objc dynamic var content: String
 	@objc dynamic var docTypeName: String
 	@objc dynamic var docTypeLanguage: String
+	var encoding: String.Encoding
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content
 		self.docTypeName = typeName
 		self.docTypeLanguage = typeLanguage
+		self.encoding = .utf8
 	}
 
 }
@@ -39,13 +41,33 @@ extension TextFileModel {
 	func read(from data: Data, ofType typeName: String) {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		content = String(data: data, encoding: .utf8) ?? "** UNRECOGNIZED FILE **"
+		/*
+		var convertedString: NSString?
+		let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
+		if let text = String(data: data, encoding: .init(rawValue: encodingRaw)) {
+			content = text
+		} else {
+			content = "** UNRECOGNIZED FILE **"
+		}
+		*/
+		if let text = String(data: data, encoding: .utf8) {
+			content = text
+			encoding = .utf8
+		} else if let text = String(data: data, encoding: .macOSRoman) {
+			content = text
+			encoding = .macOSRoman
+		} else if let text = String(data: data, encoding: .ascii) {
+			content = text
+			encoding = .ascii
+		} else {
+			content = "** UNRECOGNIZED FILE **"
+		}
 	}
 
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		return content.data(using: .utf8)
+		return content.data(using: encoding)
 	}
 
 }
