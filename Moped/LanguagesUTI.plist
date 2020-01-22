@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>org.tug.tex</key>
+	<string>tex</string>
 	<key>public.svg-image</key>
 	<string>xml</string>
 	<key>public.comma-separated-values-text</key>
