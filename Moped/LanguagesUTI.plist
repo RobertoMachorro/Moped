@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>public.c-source</key>
+	<string>cpp</string>
 	<key>org.tug.tex</key>
 	<string>tex</string>
 	<key>public.svg-image</key>
@@ -29,6 +31,8 @@
 	<key>public.c-plus-plus-source</key>
 	<string>cpp</string>
 	<key>public.objective-c-source</key>
+	<string>objectivec</string>
+	<key>public.objective-c-plus-plus-source</key>
 	<string>objectivec</string>
 	<key>public.ruby-script</key>
 	<string>ruby</string>
