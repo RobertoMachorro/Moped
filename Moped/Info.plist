@@ -13,6 +13,8 @@
 			<string>Apple HTML document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.html</string>
@@ -27,6 +29,8 @@
 			<string>NSStringPboardType</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 			<key>LSItemContentTypes</key>
@@ -43,6 +47,8 @@
 			<string>NSStringPboardType</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 			<key>LSItemContentTypes</key>
@@ -61,6 +67,8 @@
 			<string>Apple SimpleText document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 			<key>LSItemContentTypes</key>
@@ -75,6 +83,8 @@
 			<string>Unknown document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
 			<key>LSItemContentTypes</key>
