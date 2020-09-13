@@ -21,7 +21,6 @@
 import Foundation
 
 class Preferences: NSObject {
-
 	// MARK: - Singleton with Custom Setup
 
 	static let userShared: Preferences = {
@@ -33,7 +32,7 @@ class Preferences: NSObject {
 
 	@objc dynamic var language: String {
 		get {
-			return getStringValue(forKey: "language", otherwiseUse: "plaintext")
+			getStringValue(forKey: "language", otherwiseUse: "plaintext")
 		}
 		set {
 			setStringValue(forKey: "language", to: newValue)
@@ -42,7 +41,7 @@ class Preferences: NSObject {
 
 	@objc dynamic var theme: String {
 		get {
-			return getStringValue(forKey: "theme", otherwiseUse: "xcode")
+			getStringValue(forKey: "theme", otherwiseUse: "xcode")
 		}
 		set {
 			setStringValue(forKey: "theme", to: newValue)
@@ -51,7 +50,7 @@ class Preferences: NSObject {
 
 	@objc dynamic var font: String {
 		get {
-			return getStringValue(forKey: "font", otherwiseUse: "Menlo")
+			getStringValue(forKey: "font", otherwiseUse: "Menlo")
 		}
 		set {
 			setStringValue(forKey: "font", to: newValue)
@@ -60,7 +59,7 @@ class Preferences: NSObject {
 
 	@objc dynamic var fontSize: String {
 		get {
-			return getStringValue(forKey: "fontSize", otherwiseUse: "13")
+			getStringValue(forKey: "fontSize", otherwiseUse: "13")
 		}
 		set {
 			setStringValue(forKey: "fontSize", to: newValue)
@@ -70,21 +69,18 @@ class Preferences: NSObject {
 	// MARK: - UserDefaults Helpers
 
 	var fontSizeFloat: CGFloat {
-		get {
-			guard let number = NumberFormatter().number(from: fontSize) else {
-				return CGFloat(9)
-			}
-			return CGFloat(truncating: number)
+		guard let number = NumberFormatter().number(from: fontSize) else {
+			return CGFloat(9)
 		}
+		return CGFloat(truncating: number)
 	}
 
 	func getStringValue(forKey key: String, otherwiseUse backup: String) -> String {
-		return UserDefaults.standard.string(forKey: key) ?? backup
+		UserDefaults.standard.string(forKey: key) ?? backup
 	}
 
 	func setStringValue(forKey key: String, to value: String) {
 		UserDefaults.standard.set(value, forKey: key)
 		NotificationCenter.default.post(name: Notification.Name(rawValue: "PreferencesChanged"), object: nil)
 	}
-
 }

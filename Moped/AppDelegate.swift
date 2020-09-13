@@ -22,7 +22,6 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
 	// MARK: - Application Delegate
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -34,13 +33,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-		return .terminateNow
+		.terminateNow
 	}
-
 }
 
 extension AppDelegate {
-
 	// MARK: - Help Menu Actions
 
 	@IBAction func linkToLicense(_ sender: Any) {
@@ -64,5 +61,4 @@ extension AppDelegate {
 			NSWorkspace.shared.open(url)
 		}
 	}
-
 }

@@ -22,11 +22,10 @@ import Cocoa
 import Highlightr
 
 class PreferencesViewController: NSViewController {
-
-	@IBOutlet weak var languages: NSPopUpButton!
-	@IBOutlet weak var themes: NSPopUpButton!
-	@IBOutlet weak var fonts: NSPopUpButton!
-	@IBOutlet weak var fontSizes: NSPopUpButton!
+	@IBOutlet var languages: NSPopUpButton!
+	@IBOutlet var themes: NSPopUpButton!
+	@IBOutlet var fonts: NSPopUpButton!
+	@IBOutlet var fontSizes: NSPopUpButton!
 
 	@objc let userPreferences = Preferences.userShared
 
@@ -52,5 +51,4 @@ class PreferencesViewController: NSViewController {
 		fonts.selectItem(withTitle: userPreferences.font)
 		fontSizes.selectItem(withTitle: userPreferences.fontSize)
 	}
-
 }

@@ -21,7 +21,6 @@
 import Foundation
 
 class TextFileModel: NSObject {
-
 	@objc dynamic var content: String
 	@objc dynamic var docTypeName: String
 	@objc dynamic var docTypeLanguage: String
@@ -29,30 +28,28 @@ class TextFileModel: NSObject {
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content
-		self.docTypeName = typeName
-		self.docTypeLanguage = typeLanguage
-		self.encoding = .utf8
+		docTypeName = typeName
+		docTypeLanguage = typeLanguage
+		encoding = .utf8
 	}
-
 }
 
 extension TextFileModel {
-
 	func read(from data: Data, ofType typeName: String) {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
 
 		/*
-		var convertedString: NSString?
-		let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
+		 var convertedString: NSString?
+		 let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
 
-		if let convertedString = convertedString as String? {
-			self.content = convertedString
-			self.encoding = .init(rawValue: encodingRaw)
-		} else {
-			content = "** UNRECOGNIZED FILE **"
-		}
-		*/
+		 if let convertedString = convertedString as String? {
+		 	self.content = convertedString
+		 	self.encoding = .init(rawValue: encodingRaw)
+		 } else {
+		 	content = "** UNRECOGNIZED FILE **"
+		 }
+		 */
 
 		if let text = String(data: data, encoding: .utf8) {
 			content = text
@@ -73,19 +70,17 @@ extension TextFileModel {
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
 		return content.data(using: encoding)
 	}
-
 }
 
 extension TextFileModel {
-
 	func getLanguageForType(typeName: String) -> String {
 		guard let plistPath = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
 			let languagesFromUTI = NSDictionary(contentsOfFile: plistPath),
-			let language = languagesFromUTI[typeName] as? String else {
+			let language = languagesFromUTI[typeName] as? String
+		else {
 			print("Unknown doctTypeName: \(docTypeName)")
 			return "plaintext"
 		}
 		return language
 	}
-
 }

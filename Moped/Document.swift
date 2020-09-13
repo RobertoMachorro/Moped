@@ -21,7 +21,6 @@
 import Cocoa
 
 class Document: NSDocument {
-
 	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
@@ -31,15 +30,15 @@ class Document: NSDocument {
 	// MARK: - Enablers
 
 	override class var autosavesInPlace: Bool {
-		return true // FALSE: Enables Save As, disables versioning
+		true // FALSE: Enables Save As, disables versioning
 	}
 
 	override func canAsynchronouslyWrite(to url: URL, ofType typeName: String, for saveOperation: NSDocument.SaveOperationType) -> Bool {
-		return true
+		true
 	}
 
 	override class func canConcurrentlyReadDocuments(ofType: String) -> Bool {
-		return true
+		true
 	}
 
 	// MARK: - User Interface
@@ -48,7 +47,7 @@ class Document: NSDocument {
 		// Returns the Storyboard that contains your Document window.
 		let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: nil)
 		if let windowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("Document Window Controller")) as? WindowController {
-			self.addWindowController(windowController)
+			addWindowController(windowController)
 
 			if let viewController = windowController.contentViewController as? ViewController {
 				viewController.representedObject = model
@@ -61,27 +60,27 @@ class Document: NSDocument {
 	override func read(from data: Data, ofType typeName: String) throws {
 		// TODO: Switch to extension based recognitions
 		/*
-		if let fileExtension = self.fileURL?.pathExtension {
-			NSLog("FILE EXTENSION: \(fileExtension)")
-		}
-		if let fileName = self.displayName {
-			NSLog("FILE NAME: \(fileName)")
-		}
-		*/
+		 if let fileExtension = self.fileURL?.pathExtension {
+		 	NSLog("FILE EXTENSION: \(fileExtension)")
+		 }
+		 if let fileName = self.displayName {
+		 	NSLog("FILE NAME: \(fileName)")
+		 }
+		 */
 		model.read(from: data, ofType: typeName)
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
 		// TODO: Switch to extension based recognitions
 		/*
-		if let fileExtension = self.fileURL?.pathExtension {
-			NSLog("FILE EXTENSION: \(fileExtension)")
-		}
-		if let fileName = self.displayName {
-			NSLog("FILE NAME: \(fileName)")
-		}
-		*/
-		return model.data(ofType: typeName)!
+		 if let fileExtension = self.fileURL?.pathExtension {
+		 	NSLog("FILE EXTENSION: \(fileExtension)")
+		 }
+		 if let fileName = self.displayName {
+		 	NSLog("FILE NAME: \(fileName)")
+		 }
+		 */
+		model.data(ofType: typeName)!
 	}
 
 	// MARK: - Printing
@@ -91,7 +90,7 @@ class Document: NSDocument {
 		thePrintInfo.horizontalPagination = .fit
 		thePrintInfo.isHorizontallyCentered = false
 		thePrintInfo.isVerticallyCentered = false
-		
+
 		// One inch margin all the way around.
 		thePrintInfo.leftMargin = 72.0
 		thePrintInfo.rightMargin = 72.0
@@ -99,7 +98,7 @@ class Document: NSDocument {
 		thePrintInfo.bottomMargin = 72.0
 
 		printInfo.dictionary().setObject(NSNumber(value: true), forKey: NSPrintInfo.AttributeKey.headerAndFooter as NSCopying)
-		
+
 		return thePrintInfo
 	}
 
@@ -111,7 +110,7 @@ class Document: NSDocument {
 		// Print the NSTextView.
 
 		// Create a copy to manipulate for printing.
-		let pageSize = NSSize(width: (printInfo.paperSize.width), height: (printInfo.paperSize.height))
+		let pageSize = NSSize(width: printInfo.paperSize.width, height: printInfo.paperSize.height)
 		let textView = NSTextView(frame: NSRect(x: 0.0, y: 0.0, width: pageSize.width, height: pageSize.height))
 
 		// Make sure we print on a white background.
@@ -123,5 +122,4 @@ class Document: NSDocument {
 		let printOperation = NSPrintOperation(view: textView)
 		printOperation.runModal(for: windowControllers[0].window!, delegate: self, didRun: #selector(printOperationDidRun(_:success:contextInfo:)), contextInfo: nil)
 	}
-
 }

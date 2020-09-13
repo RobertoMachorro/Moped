@@ -22,13 +22,12 @@ import Cocoa
 import Highlightr
 
 class ViewController: NSViewController, NSTextViewDelegate {
-
 	// TextView Editor
 	@IBOutlet var textView: NSTextView!
 	// Status bar components
-	@IBOutlet weak var statusLabel: NSTextFieldCell!
-	@IBOutlet weak var languagePopup: NSPopUpButtonCell!
-	@IBOutlet weak var themePopup: NSPopUpButtonCell!
+	@IBOutlet var statusLabel: NSTextFieldCell!
+	@IBOutlet var languagePopup: NSPopUpButtonCell!
+	@IBOutlet var themePopup: NSPopUpButtonCell!
 
 	let userPreferences = Preferences.userShared
 	let highlightrTextStorage: CodeAttributedString? = CodeAttributedString()
@@ -92,7 +91,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	// MARK: - Accessor Helpers
 
 	weak var windowController: WindowController? {
-		return view.window?.windowController as? WindowController
+		view.window?.windowController as? WindowController
 	}
 
 	weak var document: Document? {
@@ -114,22 +113,20 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		/* TODO: Setup Preferences for this option, autodectect from file as well
-		if (commandSelector == #selector(NSResponder.insertTab(_:))) {
-			textView.insertText("  ", replacementRange: textView.selectedRange())
-			return true
-		} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
-		}
-		*/
-		return false
+		 if (commandSelector == #selector(NSResponder.insertTab(_:))) {
+		 	textView.insertText("  ", replacementRange: textView.selectedRange())
+		 	return true
+		 } else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
+		 }
+		 */
+		false
 	}
-
 }
 
 extension ViewController {
-
 	func setupPreferencesObserver() {
 		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
-		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { (notification) in
+		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
 			// TODO: Check for self referencing ARC leak
 			self.updateViewTo(theme: self.userPreferences.theme)
 		}
@@ -145,10 +142,9 @@ extension ViewController {
 	}
 
 	func invertColor(_ color: NSColor) -> NSColor {
-		var r:CGFloat = 0, g:CGFloat = 0, b:CGFloat = 0
+		var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
 		// FIXME: Fix/convert colorspace (not valid for the NSColor Generic Gray Gamma 2.2)
 		color.getRed(&r, green: &g, blue: &b, alpha: nil)
-		return NSColor(red:1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
+		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
-
 }
