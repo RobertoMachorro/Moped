@@ -53,6 +53,12 @@ Contributions are more than welcome! Please fork the master branch and pull requ
 
 All Pull Requests are automatically evaluated using [Travis CI](https://travis-ci.org/RobertoMachorro/Moped), Codacy/PR Quality Review, Hound and [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master).
 
+If your document is not being identified and syntax highlighted, please send its content identifier information. It can be obtained with the following command:
+
+```bash
+mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOURFILE
+```
+
 ## Resources
 
 [Document-Based App Programming Guide for Mac](https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/DocBasedAppProgrammingGuideForOSX/Introduction/Introduction.html)
