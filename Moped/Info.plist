@@ -9,23 +9,26 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>html</string>
-				<string>htm</string>
+				<string>txt</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>AppIcon.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>HTML Document</string>
+			<string>Plain Text File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
+			<key>LSIsAppleDefaultForType</key>
+			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.html</string>
+				<string>public.plain-text</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>$(PRODUCT_MODULE_NAME).Document</string>
+			<key>NSIsRelatedItemType</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -52,26 +55,23 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>txt</string>
+				<string>html</string>
+				<string>htm</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>AppIcon.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Plain Text File</string>
+			<string>HTML Document</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>public.plain-text</string>
+				<string>public.html</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>$(PRODUCT_MODULE_NAME).Document</string>
-			<key>NSIsRelatedItemType</key>
-			<true/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
