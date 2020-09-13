@@ -46,6 +46,7 @@ Most of the technology used in this App comes straight from Apple, we are just r
 * Native Syntax highlight, ideally supporting TextMate files - this could be a nice Framework for the community
 * Line number column(s)
 * Code folding support
+* Prompt user for Encoding when it is not recognized automatically
 
 ## Contributing
 
