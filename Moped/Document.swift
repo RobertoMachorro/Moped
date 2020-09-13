@@ -60,16 +60,27 @@ class Document: NSDocument {
 
 	override func read(from data: Data, ofType typeName: String) throws {
 		// TODO: Switch to extension based recognitions
+		/*
 		if let fileExtension = self.fileURL?.pathExtension {
 			NSLog("FILE EXTENSION: \(fileExtension)")
 		}
 		if let fileName = self.displayName {
 			NSLog("FILE NAME: \(fileName)")
 		}
+		*/
 		model.read(from: data, ofType: typeName)
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
+		// TODO: Switch to extension based recognitions
+		/*
+		if let fileExtension = self.fileURL?.pathExtension {
+			NSLog("FILE EXTENSION: \(fileExtension)")
+		}
+		if let fileName = self.displayName {
+			NSLog("FILE NAME: \(fileName)")
+		}
+		*/
 		return model.data(ofType: typeName)!
 	}
 
