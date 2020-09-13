@@ -1,0 +1,10 @@
+--binarygrouping none
+--decimalgrouping none
+--hexgrouping none
+--indent tab
+--nospaceoperators +,-
+--octalgrouping none
+--semicolons never
+--stripunusedargs closure-only
+--wraparguments preserve
+--swiftversion 5.2.4
