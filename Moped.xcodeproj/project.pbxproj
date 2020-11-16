@@ -95,10 +95,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "Moped" */;
 			buildPhases = (
+				E990B6EC230263880010CF5D /* ShellScript */,
 				E9D042052300A9FE00382715 /* Sources */,
 				E9D042062300A9FE00382715 /* Frameworks */,
 				E9D042072300A9FE00382715 /* Resources */,
-				E990B6EC230263880010CF5D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -178,7 +178,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+			shellScript = "#/usr/local/bin/carthage copy-frameworks\nfor ((i=0; i<${SCRIPT_INPUT_FILE_COUNT}; i++)); do\n\tinname=\"SCRIPT_INPUT_FILE_$i\"\n\toutname=\"SCRIPT_OUTPUT_FILE_$i\"\n\tcp -R ${!inname} ${!outname}\n\t/usr/bin/xcrun codesign --force --sign - --preserve-metadata=identifier,entitlements ${!outname}\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
