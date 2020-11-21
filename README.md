@@ -60,6 +60,14 @@ If your document is not being identified and syntax highlighted, please send its
 mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOURFILE
 ```
 
+You can check for M1 (ARM) and x86 fat binary support by running lipo:
+
+```
+% lipo -archs ~/Library/Developer/Xcode/DerivedData/Moped-*/Build/Products/Debug/Moped.app/Contents/MacOS/Moped
+
+x86_64 arm64
+```
+
 ## Resources
 
 [Document-Based App Programming Guide for Mac](https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/DocBasedAppProgrammingGuideForOSX/Introduction/Introduction.html)
