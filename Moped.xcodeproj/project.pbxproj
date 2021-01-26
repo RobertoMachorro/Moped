@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
-		E990B6EB230263440010CF5D /* Highlightr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E990B6EA230263440010CF5D /* Highlightr.framework */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
@@ -24,7 +24,6 @@
 /* Begin PBXFileReference section */
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E98D58A72300BB4D003E964A /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
-		E990B6EA230263440010CF5D /* Highlightr.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Highlightr.framework; path = Carthage/Build/Mac/Highlightr.framework; sourceTree = SOURCE_ROOT; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,7 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E990B6EB230263440010CF5D /* Highlightr.framework in Frameworks */,
+				E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +82,6 @@
 				E9D042172300A9FE00382715 /* Info.plist */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
 				E9D042182300A9FE00382715 /* Moped.entitlements */,
-				E990B6EA230263440010CF5D /* Highlightr.framework */,
 			);
 			path = Moped;
 			sourceTree = "<group>";
@@ -95,7 +93,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "Moped" */;
 			buildPhases = (
-				E990B6EC230263880010CF5D /* ShellScript */,
 				E9D042052300A9FE00382715 /* Sources */,
 				E9D042062300A9FE00382715 /* Frameworks */,
 				E9D042072300A9FE00382715 /* Resources */,
@@ -105,6 +102,9 @@
 			dependencies = (
 			);
 			name = Moped;
+			packageProductDependencies = (
+				E943144D25C0D9E500C4B0F8 /* Highlightr */,
+			);
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
 			productType = "com.apple.product-type.application";
@@ -138,6 +138,9 @@
 				Base,
 			);
 			mainGroup = E9D042002300A9FE00382715;
+			packageReferences = (
+				E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */,
+			);
 			productRefGroup = E9D0420A2300A9FE00382715 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -159,28 +162,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		E990B6EC230263880010CF5D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/Mac/Highlightr.framework",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Highlightr.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#/usr/local/bin/carthage copy-frameworks\nfor ((i=0; i<${SCRIPT_INPUT_FILE_COUNT}; i++)); do\n\tinname=\"SCRIPT_INPUT_FILE_$i\"\n\toutname=\"SCRIPT_OUTPUT_FILE_$i\"\n\tcp -R ${!inname} ${!outname}\n\t/usr/bin/xcrun codesign --force --sign - --preserve-metadata=identifier,entitlements ${!outname}\ndone\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E9D042052300A9FE00382715 /* Sources */ = {
@@ -403,6 +384,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RobertoMachorro/Highlightr";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E943144D25C0D9E500C4B0F8 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E9D042012300A9FE00382715 /* Project object */;
 }

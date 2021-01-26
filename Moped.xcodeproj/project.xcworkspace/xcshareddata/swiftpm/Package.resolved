@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Highlightr",
+        "repositoryURL": "https://github.com/RobertoMachorro/Highlightr",
+        "state": {
+          "branch": "master",
+          "revision": "d54d953a4c0428da8a7f13ce3cc5cfdfcb58f1f6",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
