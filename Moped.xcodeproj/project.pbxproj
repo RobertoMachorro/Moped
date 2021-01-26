@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
@@ -42,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +102,9 @@
 			dependencies = (
 			);
 			name = Moped;
+			packageProductDependencies = (
+				E943144D25C0D9E500C4B0F8 /* Highlightr */,
+			);
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
 			productType = "com.apple.product-type.application";
@@ -133,6 +138,9 @@
 				Base,
 			);
 			mainGroup = E9D042002300A9FE00382715;
+			packageReferences = (
+				E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */,
+			);
 			productRefGroup = E9D0420A2300A9FE00382715 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -376,6 +384,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RobertoMachorro/Highlightr";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E943144D25C0D9E500C4B0F8 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E9D042012300A9FE00382715 /* Project object */;
 }
