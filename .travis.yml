@@ -1,19 +1,8 @@
 os: osx
-osx_image: xcode11
+osx_image: xcode12
 language: swift
 xcode_project: Moped.xcodeproj
 xcode_scheme: Moped
 xcode_destination: platform=macOS
-
-cache:
-  directories:
-  - Carthage
-
-before_install:
-  - brew install carthage || true
-  - brew outdated carthage || brew upgrade carthage
-
-before_script:
-  - carthage bootstrap --platform macOS --cache-builds
 
 script: xcodebuild -scheme Moped build
