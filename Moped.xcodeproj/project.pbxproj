@@ -321,8 +321,7 @@
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(inherited)"
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -347,8 +346,7 @@
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
+					"$(inherited)"
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
