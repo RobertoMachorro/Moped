@@ -13,7 +13,7 @@
                     <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="Ish-er-nHh">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="294" y="313" width="345" height="197"/>
+                        <rect key="contentRect" x="294" y="313" width="345" height="200"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
                         <connections>
                             <outlet property="delegate" destination="mFW-oj-LrQ" id="X6s-je-ABr"/>
@@ -31,8 +31,8 @@
         <scene sceneID="Qbg-AZ-2bM">
             <objects>
                 <viewController id="Z4S-xF-pOK" customClass="PreferencesViewController" customModule="Moped" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" misplaced="YES" id="DGv-bH-Q23">
-                        <rect key="frame" x="0.0" y="0.0" width="285" height="166"/>
+                    <view key="view" id="DGv-bH-Q23">
+                        <rect key="frame" x="0.0" y="0.0" width="285" height="164"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <gridView xPlacement="leading" yPlacement="fill" rowAlignment="none" columnSpacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="3m0-p3-pLN">
@@ -168,10 +168,10 @@
                             </gridView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="3m0-p3-pLN" secondAttribute="bottom" constant="20" id="2Uy-aQ-mSy"/>
-                            <constraint firstAttribute="trailing" secondItem="3m0-p3-pLN" secondAttribute="trailing" constant="20" id="9KU-aH-CPu"/>
-                            <constraint firstItem="3m0-p3-pLN" firstAttribute="leading" secondItem="DGv-bH-Q23" secondAttribute="leading" constant="20" id="cFO-NW-Y6Q"/>
-                            <constraint firstItem="3m0-p3-pLN" firstAttribute="top" secondItem="DGv-bH-Q23" secondAttribute="top" constant="20" id="fsU-sw-OF6"/>
+                            <constraint firstItem="3m0-p3-pLN" firstAttribute="leading" secondItem="DGv-bH-Q23" secondAttribute="leading" constant="20" symbolic="YES" id="1zs-ft-ssT"/>
+                            <constraint firstAttribute="bottom" secondItem="3m0-p3-pLN" secondAttribute="bottom" constant="20" symbolic="YES" id="5il-2U-2qV"/>
+                            <constraint firstAttribute="trailing" secondItem="3m0-p3-pLN" secondAttribute="trailing" constant="20" symbolic="YES" id="bPj-tc-ugV"/>
+                            <constraint firstItem="3m0-p3-pLN" firstAttribute="top" secondItem="DGv-bH-Q23" secondAttribute="top" constant="20" symbolic="YES" id="cXF-FE-7SM"/>
                         </constraints>
                     </view>
                     <connections>
