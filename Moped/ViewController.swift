@@ -142,9 +142,10 @@ extension ViewController {
 	}
 
 	func caretColor(for theme: String, using color: NSColor) -> NSColor {
-		var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
-		// FIXME: Fix/convert colorspace (not valid for the NSColor Generic Gray Gamma 2.2)
-		color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
+		if color.colorSpace == NSColorSpace.sRGB {
+			color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		}
 		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 }
