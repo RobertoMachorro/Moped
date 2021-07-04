@@ -44,7 +44,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 		if let storage = highlightrTextStorage {
 			storage.addLayoutManager(textView.layoutManager!)
-			updateViewTo(theme: userPreferences.theme)
+			setTheme(to: userPreferences.theme)
 
 			languagePopup.removeAllItems()
 			languagePopup.addItems(withTitles: storage.highlightr.supportedLanguages().sorted())
@@ -122,11 +122,11 @@ extension ViewController {
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
 			self.setLineWrap(to: self.userPreferences.doLineWrap)
 			// TODO: Check for self referencing ARC leak
-			self.updateViewTo(theme: self.userPreferences.theme)
+			self.setTheme(to: self.userPreferences.theme)
 		}
 	}
 
-	func updateViewTo(theme: String) {
+	func setTheme(to theme: String) {
 		if let storage = highlightrTextStorage {
 			storage.highlightr.setTheme(to: theme)
 			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
