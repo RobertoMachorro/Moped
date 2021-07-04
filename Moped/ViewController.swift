@@ -39,22 +39,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		textView.isAutomaticQuoteSubstitutionEnabled = false
 		textView.isAutomaticDashSubstitutionEnabled = false
 
-		// Line Wrapping
-		if userPreferences.doLineWrap {
-			textView.enclosingScrollView?.hasHorizontalScroller = false
-			textView.isHorizontallyResizable = false
-			//textView.autoresizingMask = [.width, .height]
-			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
-			textView.textContainer?.containerSize = .init(width: 480, height: giantValue)
-			textView.textContainer?.widthTracksTextView = true
-		} else {
-			textView.enclosingScrollView?.hasHorizontalScroller = true
-			textView.isHorizontallyResizable = true
-			textView.autoresizingMask = [.width, .height]
-			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
-			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
-			textView.textContainer?.widthTracksTextView = false
-		}
+		setLineWrap(to: userPreferences.doLineWrap)
 
 		statusLabel.stringValue = ""
 
@@ -164,5 +149,23 @@ extension ViewController {
 			color.getRed(&r, green: &g, blue: &b, alpha: nil)
 		}
 		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
+	}
+
+	func setLineWrap(to wrapping: Bool) {
+		if wrapping {
+			textView.enclosingScrollView?.hasHorizontalScroller = false
+			textView.isHorizontallyResizable = false
+			//textView.autoresizingMask = [.width, .height]
+			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
+			textView.textContainer?.containerSize = .init(width: 480, height: giantValue)
+			textView.textContainer?.widthTracksTextView = true
+		} else {
+			textView.enclosingScrollView?.hasHorizontalScroller = true
+			textView.isHorizontallyResizable = true
+			textView.autoresizingMask = [.width, .height]
+			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
+			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
+			textView.textContainer?.widthTracksTextView = false
+		}
 	}
 }
