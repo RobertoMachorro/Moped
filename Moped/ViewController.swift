@@ -27,7 +27,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	// Status bar components
 	@IBOutlet var statusLabel: NSTextFieldCell!
 	@IBOutlet var languagePopup: NSPopUpButtonCell!
-	@IBOutlet var themePopup: NSPopUpButtonCell!
 
 	let userPreferences = Preferences.userShared
 	let highlightrTextStorage: CodeAttributedString? = CodeAttributedString()
@@ -50,10 +49,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 			languagePopup.removeAllItems()
 			languagePopup.addItems(withTitles: storage.highlightr.supportedLanguages().sorted())
 			languagePopup.selectItem(withTitle: userPreferences.language)
-
-			themePopup.removeAllItems()
-			themePopup.addItems(withTitles: storage.highlightr.availableThemes().sorted())
-			themePopup.selectItem(withTitle: userPreferences.theme)
 		} else {
 			textView.font = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
 		}
@@ -84,10 +79,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		if let storage = highlightrTextStorage {
 			storage.language = sender.titleOfSelectedItem ?? userPreferences.language
 		}
-	}
-
-	@IBAction func themePopupAction(_ sender: NSPopUpButtonCell) {
-		updateViewTo(theme: sender.titleOfSelectedItem ?? userPreferences.theme)
 	}
 
 	// MARK: - Accessor Helpers

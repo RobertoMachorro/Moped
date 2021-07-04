@@ -893,13 +893,15 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                             </scrollView>
                             <gridView xPlacement="leading" yPlacement="fill" rowAlignment="none" rowSpacing="0.0" columnSpacing="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="3nw-OB-2I3">
                                 <rect key="frame" x="10" y="0.0" width="460" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="bcw-qm-856"/>
+                                </constraints>
                                 <rows>
                                     <gridRow id="ZLl-Ac-mLu"/>
                                 </rows>
                                 <columns>
                                     <gridColumn id="ox2-Af-L9k"/>
                                     <gridColumn width="110" id="UzX-yN-Lgt"/>
-                                    <gridColumn width="110" id="znV-ka-p1b"/>
                                 </columns>
                                 <gridCells>
                                     <gridCell row="ZLl-Ac-mLu" column="ox2-Af-L9k" id="tGB-10-3rY">
@@ -917,7 +919,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                     </gridCell>
                                     <gridCell row="ZLl-Ac-mLu" column="UzX-yN-Lgt" id="4PU-vD-6ty">
                                         <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9DN-wE-Xc2">
-                                            <rect key="frame" x="240" y="-1" width="54" height="17"/>
+                                            <rect key="frame" x="350" y="-1" width="54" height="17"/>
                                             <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" imagePosition="overlaps" alignment="center" controlSize="small" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MrM-bl-3L2">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                                 <font key="font" metaFont="message" size="11"/>
@@ -930,25 +932,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                                 </menu>
                                                 <connections>
                                                     <action selector="languagePopupAction:" target="5gI-5U-AMq" id="M6m-f2-dGg"/>
-                                                </connections>
-                                            </popUpButtonCell>
-                                        </popUpButton>
-                                    </gridCell>
-                                    <gridCell row="ZLl-Ac-mLu" column="znV-ka-p1b" id="Pv3-yk-olZ">
-                                        <popUpButton key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AJ2-1H-anJ">
-                                            <rect key="frame" x="350" y="-1" width="54" height="17"/>
-                                            <popUpButtonCell key="cell" type="recessed" bezelStyle="recessed" alignment="center" controlSize="small" lineBreakMode="truncatingTail" borderStyle="border" inset="2" id="xIP-tq-gOP">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                                                <font key="font" metaFont="message" size="11"/>
-                                                <menu key="menu" id="ok5-19-RFq">
-                                                    <items>
-                                                        <menuItem title="Item 1" id="UVz-Pf-Xhq"/>
-                                                        <menuItem title="Item 2" id="tgj-ch-Hzb"/>
-                                                        <menuItem title="Item 3" id="eND-8r-mJW"/>
-                                                    </items>
-                                                </menu>
-                                                <connections>
-                                                    <action selector="themePopupAction:" target="5gI-5U-AMq" id="5mw-zV-fSv"/>
                                                 </connections>
                                             </popUpButtonCell>
                                         </popUpButton>
@@ -970,7 +953,6 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                         <outlet property="languagePopup" destination="MrM-bl-3L2" id="Or2-02-P7B"/>
                         <outlet property="statusLabel" destination="2hk-1M-1MS" id="ohB-11-dgI"/>
                         <outlet property="textView" destination="FS1-5O-SZI" id="WQL-U9-bGz"/>
-                        <outlet property="themePopup" destination="xIP-tq-gOP" id="Agz-mI-Iah"/>
                     </connections>
                 </viewController>
                 <customObject id="2Tp-Fl-jBw" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
