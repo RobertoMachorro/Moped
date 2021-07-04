@@ -39,13 +39,22 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		textView.isAutomaticQuoteSubstitutionEnabled = false
 		textView.isAutomaticDashSubstitutionEnabled = false
 
-		// Disable Line Wrapping
-		textView.enclosingScrollView?.hasHorizontalScroller = true
-		textView.isHorizontallyResizable = true
-		textView.autoresizingMask = [.width, .height]
-		let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
-		textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
-		textView.textContainer?.widthTracksTextView = false
+		// Line Wrapping
+		if userPreferences.doLineWrap {
+			textView.enclosingScrollView?.hasHorizontalScroller = false
+			textView.isHorizontallyResizable = false
+			//textView.autoresizingMask = [.width, .height]
+			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
+			textView.textContainer?.containerSize = .init(width: 480, height: giantValue)
+			textView.textContainer?.widthTracksTextView = true
+		} else {
+			textView.enclosingScrollView?.hasHorizontalScroller = true
+			textView.isHorizontallyResizable = true
+			textView.autoresizingMask = [.width, .height]
+			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
+			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
+			textView.textContainer?.widthTracksTextView = false
+		}
 
 		statusLabel.stringValue = ""
 

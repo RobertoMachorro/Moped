@@ -84,6 +84,10 @@ class Preferences: NSObject {
 		return CGFloat(truncating: number)
 	}
 
+	var doLineWrap: Bool {
+		return lineWrap == "Yes"
+	}
+
 	func getStringValue(forKey key: String, otherwiseUse backup: String) -> String {
 		UserDefaults.standard.string(forKey: key) ?? backup
 	}
