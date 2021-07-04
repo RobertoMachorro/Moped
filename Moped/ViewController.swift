@@ -129,6 +129,7 @@ extension ViewController {
 	func setupPreferencesObserver() {
 		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
+			self.setLineWrap(to: self.userPreferences.doLineWrap)
 			// TODO: Check for self referencing ARC leak
 			self.updateViewTo(theme: self.userPreferences.theme)
 		}
