@@ -26,7 +26,8 @@ class PreferencesViewController: NSViewController {
 	@IBOutlet var themes: NSPopUpButton!
 	@IBOutlet var fonts: NSPopUpButton!
 	@IBOutlet var fontSizes: NSPopUpButton!
-
+	@IBOutlet var wrapping: NSPopUpButton!
+	
 	@objc let userPreferences = Preferences.userShared
 
 	override func viewDidLoad() {
@@ -40,6 +41,7 @@ class PreferencesViewController: NSViewController {
 		// FIXME: Pull this from NSFontManager - get all monospaced fonts
 		fonts.addItems(withTitles: ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"])
 		fontSizes.addItems(withTitles: ["9", "10", "11", "12", "13", "14", "15", "16", "17"])
+		wrapping.addItems(withTitles: ["Yes", "No"])
 	}
 
 	override func viewDidAppear() {
@@ -50,5 +52,6 @@ class PreferencesViewController: NSViewController {
 		themes.selectItem(withTitle: userPreferences.theme)
 		fonts.selectItem(withTitle: userPreferences.font)
 		fontSizes.selectItem(withTitle: userPreferences.fontSize)
+		wrapping.selectItem(withTitle: userPreferences.lineWrap)
 	}
 }

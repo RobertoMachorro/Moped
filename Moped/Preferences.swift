@@ -66,6 +66,15 @@ class Preferences: NSObject {
 		}
 	}
 
+	@objc dynamic var lineWrap: String {
+		get {
+			getStringValue(forKey: "lineWrap", otherwiseUse: "Yes")
+		}
+		set {
+			setStringValue(forKey: "lineWrap", to: newValue)
+		}
+	}
+
 	// MARK: - UserDefaults Helpers
 
 	var fontSizeFloat: CGFloat {
