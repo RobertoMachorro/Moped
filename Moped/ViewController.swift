@@ -39,6 +39,14 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		textView.isAutomaticQuoteSubstitutionEnabled = false
 		textView.isAutomaticDashSubstitutionEnabled = false
 
+		// Disable Line Wrapping
+		textView.enclosingScrollView?.hasHorizontalScroller = true
+		textView.isHorizontallyResizable = true
+		textView.autoresizingMask = [.width, .height]
+		let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
+		textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
+		textView.textContainer?.widthTracksTextView = false
+
 		statusLabel.stringValue = ""
 
 		if let storage = highlightrTextStorage {
