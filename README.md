@@ -12,6 +12,8 @@ This FREE software is licensed under [GNU GPLv3 or later](https://www.gnu.org/li
 
 ## Download Binary App
 
+[![Logo](https://github.com/RobertoMachorro/Moped/raw/master/Moped/Assets.xcassets/Logo.imageset/moped-64.png)](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12)
+
 Pre-compiled versions are available directly from [GitHub](https://github.com/RobertoMachorro/Moped/releases) or the [AppStore](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12).
 
 ![Moped Screenshot](assets/screenshot.png)
