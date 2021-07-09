@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -814,7 +813,7 @@
                                 <textFieldCell key="cell" selectable="YES" allowsUndo="NO" alignment="justified" id="n1N-rx-b5p">
                                     <font key="font" metaFont="label" size="9"/>
                                     <string key="title">A general purpose text editor, small and light.
-Copyright (C) 2019-2020 Roberto Machorro. All rights reserved.
+Copyright (C) 2019-2021 Roberto Machorro. All rights reserved.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -861,7 +860,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                 <rect key="frame" x="0.0" y="16" width="480" height="254"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
                                             <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
