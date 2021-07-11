@@ -114,6 +114,20 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		 */
 		false
 	}
+
+	// MARK: - IBActions - menus
+
+	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any) {
+		print("fontSizeIncreaseMenuItemSelected")
+	}
+
+	@IBAction func fontSizeDecreaseMenuItemSelected(_ sender: Any) {
+		print("fontSizeDecreaseMenuItemSelected")
+	}
+
+	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any) {
+		print("fontSizeResetMenuItemSelected")
+	}
 }
 
 extension ViewController {

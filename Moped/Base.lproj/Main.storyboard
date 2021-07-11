@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -665,6 +666,36 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Editor" id="kfc-K5-UHi">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Editor" id="YZg-nd-vCS">
+                                    <items>
+                                        <menuItem title="Font Size" id="iTB-ih-tIT" userLabel="Font Size">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Font Size" id="6dy-9B-eqO">
+                                                <items>
+                                                    <menuItem title="Increase" keyEquivalent="+" id="vIR-LM-bWu">
+                                                        <connections>
+                                                            <action selector="fontSizeIncreaseMenuItemSelected:" target="Ady-hI-5gd" id="QNg-aV-dxQ"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Decrease" keyEquivalent="-" id="Hba-pK-Swd">
+                                                        <connections>
+                                                            <action selector="fontSizeDecreaseMenuItemSelected:" target="Ady-hI-5gd" id="oa0-Oh-eIK"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="Mpd-rf-uvd"/>
+                                                    <menuItem title="Reset" keyEquivalent="0" id="zq2-0j-Uty">
+                                                        <connections>
+                                                            <action selector="fontSizeResetMenuItemSelected:" target="Ady-hI-5gd" id="H3D-hV-IsU"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Window" id="aUF-d1-5bR">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
@@ -860,7 +891,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                 <rect key="frame" x="0.0" y="16" width="480" height="254"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
                                     <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
-                                    <autoresizingMask key="autoresizingMask"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
                                             <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
