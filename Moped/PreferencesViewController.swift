@@ -38,8 +38,11 @@ class PreferencesViewController: NSViewController {
 
 		languages.addItems(withTitles: highlightrTextStorage.highlightr.supportedLanguages().sorted())
 		themes.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
-		// FIXME: Pull this from NSFontManager - get all monospaced fonts
-		fonts.addItems(withTitles: ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"])
+
+		let systemMonospacedFonts = NSFontManager.shared.availableFontNames(with: .fixedPitchFontMask)
+		let fallbackMonospacedFonts = ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"]
+
+		fonts.addItems(withTitles: systemMonospacedFonts ?? fallbackMonospacedFonts)
 		fontSizes.addItems(withTitles: ["9", "10", "11", "12", "13", "14", "15", "16", "17"])
 		wrapping.addItems(withTitles: ["Yes", "No"])
 	}
