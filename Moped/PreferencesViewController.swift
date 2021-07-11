@@ -41,9 +41,10 @@ class PreferencesViewController: NSViewController {
 
 		let systemMonospacedFonts = NSFontManager.shared.availableFontNames(with: .fixedPitchFontMask)
 		let fallbackMonospacedFonts = ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"]
+		let availableFontSizes = (9...24).reduce(into: []) { $0.append(String($1)) }
 
 		fonts.addItems(withTitles: systemMonospacedFonts ?? fallbackMonospacedFonts)
-		fontSizes.addItems(withTitles: ["9", "10", "11", "12", "13", "14", "15", "16", "17"])
+		fontSizes.addItems(withTitles: availableFontSizes)
 		wrapping.addItems(withTitles: ["Yes", "No"])
 	}
 
