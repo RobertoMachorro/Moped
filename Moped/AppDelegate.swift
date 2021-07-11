@@ -41,7 +41,7 @@ extension AppDelegate {
 	// MARK: - Help Menu Actions
 
 	@IBAction func linkToLicense(_ sender: Any) {
-		showWebsite(using: "https://www.gnu.org/licenses/")
+		showWebsite(using: "https://www.gnu.org/licenses/gpl-3.0.html")
 	}
 
 	@IBAction func linkToSources(_ sender: Any) {
