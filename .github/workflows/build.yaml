@@ -1,4 +1,4 @@
-name: Moped Build
+name: Moped CI Build
 
 on:
   push:
@@ -13,6 +13,12 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: mxcl/xcodebuild@v1
+        with:
+          action: build
+          code-coverage: false
+          warnings-as-errors: true
+          verbosity: xcpretty
+          upload-logs: on-failure
 
 #- name: mxcl/Xcodebuild
 #  uses: mxcl/xcodebuild@v1.7.0
