@@ -1,6 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/RobertoMachorro/Moped)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/RobertoMachorro/Moped)
-[![Travis CI Build Status](https://api.travis-ci.org/RobertoMachorro/Moped.svg?branch=master)](https://travis-ci.org/RobertoMachorro/Moped)
+![build](https://github.com/RobertoMachorro/Moped/workflows/build/badge.svg)
 [![codebeat badge](https://codebeat.co/badges/208843e4-4d01-4cb5-8543-d04103288e2d)](https://codebeat.co/projects/github-com-robertomachorro-moped-master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/29456b21ef083ae01b04/maintainability)](https://codeclimate.com/github/RobertoMachorro/Moped/maintainability)
 
