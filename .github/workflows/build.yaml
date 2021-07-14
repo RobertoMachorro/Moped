@@ -10,14 +10,11 @@ on:
 
 jobs:
   build:
+    name: Build with scheme
     runs-on: macos-latest
+
     steps:
-      - uses: mxcl/xcodebuild@v1
-        with:
-          action: none
-          #action: build
-          #code-coverage: false
-          #warnings-as-errors: true
-          #verbosity: xcpretty
-          #upload-logs: on-failure
-      - run: xcodebuild -scheme Moped build
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: xcodebuild -scheme Moped build
