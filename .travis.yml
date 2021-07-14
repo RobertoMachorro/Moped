@@ -1,8 +1,0 @@
-os: osx
-osx_image: xcode12
-language: swift
-xcode_project: Moped.xcodeproj
-xcode_scheme: Moped
-xcode_destination: platform=macOS
-
-script: xcodebuild -scheme Moped build
