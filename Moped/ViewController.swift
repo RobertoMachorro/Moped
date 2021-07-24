@@ -38,10 +38,9 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		textView.isAutomaticQuoteSubstitutionEnabled = false
 		textView.isAutomaticDashSubstitutionEnabled = false
 
-		setLineWrap(to: userPreferences.doLineWrap)
-
 		statusLabel.stringValue = ""
 
+		setLineWrap(to: userPreferences.doLineWrap)
 		if let storage = highlightrTextStorage {
 			storage.addLayoutManager(textView.layoutManager!)
 			setTheme(to: userPreferences.theme)
@@ -71,6 +70,20 @@ class ViewController: NSViewController, NSTextViewDelegate {
 				child.representedObject = representedObject
 			}
 		}
+	}
+
+	// MARK: - IBActions - menus
+
+	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any) {
+		print("fontSizeIncreaseMenuItemSelected")
+	}
+
+	@IBAction func fontSizeDecreaseMenuItemSelected(_ sender: Any) {
+		print("fontSizeDecreaseMenuItemSelected")
+	}
+
+	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any) {
+		print("fontSizeResetMenuItemSelected")
 	}
 
 	// MARK: - Language / Popup Theme Changes
@@ -113,20 +126,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		 }
 		 */
 		false
-	}
-
-	// MARK: - IBActions - menus
-
-	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any) {
-		print("fontSizeIncreaseMenuItemSelected")
-	}
-
-	@IBAction func fontSizeDecreaseMenuItemSelected(_ sender: Any) {
-		print("fontSizeDecreaseMenuItemSelected")
-	}
-
-	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any) {
-		print("fontSizeResetMenuItemSelected")
 	}
 }
 
