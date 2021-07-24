@@ -40,10 +40,8 @@ class ViewController: NSViewController, NSTextViewDelegate {
 
 		statusLabel.stringValue = ""
 
-		setLineWrap(to: userPreferences.doLineWrap)
 		if let storage = highlightrTextStorage {
 			storage.addLayoutManager(textView.layoutManager!)
-			setTheme(to: userPreferences.theme)
 
 			languagePopup.removeAllItems()
 			languagePopup.addItems(withTitles: storage.highlightr.supportedLanguages().sorted())
@@ -51,6 +49,8 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		} else {
 			textView.font = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
 		}
+		setLineWrap(to: userPreferences.doLineWrap)
+		setTheme(to: userPreferences.theme)
 
 		setupPreferencesObserver()
 	}
@@ -93,9 +93,10 @@ class ViewController: NSViewController, NSTextViewDelegate {
 			storage.language = sender.titleOfSelectedItem ?? userPreferences.language
 		}
 	}
+}
 
-	// MARK: - Accessor Helpers
-
+// MARK: - Accessor Helpers
+extension ViewController {
 	weak var windowController: WindowController? {
 		view.window?.windowController as? WindowController
 	}
@@ -106,9 +107,10 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		}
 		return nil
 	}
+}
 
-	// MARK: - NSTextViewDelegate
-
+// MARK: - NSTextViewDelegate
+extension ViewController {
 	func textDidBeginEditing(_ notification: Notification) {
 		document?.objectDidBeginEditing(self)
 	}
@@ -120,8 +122,8 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		/* TODO: Setup Preferences for this option, autodectect from file as well
 		 if (commandSelector == #selector(NSResponder.insertTab(_:))) {
-		 	textView.insertText("  ", replacementRange: textView.selectedRange())
-		 	return true
+			textView.insertText("  ", replacementRange: textView.selectedRange())
+			return true
 		 } else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
 		 }
 		 */
@@ -129,31 +131,15 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	}
 }
 
+// MARK: - Preferences
 extension ViewController {
 	func setupPreferencesObserver() {
 		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
 			self.setLineWrap(to: self.userPreferences.doLineWrap)
-			// TODO: Check for self referencing ARC leak
 			self.setTheme(to: self.userPreferences.theme)
+			// TODO: Check for self referencing ARC leak
 		}
-	}
-
-	func setTheme(to theme: String) {
-		if let storage = highlightrTextStorage {
-			storage.highlightr.setTheme(to: theme)
-			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
-			textView.backgroundColor = storage.highlightr.theme.themeBackgroundColor
-			textView.insertionPointColor = caretColor(for: theme, using: textView.backgroundColor)
-		}
-	}
-
-	func caretColor(for theme: String, using color: NSColor) -> NSColor {
-		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
-		if color.colorSpace == NSColorSpace.sRGB {
-			color.getRed(&r, green: &g, blue: &b, alpha: nil)
-		}
-		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 
 	func setLineWrap(to wrapping: Bool) {
@@ -172,5 +158,25 @@ extension ViewController {
 			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
 			textView.textContainer?.widthTracksTextView = false
 		}
+	}
+}
+
+// MARK: - Themeing
+extension ViewController {
+	func setTheme(to theme: String) {
+		if let storage = highlightrTextStorage {
+			storage.highlightr.setTheme(to: theme)
+			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
+			textView.backgroundColor = storage.highlightr.theme.themeBackgroundColor
+			textView.insertionPointColor = caretColor(for: theme, using: textView.backgroundColor)
+		}
+	}
+
+	func caretColor(for theme: String, using color: NSColor) -> NSColor {
+		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
+		if color.colorSpace == NSColorSpace.sRGB {
+			color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		}
+		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 }
