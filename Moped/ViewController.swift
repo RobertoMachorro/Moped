@@ -50,7 +50,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 			textView.font = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
 		}
 		setLineWrap(to: userPreferences.doLineWrap)
-		setTheme(to: userPreferences.theme)
+		setTheme(to: userPreferences.theme, fontSize: userPreferences.fontSizeFloat)
 
 		setupPreferencesObserver()
 	}
@@ -75,15 +75,15 @@ class ViewController: NSViewController, NSTextViewDelegate {
 	// MARK: - IBActions - menus
 
 	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any) {
-		print("fontSizeIncreaseMenuItemSelected")
+		fontSizeIncrease()
 	}
 
 	@IBAction func fontSizeDecreaseMenuItemSelected(_ sender: Any) {
-		print("fontSizeDecreaseMenuItemSelected")
+		fontSizeDecrease()
 	}
 
 	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any) {
-		print("fontSizeResetMenuItemSelected")
+		fontSizeReset()
 	}
 
 	// MARK: - Language / Popup Theme Changes
@@ -137,7 +137,7 @@ extension ViewController {
 		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
 			self.setLineWrap(to: self.userPreferences.doLineWrap)
-			self.setTheme(to: self.userPreferences.theme)
+			self.setTheme(to: self.userPreferences.theme, fontSize: self.userPreferences.fontSizeFloat)
 			// TODO: Check for self referencing ARC leak
 		}
 	}
@@ -163,10 +163,10 @@ extension ViewController {
 
 // MARK: - Themeing
 extension ViewController {
-	func setTheme(to theme: String) {
+	func setTheme(to theme: String, fontSize: CGFloat) {
 		if let storage = highlightrTextStorage {
 			storage.highlightr.setTheme(to: theme)
-			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
+			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: fontSize)
 			textView.backgroundColor = storage.highlightr.theme.themeBackgroundColor
 			textView.insertionPointColor = caretColor(using: textView.backgroundColor)
 		}
@@ -178,5 +178,27 @@ extension ViewController {
 			color.getRed(&r, green: &g, blue: &b, alpha: nil)
 		}
 		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
+	}
+
+	func fontSizeIncrease() {
+		if let storage = highlightrTextStorage {
+			let newFontSize = storage.highlightr.theme.codeFont.pointSize + 1.0
+			setTheme(to: userPreferences.theme, fontSize: newFontSize)
+		}
+	}
+
+	func fontSizeDecrease() {
+		if let storage = highlightrTextStorage {
+			let newFontSize = storage.highlightr.theme.codeFont.pointSize - 1.0
+			if newFontSize > 2 {
+				setTheme(to: userPreferences.theme, fontSize: newFontSize)
+			} else {
+				NSSound.beep()
+			}
+		}
+	}
+
+	func fontSizeReset() {
+		setTheme(to: userPreferences.theme, fontSize: userPreferences.fontSizeFloat)
 	}
 }
