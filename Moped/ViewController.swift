@@ -119,16 +119,20 @@ extension ViewController {
 		document?.objectDidEndEditing(self)
 	}
 
+	/* Prepping for auto-indenting
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-		/* TODO: Setup Preferences for this option, autodectect from file as well
-		 if (commandSelector == #selector(NSResponder.insertTab(_:))) {
-			textView.insertText("  ", replacementRange: textView.selectedRange())
+		if (commandSelector == #selector(NSResponder.insertTab(_:))) {
+			//textView.insertText("  ", replacementRange: textView.selectedRange())
+			//return true
+			return false
+		} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
+			print("Command: -newline-")
+			textView.insertText("\n", replacementRange: textView.selectedRange())
 			return true
-		 } else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
-		 }
-		 */
-		false
+		}
+		return false
 	}
+	*/
 }
 
 // MARK: - Preferences
