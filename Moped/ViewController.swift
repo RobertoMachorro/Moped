@@ -168,11 +168,11 @@ extension ViewController {
 			storage.highlightr.setTheme(to: theme)
 			storage.highlightr.theme.codeFont = NSFont(name: userPreferences.font, size: userPreferences.fontSizeFloat)
 			textView.backgroundColor = storage.highlightr.theme.themeBackgroundColor
-			textView.insertionPointColor = caretColor(for: theme, using: textView.backgroundColor)
+			textView.insertionPointColor = caretColor(using: textView.backgroundColor)
 		}
 	}
 
-	func caretColor(for theme: String, using color: NSColor) -> NSColor {
+	func caretColor(using color: NSColor) -> NSColor {
 		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
 		if color.colorSpace == NSColorSpace.sRGB {
 			color.getRed(&r, green: &g, blue: &b, alpha: nil)
