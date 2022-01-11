@@ -112,11 +112,12 @@ extension ViewController {
 // MARK: - NSTextViewDelegate
 extension ViewController {
 	func textDidBeginEditing(_ notification: Notification) {
-		document?.objectDidBeginEditing(self)
+		// PENDING This call is causing a post-save refresh
+		//document?.objectDidBeginEditing(self)
 	}
 
 	func textDidEndEditing(_ notification: Notification) {
-		document?.objectDidEndEditing(self)
+		//document?.objectDidEndEditing(self)
 	}
 
 	/* Prepping for auto-indenting
