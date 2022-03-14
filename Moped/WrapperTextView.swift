@@ -7,8 +7,9 @@
 //
 
 import Cocoa
+import STTextView
 
-class WrapperTextView: NSTextView {
+class WrapperTextView: STTextView {
 
 	override func draw(_ dirtyRect: NSRect) {
 		super.draw(dirtyRect)
