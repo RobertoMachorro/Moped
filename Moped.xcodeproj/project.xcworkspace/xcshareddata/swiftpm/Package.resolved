@@ -9,6 +9,15 @@
           "revision": "d54d953a4c0428da8a7f13ce3cc5cfdfcb58f1f6",
           "version": null
         }
+      },
+      {
+        "package": "STTextView",
+        "repositoryURL": "https://github.com/krzyzanowskim/STTextView",
+        "state": {
+          "branch": null,
+          "revision": "7afa48c75b87eb39deb414fdbb8a6adf9b883451",
+          "version": "0.0.4"
+        }
       }
     ]
   },
