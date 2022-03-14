@@ -17,6 +17,8 @@
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		E9D042162300A9FE00382715 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9D042142300A9FE00382715 /* Main.storyboard */; };
+		E9F03E6A27DEEA85007D1901 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = E9F03E6927DEEA85007D1901 /* STTextView */; };
+		E9F03E6C27DEEC3D007D1901 /* WrapperTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F03E6B27DEEC3D007D1901 /* WrapperTextView.swift */; };
 		E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */; };
 		E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC082C230115B800A1EE3D /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +36,7 @@
 		E9D042152300A9FE00382715 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
+		E9F03E6B27DEEC3D007D1901 /* WrapperTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapperTextView.swift; sourceTree = "<group>"; };
 		E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		E9FC082C230115B800A1EE3D /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -44,6 +47,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */,
+				E9F03E6A27DEEA85007D1901 /* STTextView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +81,7 @@
 				E9FC082C230115B800A1EE3D /* AboutViewController.swift */,
 				E94A91A923106CC900BE978A /* Preferences.swift */,
 				E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */,
+				E9F03E6B27DEEC3D007D1901 /* WrapperTextView.swift */,
 				E9D042122300A9FE00382715 /* Assets.xcassets */,
 				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
@@ -104,6 +109,7 @@
 			name = Moped;
 			packageProductDependencies = (
 				E943144D25C0D9E500C4B0F8 /* Highlightr */,
+				E9F03E6927DEEA85007D1901 /* STTextView */,
 			);
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
@@ -140,6 +146,7 @@
 			mainGroup = E9D042002300A9FE00382715;
 			packageReferences = (
 				E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */,
+				E9F03E6827DEEA85007D1901 /* XCRemoteSwiftPackageReference "STTextView" */,
 			);
 			productRefGroup = E9D0420A2300A9FE00382715 /* Products */;
 			projectDirPath = "";
@@ -171,6 +178,7 @@
 				E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
 				E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */,
+				E9F03E6C27DEEC3D007D1901 /* WrapperTextView.swift in Sources */,
 				E98D58A82300BB4D003E964A /* WindowController.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
 				E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */,
@@ -390,6 +398,14 @@
 				kind = branch;
 			};
 		};
+		E9F03E6827DEEA85007D1901 /* XCRemoteSwiftPackageReference "STTextView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/STTextView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -397,6 +413,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */;
 			productName = Highlightr;
+		};
+		E9F03E6927DEEA85007D1901 /* STTextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9F03E6827DEEA85007D1901 /* XCRemoteSwiftPackageReference "STTextView" */;
+			productName = STTextView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
