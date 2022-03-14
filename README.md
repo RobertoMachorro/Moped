@@ -3,6 +3,9 @@
 ![build](https://github.com/RobertoMachorro/Moped/actions/workflows/build.yaml/badge.svg)
 [![codebeat badge](https://codebeat.co/badges/208843e4-4d01-4cb5-8543-d04103288e2d)](https://codebeat.co/projects/github-com-robertomachorro-moped-master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/29456b21ef083ae01b04/maintainability)](https://codeclimate.com/github/RobertoMachorro/Moped/maintainability)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://vshymanskyy.github.io/StandWithUkraine)
+
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 
 ## License
 
