@@ -231,6 +231,88 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>TeX Document</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>org.tug.tex</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://tex.tug.org</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tex</string>
+					<string>latex</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-tex</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Rust Program File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.rust-source</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://www.rust-lang.org</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rs</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-rust</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Kotlin Source File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.kotlin-source</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://kotlinlang.org</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>kt</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-kotlin</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>
