@@ -84,5 +84,9 @@
 	<string>plaintext</string>
 	<key>net.daringfireball.markdown</key>
 	<string>markdown</string>
+	<key>com.unknown.md</key>
+	<string>markdown</string>
+	<key>public.markdown</key>
+	<string>markdown</string>
 </dict>
 </plist>
