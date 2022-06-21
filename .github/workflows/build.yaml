@@ -17,4 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: xcodebuild -scheme Moped build
+        run: |
+          rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+          xcodebuild -scheme Moped build
