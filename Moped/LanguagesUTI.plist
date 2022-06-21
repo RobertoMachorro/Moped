@@ -22,6 +22,8 @@
 	<string>htmlbars</string>
 	<key>com.textadept.nim-source</key>
 	<string>nimrod</string>
+	<key>public.nim-source</key>
+	<string>nimrod</string>
 	<key>org.iso.sql</key>
 	<string>sql</string>
 	<key>public.patch-file</key>
@@ -30,22 +32,36 @@
 	<string>shell</string>
 	<key>com.apple.xcode.make-script</key>
 	<string>makefile</string>
+	<key>public.make-source</key>
+	<string>makefile</string>
 	<key>public.perl-script</key>
 	<string>perl</string>
 	<key>com.apple.xcode.bash-script</key>
+	<string>bash</string>
+	<key>public.bash-script</key>
 	<string>bash</string>
 	<key>com.apple.xml-property-list</key>
 	<string>xml</string>
 	<key>public.c-plus-plus-source</key>
 	<string>cpp</string>
+	<key>public.c-plus-plus-header</key>
+	<string>cpp</string>
 	<key>public.objective-c-source</key>
 	<string>objectivec</string>
+	<key>public.objective-c-header</key>
+	<string>objectivec</string>
 	<key>public.objective-c-plus-plus-source</key>
+	<string>objectivec</string>
+	<key>public.objective-c-plus-plus-header</key>
 	<string>objectivec</string>
 	<key>public.ruby-script</key>
 	<string>ruby</string>
 	<key>public.python-script</key>
 	<string>python</string>
+	<key>public.rust-source</key>
+	<string>rust</string>
+	<key>public.kotlin-source</key>
+	<string>kotlin</string>
 	<key>com.netscape.javascript-source</key>
 	<string>javascript</string>
 	<key>public.text</key>
