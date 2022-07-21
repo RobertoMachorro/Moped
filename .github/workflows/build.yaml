@@ -22,3 +22,11 @@ jobs:
           xcodebuild -scheme Moped -derivedDataPath ./xcbuild build
           mv xcbuild/Build/Products/Debug/Moped.app .
           zip -9 Moped.zip Moped.app
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: Moped.zip
+          path: Moped.zip
+          # Duration after which artifact will expire in days. 0 means using default retention.
+          # Minimum 1 day. Maximum 90 days unless changed from the repository settings page.
+          retention-days: 0
