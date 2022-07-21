@@ -19,4 +19,6 @@ jobs:
       - name: Build
         run: |
           rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-          xcodebuild -scheme Moped build
+          xcodebuild -scheme Moped -derivedDataPath ./build xcbuild
+          mv xcbuild/Build/Products/Debug/Moped.app .
+          zip -9 Moped.zip Moped.app
