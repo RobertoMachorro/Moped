@@ -113,25 +113,25 @@ extension ViewController {
 extension ViewController {
 	func textDidBeginEditing(_ notification: Notification) {
 		// PENDING This call is causing a post-save refresh
-		//document?.objectDidBeginEditing(self)
+		// document?.objectDidBeginEditing(self)
 	}
 
 	func textDidEndEditing(_ notification: Notification) {
-		//document?.objectDidEndEditing(self)
+		// document?.objectDidEndEditing(self)
 	}
 
 	/* Prepping for auto-indenting
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-		if (commandSelector == #selector(NSResponder.insertTab(_:))) {
-			//textView.insertText("  ", replacementRange: textView.selectedRange())
-			//return true
-			return false
-		} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
-			print("Command: -newline-")
-			textView.insertText("\n", replacementRange: textView.selectedRange())
-			return true
-		}
-		return false
+	if (commandSelector == #selector(NSResponder.insertTab(_:))) {
+	//textView.insertText("  ", replacementRange: textView.selectedRange())
+	//return true
+	return false
+	} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
+	print("Command: -newline-")
+	textView.insertText("\n", replacementRange: textView.selectedRange())
+	return true
+	}
+	return false
 	}
 	*/
 }
@@ -151,7 +151,7 @@ extension ViewController {
 		if wrapping {
 			textView.enclosingScrollView?.hasHorizontalScroller = false
 			textView.isHorizontallyResizable = false
-			//textView.autoresizingMask = [.width, .height]
+			// textView.autoresizingMask = [.width, .height]
 			let giantValue = Double.greatestFiniteMagnitude // FLT_MAX
 			textView.textContainer?.containerSize = .init(width: 480, height: giantValue)
 			textView.textContainer?.widthTracksTextView = true

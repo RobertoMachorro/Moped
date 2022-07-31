@@ -27,7 +27,7 @@ class PreferencesViewController: NSViewController {
 	@IBOutlet var fonts: NSPopUpButton!
 	@IBOutlet var fontSizes: NSPopUpButton!
 	@IBOutlet var wrapping: NSPopUpButton!
-	
+
 	@objc let userPreferences = Preferences.userShared
 
 	override func viewDidLoad() {
