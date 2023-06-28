@@ -57,7 +57,7 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
 
-All Pull Requests are automatically evaluated using [Travis CI](https://travis-ci.org/RobertoMachorro/Moped), Codacy/PR Quality Review, Hound and [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master).
+All Pull Requests are automatically evaluated using [Github Actions](https://github.com/RobertoMachorro/Moped/actions), Codacy/PR Quality Review, Hound and [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master).
 
 If your document is not being identified and syntax highlighted, please send its content identifier information. It can be obtained with the following command:
 
