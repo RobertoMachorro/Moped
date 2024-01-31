@@ -115,7 +115,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2019-2022 Roberto Machorro. All rights reserved.</string>
+	<string>Copyright © 2019-2024 Roberto Machorro. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
@@ -208,7 +208,7 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>YAML Ain't Markup Language</string>
+			<string>YAML Ain&apos;t Markup Language</string>
 			<key>UTTypeIconFile</key>
 			<string>AppIcon.icns</string>
 			<key>UTTypeIcons</key>
