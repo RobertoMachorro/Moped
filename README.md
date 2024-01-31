@@ -77,6 +77,8 @@ You can check for M1 (ARM) and x86 fat binary support by running lipo:
 x86_64 arm64
 ```
 
+Having trouble building / you are new to contributing? Check the following Issue and the video I posted: https://github.com/RobertoMachorro/Moped/issues/36
+
 ## Resources
 
 [Document-Based App Programming Guide for Mac](https://developer.apple.com/library/archive/documentation/DataManagement/Conceptual/DocBasedAppProgrammingGuideForOSX/Introduction/Introduction.html)
