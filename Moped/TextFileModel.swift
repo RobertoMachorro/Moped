@@ -39,30 +39,15 @@ extension TextFileModel {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
 
-		/*
 		var convertedString: NSString?
 		let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
 
 		if let convertedString = convertedString as String? {
-		self.content = convertedString
-		self.encoding = .init(rawValue: encodingRaw)
-		} else {
-		content = "** UNRECOGNIZED FILE **"
-		}
-		*/
-
-		var nsString: NSString?
-		let rawValue = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &nsString, usedLossyConversion: nil)
-		encoding = .init(rawValue: rawValue)
-
-		if let text = String(data: data, encoding: encoding) {
-			content = text
-		} else {
-			content = "** UNRECOGNIZED FILE **"
-		}
-
-		/*
-		if let text = String(data: data, encoding: .utf8) {
+			// Auto Detected Encoding
+			self.content = convertedString
+			self.encoding = .init(rawValue: encodingRaw)
+			// Otherwise start guessing...
+		} else if let text = String(data: data, encoding: .utf8) {
 			content = text
 			encoding = .utf8
 		} else if let text = String(data: data, encoding: .macOSRoman) {
@@ -74,7 +59,6 @@ extension TextFileModel {
 		} else {
 			content = "** UNRECOGNIZED FILE **"
 		}
-		*/
 	}
 
 	func data(ofType typeName: String) -> Data? {
