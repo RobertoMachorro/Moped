@@ -51,6 +51,17 @@ extension TextFileModel {
 		}
 		*/
 
+		var nsString: NSString?
+		let rawValue = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &nsString, usedLossyConversion: nil)
+		encoding = .init(rawValue: rawValue)
+
+		if let text = String(data: data, encoding: encoding) {
+			content = text
+		} else {
+			content = "** UNRECOGNIZED FILE **"
+		}
+
+		/*
 		if let text = String(data: data, encoding: .utf8) {
 			content = text
 			encoding = .utf8
@@ -63,6 +74,7 @@ extension TextFileModel {
 		} else {
 			content = "** UNRECOGNIZED FILE **"
 		}
+		*/
 	}
 
 	func data(ofType typeName: String) -> Data? {
