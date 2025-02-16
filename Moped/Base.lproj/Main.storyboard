@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23504"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -64,7 +64,7 @@
                                             <rect key="frame" x="210" y="100" width="39" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="TMb-0P-F1r">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" id="Ho5-nB-Tqb"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -87,7 +87,7 @@
                                             <rect key="frame" x="210" y="74" width="39" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="95w-rx-cmk">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" id="Az0-C7-o5F"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -110,7 +110,7 @@
                                             <rect key="frame" x="210" y="48" width="39" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="2sU-N1-J0K">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" id="Zde-v0-9el"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -133,7 +133,7 @@
                                             <rect key="frame" x="210" y="22" width="39" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="eId-NU-gHf">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" id="L3n-wT-xkQ"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -156,7 +156,7 @@
                                             <rect key="frame" x="210" y="-4" width="39" height="25"/>
                                             <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="4Tx-yA-gUV">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="menu"/>
+                                                <font key="font" metaFont="message"/>
                                                 <menu key="menu" id="qVI-cp-RRy"/>
                                             </popUpButtonCell>
                                             <connections>
@@ -890,15 +890,15 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nlf-e6-r1G">
                                 <rect key="frame" x="0.0" y="16" width="480" height="254"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="465" height="254"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
-                                            <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="465" height="254"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="480" height="254"/>
+                                            <size key="minSize" width="465" height="254"/>
                                             <size key="maxSize" width="480" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <connections>
@@ -917,7 +917,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="hJU-wx-eep">
-                                    <rect key="frame" x="464" y="0.0" width="16" height="254"/>
+                                    <rect key="frame" x="465" y="0.0" width="15" height="254"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
