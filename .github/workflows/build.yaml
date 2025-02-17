@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Build
         run: |
           rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
@@ -23,7 +23,7 @@ jobs:
           mv xcbuild/Build/Products/Debug/Moped.app .
           zip -r -9 Moped.zip Moped.app
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4
         with:
           name: Moped.zip
           path: Moped.zip
