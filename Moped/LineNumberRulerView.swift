@@ -96,7 +96,7 @@ final class LineNumberRulerView: NSRulerView {
 			.paragraphStyle: paragraphStyle
 		]
 
-		// Count lines only in the visible range to avoid expensive string operations on large files
+		// Cast to NSString for line range methods - performed after visible range calculation for clarity
 		let text = textView.string as NSString
 		var lineNumber = 1
 		if visibleCharacterRange.location > 0 {
