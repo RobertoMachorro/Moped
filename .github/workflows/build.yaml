@@ -19,7 +19,7 @@ jobs:
       - name: Build
         run: |
           rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
-          xcodebuild -scheme Moped -derivedDataPath ./xcbuild build
+          xcodebuild -scheme Moped -derivedDataPath ./xcbuild build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
           mv xcbuild/Build/Products/Debug/Moped.app .
           zip -r -9 Moped.zip Moped.app
       - name: Upload a Build Artifact

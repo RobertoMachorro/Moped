@@ -14,6 +14,7 @@
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420E2300A9FE00382715 /* ViewController.swift */; };
+		E9D7B3F22D5A4B2B00B8C4A1 /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D7B3F12D5A4B2B00B8C4A1 /* LineNumberRulerView.swift */; };
 		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		E9D042162300A9FE00382715 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9D042142300A9FE00382715 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		E9D7B3F12D5A4B2B00B8C4A1 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
 		E9D042102300A9FE00382715 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9D042152300A9FE00382715 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				E9D0420C2300A9FE00382715 /* AppDelegate.swift */,
 				E98D58A72300BB4D003E964A /* WindowController.swift */,
 				E9D0420E2300A9FE00382715 /* ViewController.swift */,
+				E9D7B3F12D5A4B2B00B8C4A1 /* LineNumberRulerView.swift */,
 				E990B6F0230A38930010CF5D /* TextFileModel.swift */,
 				E9D042102300A9FE00382715 /* Document.swift */,
 				E9FC082C230115B800A1EE3D /* AboutViewController.swift */,
@@ -172,6 +175,7 @@
 				E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
 				E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */,
+				E9D7B3F22D5A4B2B00B8C4A1 /* LineNumberRulerView.swift in Sources */,
 				E98D58A82300BB4D003E964A /* WindowController.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
 				E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */,
