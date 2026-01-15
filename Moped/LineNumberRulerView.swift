@@ -33,7 +33,7 @@ final class LineNumberRulerView: NSRulerView {
 	}
 
 	required init(coder: NSCoder) {
-		super.init(coder: coder)
+		fatalError("init(coder:) has not been implemented")
 	}
 
 	deinit {
@@ -72,7 +72,7 @@ final class LineNumberRulerView: NSRulerView {
 	}
 
 	override func drawHashMarksAndLabels(in rect: NSRect) {
-		guard let textView, let layoutManager = textView.layoutManager, let textContainer = textView.textContainer else {
+		guard let textView = self.textView, let layoutManager = textView.layoutManager, let textContainer = textView.textContainer else {
 			return
 		}
 
@@ -85,7 +85,6 @@ final class LineNumberRulerView: NSRulerView {
 		visibleRect.size.height += textInset.height * 2
 		let visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: visibleRect, in: textContainer)
 		let visibleCharacterRange = layoutManager.characterRange(forGlyphRange: visibleGlyphRange, actualGlyphRange: nil)
-		let text = textView.string as NSString
 
 		let font = textView.font ?? NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
 		let lineHeight = layoutManager.defaultLineHeight(for: font)
@@ -97,6 +96,8 @@ final class LineNumberRulerView: NSRulerView {
 			.paragraphStyle: paragraphStyle
 		]
 
+		// Count lines only in the visible range to avoid expensive string operations on large files
+		let text = textView.string as NSString
 		var lineNumber = 1
 		if visibleCharacterRange.location > 0 {
 			let prefix = text.substring(to: visibleCharacterRange.location)
