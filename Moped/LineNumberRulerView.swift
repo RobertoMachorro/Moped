@@ -79,12 +79,16 @@ final class LineNumberRulerView: NSRulerView {
 		NSColor.controlBackgroundColor.setFill()
 		rect.fill()
 
-		let visibleRect = textView.visibleRect
+		let textInset = textView.textContainerInset
+		var visibleRect = textView.visibleRect
+		visibleRect.origin.y -= textInset.height
+		visibleRect.size.height += textInset.height * 2
 		let visibleGlyphRange = layoutManager.glyphRange(forBoundingRect: visibleRect, in: textContainer)
 		let visibleCharacterRange = layoutManager.characterRange(forGlyphRange: visibleGlyphRange, actualGlyphRange: nil)
 		let text = textView.string as NSString
 
 		let font = textView.font ?? NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
+		let lineHeight = layoutManager.defaultLineHeight(for: font)
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = .right
 		let attributes: [NSAttributedString.Key: Any] = [
@@ -111,8 +115,8 @@ final class LineNumberRulerView: NSRulerView {
 			let lineRectInTextView = lineFragmentRect.offsetBy(dx: textView.textContainerOrigin.x, dy: textView.textContainerOrigin.y)
 			let lineRectInRuler = convert(lineRectInTextView, from: textView)
 
-			let yPosition = lineRectInRuler.minY + (lineRectInRuler.height - font.lineHeight) / 2
-			let textRect = NSRect(x: 0, y: yPosition, width: bounds.width - 8, height: font.lineHeight)
+			let yPosition = lineRectInRuler.minY + (lineRectInRuler.height - lineHeight) / 2
+			let textRect = NSRect(x: 0, y: yPosition, width: bounds.width - 8, height: lineHeight)
 			"\(lineNumber)".draw(in: textRect, withAttributes: attributes)
 			lineNumber += 1
 		}
