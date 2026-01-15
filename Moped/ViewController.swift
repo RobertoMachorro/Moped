@@ -51,6 +51,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		}
 		setLineWrap(to: userPreferences.doLineWrap)
 		setTheme(to: userPreferences.theme, fontSize: userPreferences.fontSizeFloat)
+		setupLineNumberRuler()
 
 		setupPreferencesObserver()
 	}
@@ -163,6 +164,24 @@ extension ViewController {
 			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
 			textView.textContainer?.widthTracksTextView = false
 		}
+
+		if let rulerView = textView.enclosingScrollView?.verticalRulerView as? LineNumberRulerView {
+			rulerView.needsDisplay = true
+		}
+	}
+}
+
+// MARK: - Line Numbers
+extension ViewController {
+	func setupLineNumberRuler() {
+		guard let scrollView = textView.enclosingScrollView else {
+			return
+		}
+
+		let rulerView = LineNumberRulerView(textView: textView)
+		scrollView.verticalRulerView = rulerView
+		scrollView.hasVerticalRuler = true
+		scrollView.rulersVisible = true
 	}
 }
 
