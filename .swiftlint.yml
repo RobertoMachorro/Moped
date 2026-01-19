@@ -1,1 +1,5 @@
 indentation: tabs
+disabled_rules:
+  - todo
+  - line_length
+

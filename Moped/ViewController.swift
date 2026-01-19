@@ -57,10 +57,6 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		setupPreferencesObserver()
 	}
 
-	override func viewDidAppear() {
-		super.viewDidAppear()
-	}
-
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		if let storage = highlightrTextStorage, let language = document?.model.docTypeLanguage {
@@ -149,36 +145,36 @@ extension ViewController {
 			  let containerView = scrollView.superview else {
 			return
 		}
-		
+
 		// Create the gutter view
 		lineNumberGutter = LineNumberGutterView(textView: textView)
 		guard let gutter = lineNumberGutter else { return }
-		
+
 		// Add gutter ABOVE scroll view so it's visible (not covered)
 		containerView.addSubview(gutter, positioned: .above, relativeTo: scrollView)
-		
+
 		// Setup constraints
 		gutter.translatesAutoresizingMaskIntoConstraints = false
-		
+
 		NSLayoutConstraint.activate([
 			gutter.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
 			gutter.topAnchor.constraint(equalTo: scrollView.topAnchor),
 			gutter.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
 			gutter.widthAnchor.constraint(equalToConstant: gutter.gutterWidth)
 		])
-		
+
 		// Indent text to make room for gutter
 		var insets = textView.textContainerInset
 		insets.width = gutter.gutterWidth
 		textView.textContainerInset = insets
-		
+
 		// Update gutter font to match editor
 		updateLineNumberFont()
 	}
-	
+
 	func updateLineNumberFont() {
 		guard let gutter = lineNumberGutter else { return }
-		
+
 		if let storage = highlightrTextStorage {
 			gutter.font = NSFont.userFixedPitchFont(
 				ofSize: storage.highlightr.theme.codeFont.pointSize * 0.9
@@ -189,7 +185,7 @@ extension ViewController {
 			) ?? NSFont.systemFont(ofSize: userPreferences.fontSizeFloat * 0.9)
 		}
 	}
-	
+
 	func setupPreferencesObserver() {
 		let notificationName = Notification.Name(rawValue: "PreferencesChanged")
 		NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
@@ -231,6 +227,7 @@ extension ViewController {
 	}
 
 	func caretColor(using color: NSColor) -> NSColor {
+		// swiftlint:disable:next identifier_name
 		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
 		if color.colorSpace == NSColorSpace.sRGB {
 			color.getRed(&r, green: &g, blue: &b, alpha: nil)
