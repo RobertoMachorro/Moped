@@ -27,8 +27,8 @@ class AboutViewController: NSViewController {
 		super.viewDidLoad()
 		title = ""
 
-		let versionNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-		let buildNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+		let versionNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
+		let buildNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
 		versionLabel.stringValue = "v\(versionNumber) (\(buildNumber))"
 	}
 
