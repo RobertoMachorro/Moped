@@ -21,6 +21,8 @@
 import Cocoa
 
 class Document: NSDocument {
+	private static let maxFileLength = 1_048_576
+
 	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
@@ -57,6 +59,16 @@ class Document: NSDocument {
 
 	// MARK: - Reading and Writing
 
+	override func read(from url: URL, ofType typeName: String) throws {
+		let fileSize = try fileSize(for: url)
+		if fileSize > Document.maxFileLength {
+			// showFileTooLargeAlert()
+			throw CocoaError(.fileReadTooLarge)
+		}
+
+		try super.read(from: url, ofType: typeName)
+	}
+
 	override func read(from data: Data, ofType typeName: String) throws {
 		// TODO: Switch to extension based recognitions
 		/*
@@ -68,6 +80,26 @@ class Document: NSDocument {
 		}
 		*/
 		model.read(from: data, ofType: typeName)
+	}
+
+	private func fileSize(for url: URL) throws -> Int {
+		let values = try url.resourceValues(forKeys: [.fileSizeKey])
+		return values.fileSize ?? 0
+	}
+
+	private func showFileTooLargeAlert() {
+		let showAlert = {
+			let alert = NSAlert()
+			alert.messageText = "File is too big for Moped."
+			alert.addButton(withTitle: "OK")
+			alert.runModal()
+		}
+
+		if Thread.isMainThread {
+			showAlert()
+		} else {
+			DispatchQueue.main.sync(execute: showAlert)
+		}
 	}
 
 	override func data(ofType typeName: String) throws -> Data {
