@@ -95,7 +95,7 @@ class LineNumberRulerView: NSRulerView {
 			return
 		}
 
-		let textColor = textView.textColor ?? NSColor.labelColor
+		let textColor = NSColor.secondaryLabelColor
 		let attributes: [NSAttributedString.Key: Any] = [
 			.font: font,
 			.foregroundColor: textColor
@@ -115,7 +115,7 @@ class LineNumberRulerView: NSRulerView {
 	}
 
 	private func drawBackgroundAndDivider() {
-		NSColor.controlBackgroundColor.setFill()
+		NSColor.windowBackgroundColor.setFill()
 		bounds.fill()
 
 		NSColor.separatorColor.setStroke()
@@ -180,3 +180,4 @@ class LineNumberRulerView: NSRulerView {
 		}
 	}
 }
+
