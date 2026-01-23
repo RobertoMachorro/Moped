@@ -40,7 +40,7 @@ class PreferencesViewController: NSViewController {
 		themes.addItems(withTitles: highlightrTextStorage.highlightr.availableThemes().sorted())
 
 		// let systemMonospacedFonts = NSFontManager.shared.availableFontNames(with: .fixedPitchFontMask)
-		let systemAllFonts = NSFontManager.shared.availableFonts
+		let systemAllFonts = NSFontManager.shared.availableFonts.sorted()
 		// let fallbackMonospacedFonts = ["Andale Mono", "Courier", "Courier New", "Menlo", "Monaco"]
 		let availableFontSizes = (9...24).reduce(into: []) { $0.append(String($1)) }
 
@@ -60,3 +60,4 @@ class PreferencesViewController: NSViewController {
 		wrapping.selectItem(withTitle: userPreferences.lineWrap)
 	}
 }
+
