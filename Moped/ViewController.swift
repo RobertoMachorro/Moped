@@ -124,20 +124,39 @@ extension ViewController {
 		// document?.objectDidEndEditing(self)
 	}
 
-	/* Prepping for auto-indenting
 	func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-	if (commandSelector == #selector(NSResponder.insertTab(_:))) {
-	//textView.insertText("  ", replacementRange: textView.selectedRange())
-	//return true
-	return false
-	} else if (commandSelector == #selector(NSResponder.insertNewline(_:))) {
-	print("Command: -newline-")
-	textView.insertText("\n", replacementRange: textView.selectedRange())
-	return true
+		if commandSelector == #selector(NSResponder.insertNewline(_:)) {
+			let selectedRange = textView.selectedRange()
+			let text = textView.string as NSString
+			let caretLocation = min(selectedRange.location, text.length)
+			let searchRange = NSRange(location: 0, length: caretLocation)
+			let previousNewline = text.range(
+				of: "\n",
+				options: .backwards,
+				range: searchRange
+			)
+			let lineStart = previousNewline.location == NSNotFound
+				? 0
+				: previousNewline.location + 1
+			var indentEnd = lineStart
+			while indentEnd < text.length {
+				let character = text.character(at: indentEnd)
+				if character != 9 && character != 32 {
+					break
+				}
+				indentEnd += 1
+			}
+			let indent = text.substring(
+				with: NSRange(location: lineStart, length: indentEnd - lineStart)
+			)
+			textView.insertText(
+				"\n" + indent,
+				replacementRange: selectedRange
+			)
+			return true
+		}
+		return false
 	}
-	return false
-	}
-	*/
 }
 
 // MARK: - Preferences
