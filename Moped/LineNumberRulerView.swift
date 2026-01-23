@@ -180,4 +180,3 @@ class LineNumberRulerView: NSRulerView {
 		}
 	}
 }
-

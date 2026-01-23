@@ -60,4 +60,3 @@ class PreferencesViewController: NSViewController {
 		wrapping.selectItem(withTitle: userPreferences.lineWrap)
 	}
 }
-
