@@ -844,7 +844,7 @@
                                 <textFieldCell key="cell" selectable="YES" allowsUndo="NO" alignment="justified" id="n1N-rx-b5p">
                                     <font key="font" metaFont="label" size="9"/>
                                     <string key="title">A general purpose text editor, small and light.
-Copyright (C) 2019-2024 Roberto Machorro. All rights reserved.
+Copyright (C) 2019-2026 Roberto Machorro. All rights reserved.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -890,15 +890,15 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nlf-e6-r1G">
                                 <rect key="frame" x="0.0" y="16" width="480" height="254"/>
                                 <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="KpP-uK-k1R">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="463" height="254"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="bar" allowsUndo="YES" spellingCorrection="YES" smartInsertDelete="YES" id="FS1-5O-SZI">
-                                            <rect key="frame" x="0.0" y="0.0" width="480" height="254"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="463" height="254"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="480" height="254"/>
+                                            <size key="minSize" width="463" height="254"/>
                                             <size key="maxSize" width="480" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <connections>

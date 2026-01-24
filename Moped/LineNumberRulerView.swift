@@ -2,7 +2,7 @@
 //  LineNumberRulerView.swift
 //
 //  Moped - A general purpose text editor, small and light.
-//  Copyright © 2019-2024 Roberto Machorro. All rights reserved.
+//  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -180,3 +180,4 @@ class LineNumberRulerView: NSRulerView {
 		}
 	}
 }
+
