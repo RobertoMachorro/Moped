@@ -1,0 +1,46 @@
+#!/bin/zsh
+set -euo pipefail
+
+wait_mode=0
+files=()
+
+for arg in "$@"; do
+	if [[ "$arg" == "--wait" ]]; then
+		wait_mode=1
+	else
+		files+=("$arg")
+	fi
+done
+
+if (( ${#files[@]} == 0 )); then
+	echo "Usage: moped [--wait] <file>..." >&2
+	exit 1
+fi
+
+resolve_path() {
+	local path="$1"
+
+	while [[ -L "$path" ]]; do
+		local target
+		target="$(/usr/bin/readlink "$path")"
+
+		if [[ "$target" = /* ]]; then
+			path="$target"
+		else
+			path="$(/usr/bin/dirname "$path")/$target"
+		fi
+	done
+
+	echo "$path"
+}
+
+cli_path="$(resolve_path "$0")"
+resources_dir="$(/usr/bin/dirname "$cli_path")"
+contents_dir="$(/usr/bin/dirname "$resources_dir")"
+app_path="$(/usr/bin/dirname "$contents_dir")"
+
+if (( wait_mode )); then
+	/usr/bin/open -n -W -a "$app_path" --args --moped-wait "${files[@]}"
+else
+	/usr/bin/open -a "$app_path" "${files[@]}"
+fi

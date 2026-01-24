@@ -209,6 +209,12 @@
                                                 <segue destination="mFW-oj-LrQ" kind="modal" id="LKJ-S5-6cS"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Setup moped CLI" id="9SP-q0-u5P">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="setupMopedCLI:" target="Voe-Tx-rLC" id="G12-Nb-2Hi"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                                         <menuItem title="Services" id="NMo-om-nkz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
