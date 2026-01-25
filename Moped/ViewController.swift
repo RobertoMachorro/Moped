@@ -67,6 +67,13 @@ class ViewController: NSViewController, NSTextViewDelegate {
 		}
 	}
 
+	override func viewDidAppear() {
+		super.viewDidAppear()
+		DispatchQueue.main.async { [weak self] in
+			self?.refreshLineNumberRuler()
+		}
+	}
+
 	override var representedObject: Any? {
 		didSet {
 			// Pass down ContentModel to all of the child view controllers
@@ -178,6 +185,17 @@ extension ViewController {
 		updateLineNumberFont()
 	}
 
+	private func refreshLineNumberRuler() {
+		guard let layoutManager = textView.layoutManager,
+			let textContainer = textView.textContainer else {
+			return
+		}
+
+		layoutManager.ensureLayout(for: textContainer)
+		lineNumberRuler?.needsDisplay = true
+		textView.enclosingScrollView?.verticalRulerView?.needsDisplay = true
+	}
+
 	func updateLineNumberFont() {
 		guard let ruler = lineNumberRuler else { return }
 
@@ -263,4 +281,3 @@ extension ViewController {
 		setTheme(to: userPreferences.theme, fontSize: userPreferences.fontSizeFloat)
 	}
 }
-

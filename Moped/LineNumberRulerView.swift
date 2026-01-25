@@ -85,6 +85,7 @@ class LineNumberRulerView: NSRulerView {
 			return
 		}
 
+		layoutManager.ensureLayout(for: textContainer)
 		drawBackgroundAndDivider()
 
 		let visibleRect = scrollView.contentView.bounds
@@ -162,7 +163,7 @@ class LineNumberRulerView: NSRulerView {
 				forGlyphAt: glyphIndex,
 				effectiveRange: &lineRange
 			)
-			let yPosition = lineRect.origin.y - visibleRect.origin.y + textView.textContainerInset.height
+			let yPosition = lineRect.origin.y - visibleRect.origin.y + textView.textContainerOrigin.y
 
 			if yPosition + lineRect.height >= 0 && yPosition <= bounds.height {
 				let lineNumberString = String(lineNumber)
@@ -180,4 +181,3 @@ class LineNumberRulerView: NSRulerView {
 		}
 	}
 }
-
