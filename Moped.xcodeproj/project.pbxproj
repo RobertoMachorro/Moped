@@ -8,36 +8,44 @@
 
 /* Begin PBXBuildFile section */
 		945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */; };
+		A1B2C3D4E500000000000010 /* EditorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000110 /* EditorState.swift */; };
+		A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */; };
+		A1B2C3D4E500000000000012 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000112 /* EditorView.swift */; };
+		A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000113 /* PreferencesView.swift */; };
+		A1B2C3D4E500000000000014 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000114 /* AboutView.swift */; };
+		A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000116 /* WaitManager.swift */; };
+		A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000220 /* MopedApp.swift */; };
+		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
+		A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000222 /* MopedCommands.swift */; };
+		A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */; };
 		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
-		E98D58A82300BB4D003E964A /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98D58A72300BB4D003E964A /* WindowController.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
-		E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420E2300A9FE00382715 /* ViewController.swift */; };
-		E9D042112300A9FE00382715 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D042102300A9FE00382715 /* Document.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
-		E9D042162300A9FE00382715 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9D042142300A9FE00382715 /* Main.storyboard */; };
-		E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */; };
-		E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC082C230115B800A1EE3D /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000110 /* EditorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorState.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorRepresentable.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000112 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000113 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000114 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000116 /* WaitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitManager.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000220 /* MopedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedApp.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000222 /* MopedCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedCommands.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FocusedValues+Moped.swift"; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		E98D58A72300BB4D003E964A /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E9D0420E2300A9FE00382715 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E9D042102300A9FE00382715 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E9D042152300A9FE00382715 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
-		E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
-		E9FC082C230115B800A1EE3D /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,16 +82,20 @@
 			isa = PBXGroup;
 			children = (
 				E9D0420C2300A9FE00382715 /* AppDelegate.swift */,
-				E98D58A72300BB4D003E964A /* WindowController.swift */,
-				E9D0420E2300A9FE00382715 /* ViewController.swift */,
+				A1B2C3D4E500000000000220 /* MopedApp.swift */,
+				A1B2C3D4E500000000000221 /* MopedDocument.swift */,
+				A1B2C3D4E500000000000222 /* MopedCommands.swift */,
+				A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */,
+				A1B2C3D4E500000000000114 /* AboutView.swift */,
+				A1B2C3D4E500000000000112 /* EditorView.swift */,
+				A1B2C3D4E500000000000110 /* EditorState.swift */,
+				A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */,
 				929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */,
+				A1B2C3D4E500000000000116 /* WaitManager.swift */,
 				E990B6F0230A38930010CF5D /* TextFileModel.swift */,
-				E9D042102300A9FE00382715 /* Document.swift */,
-				E9FC082C230115B800A1EE3D /* AboutViewController.swift */,
+				A1B2C3D4E500000000000113 /* PreferencesView.swift */,
 				E94A91A923106CC900BE978A /* Preferences.swift */,
-				E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */,
 				E9D042122300A9FE00382715 /* Assets.xcassets */,
-				E9D042142300A9FE00382715 /* Main.storyboard */,
 				E9D042172300A9FE00382715 /* Info.plist */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
 				E9D042182300A9FE00382715 /* Moped.entitlements */,
@@ -172,7 +184,6 @@
 			files = (
 				E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */,
 				E9D042132300A9FE00382715 /* Assets.xcassets in Resources */,
-				E9D042162300A9FE00382715 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,29 +213,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */,
+				A1B2C3D4E500000000000014 /* AboutView.swift in Sources */,
+				A1B2C3D4E500000000000012 /* EditorView.swift in Sources */,
+				A1B2C3D4E500000000000010 /* EditorState.swift in Sources */,
+				A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */,
+				A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */,
+				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
+				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
+				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
+				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
+				A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
-				E9D0420F2300A9FE00382715 /* ViewController.swift in Sources */,
 				945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */,
-				E98D58A82300BB4D003E964A /* WindowController.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
-				E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */,
 				E94A91AA23106CC900BE978A /* Preferences.swift in Sources */,
-				E9D042112300A9FE00382715 /* Document.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		E9D042142300A9FE00382715 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E9D042152300A9FE00382715 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -284,7 +292,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -346,7 +354,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;

@@ -18,9 +18,10 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+import Combine
 import Foundation
 
-class Preferences: NSObject {
+class Preferences: NSObject, ObservableObject {
 	// MARK: - Singleton with Custom Setup
 
 	static let userShared: Preferences = {
@@ -94,6 +95,7 @@ class Preferences: NSObject {
 
 	func setStringValue(forKey key: String, to value: String) {
 		UserDefaults.standard.set(value, forKey: key)
+		objectWillChange.send()
 		NotificationCenter.default.post(name: Notification.Name(rawValue: "PreferencesChanged"), object: nil)
 	}
 }
