@@ -153,6 +153,7 @@ final class WaitManager: NSObject {
 	private var sessionFiles: [String: String] = [:]
 	private var isObserving = false
 	private var pollTimer: Timer?
+	private let stateQueue = DispatchQueue(label: "net.machorro.roberto.Moped.WaitManager.state")
 
 	func startObserving() {
 		guard !isObserving else {
@@ -177,7 +178,9 @@ final class WaitManager: NSObject {
 	}
 
 	func handleDocumentClosePath(_ path: String) {
-		removePendingPath(path)
+		stateQueue.async { [weak self] in
+			self?.removePendingPathLocked(path)
+		}
 	}
 
 	@objc private func waitRequestReceived(_ notification: Notification) {
@@ -187,24 +190,32 @@ final class WaitManager: NSObject {
 			return
 		}
 
-		if let sessionFilePath = userInfo[CLIConstants.sessionFileKey] as? String {
-			sessionFiles[sessionID] = sessionFilePath
-		}
+		stateQueue.async { [weak self] in
+			guard let self = self else {
+				return
+			}
 
-		let standardizedPaths = Set(filePaths.map { WaitManager.canonicalPath(for: URL(fileURLWithPath: $0)) })
-		sessions[sessionID] = standardizedPaths
+			if let sessionFilePath = userInfo[CLIConstants.sessionFileKey] as? String {
+				self.sessionFiles[sessionID] = sessionFilePath
+			}
 
-		if standardizedPaths.isEmpty {
-			completeSession(sessionID)
-			return
-		}
+			let standardizedPaths = Set(filePaths.map {
+				WaitManager.canonicalPath(for: URL(fileURLWithPath: $0))
+			})
+			self.sessions[sessionID] = standardizedPaths
 
-		DispatchQueue.main.async { [weak self] in
-			self?.startPollingIfNeeded()
+			if standardizedPaths.isEmpty {
+				self.completeSessionLocked(sessionID)
+				return
+			}
+
+			DispatchQueue.main.async { [weak self] in
+				self?.startPollingIfNeeded()
+			}
 		}
 	}
 
-	private func removePendingPath(_ path: String) {
+	private func removePendingPathLocked(_ path: String) {
 		let incomingURL = URL(fileURLWithPath: path)
 		let incomingCanonical = WaitManager.canonicalPath(for: incomingURL)
 		let incomingIdentifier = fileIdentifier(for: incomingURL)
@@ -231,11 +242,13 @@ final class WaitManager: NSObject {
 
 		for sessionID in finishedSessions {
 			sessions.removeValue(forKey: sessionID)
-			completeSession(sessionID)
+			completeSessionLocked(sessionID)
 		}
 
 		if sessions.isEmpty {
-			stopPollingIfNeeded()
+			DispatchQueue.main.async { [weak self] in
+				self?.stopPollingIfNeeded()
+			}
 		}
 	}
 
@@ -291,11 +304,6 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func pollOpenDocuments() {
-		guard !sessions.isEmpty else {
-			stopPollingIfNeeded()
-			return
-		}
-
 		let openPaths: Set<String> = Set(
 			NSApplication.shared.windows.compactMap { window in
 				guard window.isVisible,
@@ -306,18 +314,41 @@ final class WaitManager: NSObject {
 				return WaitManager.canonicalPath(for: url)
 			}
 		)
-		var closedPaths: [String] = []
-		for paths in sessions.values {
-			for path in paths {
-				let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
-				if !openPaths.contains(canonical) {
-					closedPaths.append(path)
+		var shouldStopPolling = false
+		let closedPaths: [String] = stateQueue.sync {
+			guard !sessions.isEmpty else {
+				shouldStopPolling = true
+				return []
+			}
+
+			var collectedPaths: [String] = []
+			for paths in sessions.values {
+				for path in paths {
+					let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
+					if !openPaths.contains(canonical) {
+						collectedPaths.append(path)
+					}
 				}
 			}
+
+			return collectedPaths
 		}
 
-		for path in Set(closedPaths) {
-			removePendingPath(path)
+		if shouldStopPolling {
+			stopPollingIfNeeded()
+			return
+		}
+
+		if !closedPaths.isEmpty {
+			stateQueue.async { [weak self] in
+				guard let self = self else {
+					return
+				}
+
+				for path in Set(closedPaths) {
+					self.removePendingPathLocked(path)
+				}
+			}
 		}
 	}
 
@@ -334,13 +365,19 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func appWillTerminate(_ notification: Notification) {
-		for sessionID in sessions.keys {
-			completeSession(sessionID)
+		stateQueue.async { [weak self] in
+			guard let self = self else {
+				return
+			}
+
+			for sessionID in self.sessions.keys {
+				self.completeSessionLocked(sessionID)
+			}
+			self.sessions.removeAll()
 		}
-		sessions.removeAll()
 	}
 
-	private func completeSession(_ sessionID: String) {
+	private func completeSessionLocked(_ sessionID: String) {
 		if let sessionFilePath = sessionFiles.removeValue(forKey: sessionID) {
 			try? FileManager.default.removeItem(
 				at: URL(fileURLWithPath: sessionFilePath)
