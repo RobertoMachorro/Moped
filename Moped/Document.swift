@@ -22,11 +22,20 @@ import Cocoa
 
 class Document: NSDocument {
 	private static let maxFileLength = 1_048_576
+	private var openedFilePath: String?
 
 	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
 		super.init()
+	}
+
+	override func close() {
+		if let filePath = waitTrackingPath() {
+			WaitManager.shared.handleDocumentClosePath(filePath)
+		}
+
+		super.close()
 	}
 
 	// MARK: - Enablers
@@ -61,6 +70,7 @@ class Document: NSDocument {
 	// MARK: - Reading and Writing
 
 	override func read(from url: URL, ofType typeName: String) throws {
+		openedFilePath = WaitManager.canonicalPath(for: url)
 		let fileSize = try fileSize(for: url)
 		if fileSize > Document.maxFileLength {
 			// showFileTooLargeAlert()
@@ -81,6 +91,14 @@ class Document: NSDocument {
 		}
 		*/
 		model.read(from: data, ofType: typeName)
+	}
+
+	func waitTrackingPath() -> String? {
+		if let url = fileURL {
+			return WaitManager.canonicalPath(for: url)
+		}
+
+		return openedFilePath
 	}
 
 	private func fileSize(for url: URL) throws -> Int {
@@ -156,4 +174,3 @@ class Document: NSDocument {
 		printOperation.runModal(for: windowControllers[0].window!, delegate: self, didRun: #selector(printOperationDidRun(_:success:contextInfo:)), contextInfo: nil)
 	}
 }
-

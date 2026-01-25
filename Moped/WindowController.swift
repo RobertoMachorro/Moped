@@ -21,9 +21,37 @@
 import Cocoa
 
 class WindowController: NSWindowController {
+	override func windowDidLoad() {
+		super.windowDidLoad()
+
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(windowWillClose(_:)),
+			name: NSWindow.willCloseNotification,
+			object: window
+		)
+	}
+
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		shouldCascadeWindows = true
 	}
-}
 
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	@objc private func windowWillClose(_ notification: Notification) {
+		guard let document = document as? NSDocument else {
+			return
+		}
+
+		let path = (document as? Document)?.waitTrackingPath()
+			?? document.fileURL.map { WaitManager.canonicalPath(for: $0) }
+		guard let path = path else {
+			return
+		}
+
+		WaitManager.shared.handleDocumentClosePath(path)
+	}
+}

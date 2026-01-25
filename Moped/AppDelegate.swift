@@ -27,7 +27,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
 		WaitManager.shared.startObserving()
-		handleCLIWaitIfNeeded()
+	}
+
+	func applicationWillFinishLaunching(_ notification: Notification) {
+		WaitManager.shared.startObserving()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -38,45 +41,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		.terminateNow
 	}
 
-	private func handleCLIWaitIfNeeded() {
-		guard let waitIndex = CommandLine.arguments.firstIndex(of: "--moped-wait") else {
-			return
-		}
-
-		let fileArguments = CommandLine.arguments
-			.suffix(from: CommandLine.arguments.index(after: waitIndex))
-		let fileURLs = fileArguments.map { fileArgument -> URL in
-			let expandedPath = (fileArgument as NSString).expandingTildeInPath
-			return URL(fileURLWithPath: expandedPath)
-		}
-
-		if fileURLs.isEmpty {
-			return
-		}
-
-		WaitManager.shared.beginWait(for: fileURLs, terminateWhenDone: true)
-
-		for fileURL in fileURLs {
-			NSDocumentController.shared.openDocument(withContentsOf: fileURL, display: true) { [weak self] document, wasOpen, error in
-				if let error = error {
-					WaitManager.shared.removePending(fileURL)
-					self?.presentCLIError(error, for: fileURL)
-					return
-				}
-
-				if document == nil && !wasOpen {
-					WaitManager.shared.removePending(fileURL)
-				}
-			}
-		}
-	}
-
-	private func presentCLIError(_ error: Error, for fileURL: URL) {
-		let alert = NSAlert(error: error)
-		alert.messageText = "Unable to open file."
-		alert.informativeText = fileURL.path
-		alert.runModal()
-	}
 }
 
 extension AppDelegate {
@@ -169,10 +133,27 @@ extension AppDelegate {
 
 final class WaitManager: NSObject {
 	static let shared = WaitManager()
+	static func canonicalPath(for url: URL) -> String {
+		url.resolvingSymlinksInPath().standardizedFileURL.path
+	}
 
-	private var pendingPaths = Set<String>()
-	private var shouldTerminateWhenDone = false
+	private enum CLIConstants {
+		static let requestNotification = Notification.Name(
+			"net.machorro.roberto.Moped.CLIWaitRequest"
+		)
+		static let completionNotification = Notification.Name(
+			"net.machorro.roberto.Moped.CLIWaitComplete"
+		)
+		static let sessionIDKey = "sessionID"
+		static let filesKey = "files"
+		static let sessionFileKey = "sessionFilePath"
+	}
+
+	private let distributedCenter = DistributedNotificationCenter.default()
+	private var sessions: [String: Set<String>] = [:]
+	private var sessionFiles: [String: String] = [:]
 	private var isObserving = false
+	private var pollTimer: Timer?
 
 	func startObserving() {
 		guard !isObserving else {
@@ -180,50 +161,225 @@ final class WaitManager: NSObject {
 		}
 
 		isObserving = true
-		NotificationCenter.default.addObserver(
+
+		distributedCenter.addObserver(
 			self,
-			selector: #selector(documentDidClose(_:)),
-			name: Notification.Name("NSDocumentDidCloseNotification"),
+			selector: #selector(waitRequestReceived(_:)),
+			name: CLIConstants.requestNotification,
 			object: nil
 		)
+
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(appWillTerminate(_:)),
+			name: NSApplication.willTerminateNotification,
+			object: nil
+		)
+
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(windowWillClose(_:)),
+			name: NSWindow.willCloseNotification,
+			object: nil
+		)
+		
 	}
 
-	func beginWait(for urls: [URL], terminateWhenDone: Bool) {
-		pendingPaths = Set(urls.map { $0.standardizedFileURL.path })
-		shouldTerminateWhenDone = terminateWhenDone
-
-		if shouldTerminateWhenDone && pendingPaths.isEmpty {
-			DispatchQueue.main.async {
-				NSApp.terminate(nil)
-			}
-		}
+	func handleDocumentClosePath(_ path: String) {
+		removePendingPath(path)
 	}
 
-	func removePending(_ url: URL) {
-		removePendingPath(url.standardizedFileURL.path)
-	}
-
-	@objc private func documentDidClose(_ notification: Notification) {
-		guard let document = notification.object as? NSDocument else {
+	@objc private func waitRequestReceived(_ notification: Notification) {
+		guard let userInfo = notification.userInfo,
+			let sessionID = userInfo[CLIConstants.sessionIDKey] as? String,
+			let filePaths = userInfo[CLIConstants.filesKey] as? [String] else {
 			return
 		}
 
-		guard let fileURL = document.fileURL else {
+		if let sessionFilePath = userInfo[CLIConstants.sessionFileKey] as? String {
+			sessionFiles[sessionID] = sessionFilePath
+		}
+
+		let standardizedPaths = Set(filePaths.map { WaitManager.canonicalPath(for: URL(fileURLWithPath: $0)) })
+		sessions[sessionID] = standardizedPaths
+
+		if standardizedPaths.isEmpty {
+			completeSession(sessionID)
 			return
 		}
 
-		removePendingPath(fileURL.standardizedFileURL.path)
+		DispatchQueue.main.async { [weak self] in
+			self?.startPollingIfNeeded()
+		}
 	}
 
 	private func removePendingPath(_ path: String) {
-		guard pendingPaths.remove(path) != nil else {
+		let incomingURL = URL(fileURLWithPath: path)
+		let incomingCanonical = WaitManager.canonicalPath(for: incomingURL)
+		let incomingIdentifier = fileIdentifier(for: incomingURL)
+		var finishedSessions: [String] = []
+
+		for (sessionID, paths) in sessions {
+			if let matchedPath = paths.first(where: {
+				pathsMatch(
+					incomingPath: path,
+					incomingCanonical: incomingCanonical,
+					incomingIdentifier: incomingIdentifier,
+					sessionPath: $0
+				)
+			}) {
+				var updatedPaths = paths
+				updatedPaths.remove(matchedPath)
+				if updatedPaths.isEmpty {
+					finishedSessions.append(sessionID)
+				} else {
+					sessions[sessionID] = updatedPaths
+				}
+			}
+		}
+
+		for sessionID in finishedSessions {
+			sessions.removeValue(forKey: sessionID)
+			completeSession(sessionID)
+		}
+
+		if sessions.isEmpty {
+			stopPollingIfNeeded()
+		}
+	}
+
+	private func pathsMatch(
+		incomingPath: String,
+		incomingCanonical: String,
+		incomingIdentifier: AnyHashable?,
+		sessionPath: String
+	) -> Bool {
+		if incomingPath == sessionPath {
+			return true
+		}
+
+		let sessionURL = URL(fileURLWithPath: sessionPath)
+		if WaitManager.canonicalPath(for: sessionURL) == incomingCanonical {
+			return true
+		}
+
+		guard let incomingIdentifier = incomingIdentifier,
+			let sessionIdentifier = fileIdentifier(for: sessionURL) else {
+			return false
+		}
+
+		return incomingIdentifier == sessionIdentifier
+	}
+
+	private func fileIdentifier(for url: URL) -> AnyHashable? {
+		let values = try? url.resourceValues(forKeys: [.fileResourceIdentifierKey])
+		if let identifier = values?.fileResourceIdentifier as? NSObject {
+			return AnyHashable(identifier)
+		}
+
+		return nil
+	}
+
+	private func startPollingIfNeeded() {
+		guard pollTimer == nil else {
 			return
 		}
 
-		if pendingPaths.isEmpty && shouldTerminateWhenDone {
-			DispatchQueue.main.async {
-				NSApp.terminate(nil)
+		pollTimer = Timer.scheduledTimer(
+			timeInterval: 0.5,
+			target: self,
+			selector: #selector(pollOpenDocuments),
+			userInfo: nil,
+			repeats: true
+		)
+	}
+
+	private func stopPollingIfNeeded() {
+		pollTimer?.invalidate()
+		pollTimer = nil
+	}
+
+	@objc private func pollOpenDocuments() {
+		guard !sessions.isEmpty else {
+			stopPollingIfNeeded()
+			return
+		}
+
+		let openPaths: Set<String> = Set(
+			NSApplication.shared.windows.compactMap { window in
+				guard window.isVisible,
+					let url = window.representedURL else {
+					return nil
+				}
+
+				return WaitManager.canonicalPath(for: url)
+			}
+		)
+		var closedPaths: [String] = []
+		for paths in sessions.values {
+			for path in paths {
+				let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
+				if !openPaths.contains(canonical) {
+					closedPaths.append(path)
+				}
 			}
 		}
+
+		for path in Set(closedPaths) {
+			removePendingPath(path)
+		}
+	}
+
+	private func notifyCompletion(for sessionID: String) {
+		let userInfo: [String: Any] = [
+			CLIConstants.sessionIDKey: sessionID
+		]
+
+		distributedCenter.post(
+			name: CLIConstants.completionNotification,
+			object: nil,
+			userInfo: userInfo
+		)
+	}
+
+	@objc private func appWillTerminate(_ notification: Notification) {
+		for sessionID in sessions.keys {
+			completeSession(sessionID)
+		}
+		sessions.removeAll()
+	}
+
+	@objc private func windowWillClose(_ notification: Notification) {
+		guard let window = notification.object as? NSWindow else {
+			return
+		}
+
+		if let representedURL = window.representedURL {
+			removePendingPath(WaitManager.canonicalPath(for: representedURL))
+			return
+		}
+
+		if let controller = window.windowController as? NSWindowController {
+			if let document = controller.document as? Document,
+				let path = document.waitTrackingPath() {
+				removePendingPath(path)
+				return
+			}
+
+			if let document = controller.document as? NSDocument,
+				let fileURL = document.fileURL {
+				removePendingPath(WaitManager.canonicalPath(for: fileURL))
+			}
+		}
+	}
+
+	private func completeSession(_ sessionID: String) {
+		if let sessionFilePath = sessionFiles.removeValue(forKey: sessionID) {
+			try? FileManager.default.removeItem(
+				at: URL(fileURLWithPath: sessionFilePath)
+			)
+		}
+
+		notifyCompletion(for: sessionID)
 	}
 }
