@@ -27,13 +27,13 @@ struct MopedCommands: Commands {
 	var body: some Commands {
 		CommandGroup(replacing: .appInfo) {
 			Button("About Moped") {
-				(NSApp.delegate as? AppDelegate)?.showAboutWindow(nil)
+				AppActions.shared.showAboutWindow()
 			}
 		}
 
 		CommandGroup(after: .appInfo) {
 			Button("Setup moped CLI") {
-				(NSApp.delegate as? AppDelegate)?.setupMopedCLI(NSApp as Any)
+				AppActions.shared.setupMopedCLI()
 			}
 		}
 
@@ -77,16 +77,16 @@ struct MopedCommands: Commands {
 
 		CommandGroup(replacing: .help) {
 			Button("Read License") {
-				(NSApp.delegate as? AppDelegate)?.linkToLicense(NSApp as Any)
+				AppActions.shared.linkToLicense()
 			}
 			Button("Get Source Code") {
-				(NSApp.delegate as? AppDelegate)?.linkToSources(NSApp as Any)
+				AppActions.shared.linkToSources()
 			}
 			Button("Report an Issue") {
-				(NSApp.delegate as? AppDelegate)?.linkToIssues(NSApp as Any)
+				AppActions.shared.linkToIssues()
 			}
 			Button("Logo by BSGStudio") {
-				(NSApp.delegate as? AppDelegate)?.linkToIconSite(NSApp as Any)
+				AppActions.shared.linkToIconSite()
 			}
 			Divider()
 			Button("Moped Help") {

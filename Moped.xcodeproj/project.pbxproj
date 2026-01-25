@@ -13,6 +13,7 @@
 		A1B2C3D4E500000000000012 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000112 /* EditorView.swift */; };
 		A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000113 /* PreferencesView.swift */; };
 		A1B2C3D4E500000000000014 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000114 /* AboutView.swift */; };
+		A1B2C3D4E500000000000017 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000117 /* AppActions.swift */; };
 		A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000116 /* WaitManager.swift */; };
 		A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000220 /* MopedApp.swift */; };
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
@@ -33,6 +34,7 @@
 		A1B2C3D4E500000000000112 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000113 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000114 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000117 /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000116 /* WaitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitManager.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000220 /* MopedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				E9D0420C2300A9FE00382715 /* AppDelegate.swift */,
+				A1B2C3D4E500000000000117 /* AppActions.swift */,
 				A1B2C3D4E500000000000220 /* MopedApp.swift */,
 				A1B2C3D4E500000000000221 /* MopedDocument.swift */,
 				A1B2C3D4E500000000000222 /* MopedCommands.swift */,
@@ -219,6 +222,7 @@
 				A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */,
 				A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */,
 				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
+				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
 				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
