@@ -23,6 +23,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
+	private static let maxFileLength = 1_048_576
+
 	static var readableContentTypes: [UTType] = {
 		var types: [UTType] = [
 			.plainText,
@@ -72,6 +74,10 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 
 		guard let data = configuration.file.regularFileContents else {
 			throw CocoaError(.fileReadCorruptFile)
+		}
+
+		if data.count > MopedDocument.maxFileLength {
+			throw CocoaError(.fileReadTooLarge)
 		}
 
 		model.read(from: data, ofType: configuration.contentType.identifier)
