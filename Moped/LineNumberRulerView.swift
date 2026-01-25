@@ -2,7 +2,7 @@
 //  LineNumberRulerView.swift
 //
 //  Moped - A general purpose text editor, small and light.
-//  Copyright © 2019-2024 Roberto Machorro. All rights reserved.
+//  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -85,6 +85,7 @@ class LineNumberRulerView: NSRulerView {
 			return
 		}
 
+		layoutManager.ensureLayout(for: textContainer)
 		drawBackgroundAndDivider()
 
 		let visibleRect = scrollView.contentView.bounds
@@ -162,7 +163,7 @@ class LineNumberRulerView: NSRulerView {
 				forGlyphAt: glyphIndex,
 				effectiveRange: &lineRange
 			)
-			let yPosition = lineRect.origin.y - visibleRect.origin.y + textView.textContainerInset.height
+			let yPosition = lineRect.origin.y - visibleRect.origin.y + textView.textContainerOrigin.y
 
 			if yPosition + lineRect.height >= 0 && yPosition <= bounds.height {
 				let lineNumberString = String(lineNumber)

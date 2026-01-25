@@ -2,7 +2,7 @@
 //  Document.swift
 //
 //  Moped - A general purpose text editor, small and light.
-//  Copyright © 2019-2024 Roberto Machorro. All rights reserved.
+//  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
 //
 //	This program is free software: you can redistribute it and/or modify
 //	it under the terms of the GNU General Public License as published by
@@ -22,11 +22,20 @@ import Cocoa
 
 class Document: NSDocument {
 	private static let maxFileLength = 1_048_576
+	private var openedFilePath: String?
 
 	@objc let model = TextFileModel(content: "", typeName: "public.plain-text", typeLanguage: "plaintext")
 
 	override init() {
 		super.init()
+	}
+
+	override func close() {
+		if let filePath = waitTrackingPath() {
+			WaitManager.shared.handleDocumentClosePath(filePath)
+		}
+
+		super.close()
 	}
 
 	// MARK: - Enablers
@@ -61,6 +70,7 @@ class Document: NSDocument {
 	// MARK: - Reading and Writing
 
 	override func read(from url: URL, ofType typeName: String) throws {
+		openedFilePath = WaitManager.canonicalPath(for: url)
 		let fileSize = try fileSize(for: url)
 		if fileSize > Document.maxFileLength {
 			// showFileTooLargeAlert()
@@ -81,6 +91,14 @@ class Document: NSDocument {
 		}
 		*/
 		model.read(from: data, ofType: typeName)
+	}
+
+	func waitTrackingPath() -> String? {
+		if let url = fileURL {
+			return WaitManager.canonicalPath(for: url)
+		}
+
+		return openedFilePath
 	}
 
 	private func fileSize(for url: URL) throws -> Int {
