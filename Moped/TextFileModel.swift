@@ -18,12 +18,13 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+import Combine
 import Foundation
 
-class TextFileModel: NSObject {
-	@objc dynamic var content: String
-	@objc dynamic var docTypeName: String
-	@objc dynamic var docTypeLanguage: String
+class TextFileModel: NSObject, ObservableObject {
+	@Published var content: String
+	@Published var docTypeName: String
+	@Published var docTypeLanguage: String
 	var encoding: String.Encoding
 
 	public init(content: String, typeName: String, typeLanguage: String) {

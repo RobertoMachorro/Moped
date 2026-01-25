@@ -1,5 +1,5 @@
 //
-//  AboutViewController.swift
+//  MopedApp.swift
 //
 //  Moped - A general purpose text editor, small and light.
 //  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
@@ -18,22 +18,25 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-import Cocoa
+import SwiftUI
 
-class AboutViewController: NSViewController {
-	@IBOutlet var versionLabel: NSTextField!
+@main
+struct MopedApp: App {
+	@NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		title = ""
+	var body: some Scene {
+		DocumentGroup(
+			newDocument: { MopedDocument() },
+			editor: { file in
+				EditorView(document: file.document)
+			}
+		)
+		.commands {
+			MopedCommands()
+		}
 
-		let versionNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
-		let buildNumber: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
-		versionLabel.stringValue = "v\(versionNumber) (\(buildNumber))"
-	}
-
-	override func viewDidAppear() {
-		super.viewDidAppear()
-		view.window?.styleMask.remove(.resizable)
+		Settings {
+			PreferencesView(preferences: Preferences.userShared)
+		}
 	}
 }
