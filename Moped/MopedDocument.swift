@@ -23,6 +23,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
+	/// Maximum file size in bytes (1 MB) to prevent performance issues or crashes
 	private static let maxFileLength = 1_048_576
 
 	static var readableContentTypes: [UTType] = {
