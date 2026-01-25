@@ -98,16 +98,14 @@ private func isAppRunning() -> Bool {
 	).isEmpty
 }
 
-private func postWaitRequest(sessionID: String, fileURLs: [URL], sessionFilePath: String?) {
+private func postWaitRequest(sessionID: String, fileURLs: [URL], sessionFilePath: String) {
 	let paths = fileURLs.map { $0.path }
 	var userInfo: [String: Any] = [
 		CLIConstants.sessionIDKey: sessionID,
 		CLIConstants.filesKey: paths
 	]
 
-	if let sessionFilePath = sessionFilePath {
-		userInfo[CLIConstants.sessionFileKey] = sessionFilePath
-	}
+	userInfo[CLIConstants.sessionFileKey] = sessionFilePath
 
 	DistributedNotificationCenter.default().post(
 		name: CLIConstants.requestNotification,
@@ -177,7 +175,12 @@ if !ensureAppRunning() {
 }
 
 let runLoop = RunLoop.current
-let sessionFilePath = createSessionFile(sessionID: sessionID)
+guard let sessionFilePath = createSessionFile(sessionID: sessionID) else {
+	completionCenter.removeObserver(completionObserver)
+	fputs("Unable to create Moped wait session file.\n", stderr)
+	exit(1)
+}
+
 postWaitRequest(sessionID: sessionID, fileURLs: fileURLs, sessionFilePath: sessionFilePath)
 if !openFiles(fileURLs) {
 	completionCenter.removeObserver(completionObserver)
@@ -187,8 +190,7 @@ if !openFiles(fileURLs) {
 postWaitRequest(sessionID: sessionID, fileURLs: fileURLs, sessionFilePath: sessionFilePath)
 
 while !didComplete {
-	if let sessionFilePath = sessionFilePath,
-		!FileManager.default.fileExists(atPath: sessionFilePath) {
+	if !FileManager.default.fileExists(atPath: sessionFilePath) {
 		break
 	}
 	if !isAppRunning() {
@@ -197,8 +199,6 @@ while !didComplete {
 	runLoop.run(mode: .default, before: Date(timeIntervalSinceNow: 0.1))
 }
 
-if let sessionFilePath = sessionFilePath {
-	try? FileManager.default.removeItem(atPath: sessionFilePath)
-}
+try? FileManager.default.removeItem(atPath: sessionFilePath)
 
 completionCenter.removeObserver(completionObserver)
