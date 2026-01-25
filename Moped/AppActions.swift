@@ -53,7 +53,7 @@ final class AppActions: NSObject {
 		} catch {
 			showCLIAlert(
 				title: "Unable to install moped.",
-				message: "Try running: sudo ln -sf \"\(cliURL.path)\" \"\(targetURL.path)\""
+				message: "Try running: sudo ln -sf \(shellEscape(cliURL.path)) \(shellEscape(targetURL.path))"
 			)
 		}
 	}
@@ -125,5 +125,13 @@ final class AppActions: NSObject {
 		alert.messageText = title
 		alert.informativeText = message
 		alert.runModal()
+	}
+
+	/// Escapes a string for safe use in shell commands by wrapping it in single quotes
+	/// and escaping any single quotes within the string.
+	private func shellEscape(_ string: String) -> String {
+		// Replace each single quote with '\'' (end quote, escaped quote, start quote)
+		let escaped = string.replacingOccurrences(of: "'", with: "'\\''")
+		return "'\(escaped)'"
 	}
 }
