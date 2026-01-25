@@ -37,4 +37,3 @@ class AboutViewController: NSViewController {
 		view.window?.styleMask.remove(.resizable)
 	}
 }
-

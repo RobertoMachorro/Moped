@@ -26,7 +26,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
-		WaitManager.shared.startObserving()
 	}
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
@@ -182,7 +181,7 @@ final class WaitManager: NSObject {
 			name: NSWindow.willCloseNotification,
 			object: nil
 		)
-		
+
 	}
 
 	func handleDocumentClosePath(_ path: String) {
@@ -359,7 +358,7 @@ final class WaitManager: NSObject {
 			return
 		}
 
-		if let controller = window.windowController as? NSWindowController {
+		if let controller = window.windowController {
 			if let document = controller.document as? Document,
 				let path = document.waitTrackingPath() {
 				removePendingPath(path)

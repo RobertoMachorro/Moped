@@ -80,4 +80,3 @@ extension TextFileModel {
 		return language
 	}
 }
-
