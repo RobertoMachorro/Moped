@@ -130,7 +130,8 @@ final class AppActions: NSObject {
 	/// Escapes a string for safe use in shell commands by wrapping it in single quotes
 	/// and escaping any single quotes within the string.
 	private func shellEscape(_ string: String) -> String {
-		// Replace each single quote with '\'' (end quote, escaped quote, start quote)
+		// Replace ' with '\'' (close quote, escaped quote, open quote)
+		// This technique safely escapes single quotes while keeping the string protected from shell metacharacters
 		let escaped = string.replacingOccurrences(of: "'", with: "'\\''")
 		return "'\(escaped)'"
 	}
