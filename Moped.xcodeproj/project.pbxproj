@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,9 +21,6 @@
 		E9F197BF230E1EDD00F81D74 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F197BE230E1EDD00F81D74 /* PreferencesViewController.swift */; };
 		E9FC082D230115B800A1EE3D /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FC082C230115B800A1EE3D /* AboutViewController.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
@@ -134,7 +131,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2620;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = "Roberto Machorro";
 				TargetAttributes = {
 					E9D042082300A9FE00382715 = {
@@ -219,7 +216,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-
 /* Begin PBXVariantGroup section */
 		E9D042142300A9FE00382715 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -293,6 +289,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -353,6 +350,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
