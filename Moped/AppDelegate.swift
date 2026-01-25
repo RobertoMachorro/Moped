@@ -174,14 +174,6 @@ final class WaitManager: NSObject {
 			name: NSApplication.willTerminateNotification,
 			object: nil
 		)
-
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(windowWillClose(_:)),
-			name: NSWindow.willCloseNotification,
-			object: nil
-		)
-
 	}
 
 	func handleDocumentClosePath(_ path: String) {
@@ -346,30 +338,6 @@ final class WaitManager: NSObject {
 			completeSession(sessionID)
 		}
 		sessions.removeAll()
-	}
-
-	@objc private func windowWillClose(_ notification: Notification) {
-		guard let window = notification.object as? NSWindow else {
-			return
-		}
-
-		if let representedURL = window.representedURL {
-			removePendingPath(WaitManager.canonicalPath(for: representedURL))
-			return
-		}
-
-		if let controller = window.windowController {
-			if let document = controller.document as? Document,
-				let path = document.waitTrackingPath() {
-				removePendingPath(path)
-				return
-			}
-
-			if let document = controller.document as? NSDocument,
-				let fileURL = document.fileURL {
-				removePendingPath(WaitManager.canonicalPath(for: fileURL))
-			}
-		}
 	}
 
 	private func completeSession(_ sessionID: String) {
