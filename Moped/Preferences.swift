@@ -94,8 +94,8 @@ class Preferences: NSObject, ObservableObject {
 	}
 
 	func setStringValue(forKey key: String, to value: String) {
-		UserDefaults.standard.set(value, forKey: key)
 		objectWillChange.send()
+		UserDefaults.standard.set(value, forKey: key)
 		NotificationCenter.default.post(name: Notification.Name(rawValue: "PreferencesChanged"), object: nil)
 	}
 }
