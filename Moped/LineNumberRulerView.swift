@@ -119,10 +119,19 @@ class LineNumberRulerView: NSRulerView {
 		NSColor.windowBackgroundColor.setFill()
 		bounds.fill()
 
+		guard let scrollView = scrollView else {
+			return
+		}
+
+		let contentRect = convert(scrollView.contentView.frame, from: scrollView).intersection(bounds)
+		guard !contentRect.isEmpty else {
+			return
+		}
+
 		NSColor.separatorColor.setStroke()
 		let dividerPath = NSBezierPath()
-		dividerPath.move(to: NSPoint(x: bounds.maxX - 0.5, y: bounds.minY))
-		dividerPath.line(to: NSPoint(x: bounds.maxX - 0.5, y: bounds.maxY))
+		dividerPath.move(to: NSPoint(x: bounds.maxX - 0.5, y: contentRect.minY))
+		dividerPath.line(to: NSPoint(x: bounds.maxX - 0.5, y: contentRect.maxY))
 		dividerPath.lineWidth = 1
 		dividerPath.stroke()
 	}

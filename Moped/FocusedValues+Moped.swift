@@ -1,5 +1,5 @@
 //
-//  WindowController.swift
+//  FocusedValues+Moped.swift
 //
 //  Moped - A general purpose text editor, small and light.
 //  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
@@ -18,11 +18,15 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-import Cocoa
+import SwiftUI
 
-class WindowController: NSWindowController {
-	required init?(coder: NSCoder) {
-		super.init(coder: coder)
-		shouldCascadeWindows = true
+struct DocumentContentKey: FocusedValueKey {
+	typealias Value = Binding<String>
+}
+
+extension FocusedValues {
+	var documentContent: Binding<String>? {
+		get { self[DocumentContentKey.self] }
+		set { self[DocumentContentKey.self] = newValue }
 	}
 }
