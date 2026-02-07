@@ -25,6 +25,7 @@ class LineNumberRulerView: NSRulerView {
 
 	var font: NSFont = NSFont.userFixedPitchFont(ofSize: 10) ?? NSFont.systemFont(ofSize: 10) {
 		didSet {
+			updateRuleThickness()
 			needsDisplay = true
 		}
 	}
@@ -37,6 +38,7 @@ class LineNumberRulerView: NSRulerView {
 		self.textView = textView
 		clientView = textView
 		ruleThickness = minimumRuleThickness
+		updateRuleThickness()
 
 		NotificationCenter.default.addObserver(
 			self,
@@ -70,6 +72,7 @@ class LineNumberRulerView: NSRulerView {
 	}
 
 	@objc private func textDidChange(_ notification: Notification) {
+		updateRuleThickness()
 		needsDisplay = true
 	}
 
@@ -86,6 +89,7 @@ class LineNumberRulerView: NSRulerView {
 		}
 
 		layoutManager.ensureLayout(for: textContainer)
+		updateRuleThickness()
 		drawBackgroundAndDivider()
 
 		let visibleRect = scrollView.contentView.bounds
@@ -188,5 +192,21 @@ class LineNumberRulerView: NSRulerView {
 			lineNumber += 1
 			glyphIndex = NSMaxRange(lineRange)
 		}
+	}
+
+	private func updateRuleThickness() {
+		guard let textView = textView else {
+			return
+		}
+
+		let lineCount = textView.string.reduce(into: 1) { count, character in
+			if character == "\n" {
+				count += 1
+			}
+		}
+		let numberOfDigits = max(String(lineCount).count, 2)
+		let widthSample = String(repeating: "8", count: numberOfDigits)
+		let labelWidth = (widthSample as NSString).size(withAttributes: [.font: font]).width
+		ruleThickness = max(minimumRuleThickness, ceil(labelWidth + (padding * 2)))
 	}
 }

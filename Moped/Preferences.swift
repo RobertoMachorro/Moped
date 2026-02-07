@@ -76,6 +76,15 @@ class Preferences: NSObject, ObservableObject {
 		}
 	}
 
+	@objc dynamic var showLineNumberRuler: String {
+		get {
+			getStringValue(forKey: "showLineNumberRuler", otherwiseUse: "Yes")
+		}
+		set {
+			setStringValue(forKey: "showLineNumberRuler", to: newValue)
+		}
+	}
+
 	// MARK: - UserDefaults Helpers
 
 	var fontSizeFloat: CGFloat {
@@ -87,6 +96,10 @@ class Preferences: NSObject, ObservableObject {
 
 	var doLineWrap: Bool {
 		return lineWrap == "Yes"
+	}
+
+	var doShowLineNumberRuler: Bool {
+		return showLineNumberRuler == "Yes"
 	}
 
 	func getStringValue(forKey key: String, otherwiseUse backup: String) -> String {

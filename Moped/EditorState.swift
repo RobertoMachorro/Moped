@@ -107,6 +107,7 @@ final class EditorState: NSObject, ObservableObject {
 	private func applyPreferences() {
 		currentFontSize = preferences.fontSizeFloat
 		setLineWrap(to: preferences.doLineWrap)
+		setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
 		setTheme(to: preferences.theme, fontSize: currentFontSize)
 	}
 
@@ -114,9 +115,17 @@ final class EditorState: NSObject, ObservableObject {
 		let ruler = LineNumberRulerView(textView: textView)
 		lineNumberRuler = ruler
 		scrollView.hasVerticalRuler = true
-		scrollView.rulersVisible = true
 		scrollView.verticalRulerView = ruler
 		updateLineNumberFont()
+	}
+
+	private func setLineNumberRulerVisible(_ visible: Bool) {
+		guard let scrollView = textView?.enclosingScrollView else {
+			return
+		}
+
+		scrollView.hasVerticalRuler = visible
+		scrollView.rulersVisible = visible
 	}
 
 	private func updateLineNumberFont() {
