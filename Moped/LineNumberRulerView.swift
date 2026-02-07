@@ -89,7 +89,6 @@ class LineNumberRulerView: NSRulerView {
 		}
 
 		layoutManager.ensureLayout(for: textContainer)
-		updateRuleThickness()
 		drawBackgroundAndDivider()
 
 		let visibleRect = scrollView.contentView.bounds
