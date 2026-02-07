@@ -50,13 +50,27 @@ private func resolveFileURLs(from paths: [String]) -> [URL] {
 }
 
 private func openFiles(_ urls: [URL]) -> Bool {
+	guard let appURL = NSWorkspace.shared.urlForApplication(
+		withBundleIdentifier: CLIConstants.bundleIdentifier
+	) else {
+		return false
+	}
+
+	let configuration = NSWorkspace.OpenConfiguration()
+	let semaphore = DispatchSemaphore(value: 0)
+	var didOpen = false
+
 	NSWorkspace.shared.open(
 		urls,
-		withAppBundleIdentifier: CLIConstants.bundleIdentifier,
-		options: [],
-		additionalEventParamDescriptor: nil,
-		launchIdentifiers: nil
-	)
+		withApplicationAt: appURL,
+		configuration: configuration
+	) { _, error in
+		didOpen = (error == nil)
+		semaphore.signal()
+	}
+
+	_ = semaphore.wait(timeout: .now() + 10.0)
+	return didOpen
 }
 
 private func ensureAppRunning() -> Bool {
@@ -68,13 +82,26 @@ private func ensureAppRunning() -> Bool {
 		return true
 	}
 
-	let launched = NSWorkspace.shared.launchApplication(
-		withBundleIdentifier: CLIConstants.bundleIdentifier,
-		options: [],
-		additionalEventParamDescriptor: nil,
-		launchIdentifier: nil
-	)
-	if !launched {
+	guard let appURL = NSWorkspace.shared.urlForApplication(
+		withBundleIdentifier: CLIConstants.bundleIdentifier
+	) else {
+		return false
+	}
+
+	let configuration = NSWorkspace.OpenConfiguration()
+	let semaphore = DispatchSemaphore(value: 0)
+	var didLaunch = false
+
+	NSWorkspace.shared.openApplication(
+		at: appURL,
+		configuration: configuration
+	) { _, error in
+		didLaunch = (error == nil)
+		semaphore.signal()
+	}
+
+	_ = semaphore.wait(timeout: .now() + 10.0)
+	if !didLaunch {
 		return false
 	}
 
