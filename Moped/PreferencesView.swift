@@ -29,6 +29,7 @@ struct PreferencesView: View {
 	private let fonts: [String]
 	private let fontSizes: [String]
 	private let wrapOptions = ["Yes", "No"]
+	private let lineNumberRulerOptions = ["Yes", "No"]
 
 	init(preferences: Preferences) {
 		self.preferences = preferences
@@ -86,9 +87,18 @@ struct PreferencesView: View {
 				),
 				options: wrapOptions
 			)
+
+			PreferenceRow(
+				title: "Line Numbers:",
+				selection: Binding(
+					get: { preferences.showLineNumberRuler },
+					set: { preferences.showLineNumberRuler = $0 }
+				),
+				options: lineNumberRulerOptions
+			)
 		}
 		.padding(20)
-		.frame(width: 345, height: 200, alignment: .topLeading)
+		.frame(width: 345, height: 232, alignment: .topLeading)
 	}
 }
 

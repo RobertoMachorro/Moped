@@ -25,18 +25,21 @@ class LineNumberRulerView: NSRulerView {
 
 	var font: NSFont = NSFont.userFixedPitchFont(ofSize: 10) ?? NSFont.systemFont(ofSize: 10) {
 		didSet {
+			updateRuleThickness()
 			needsDisplay = true
 		}
 	}
 
 	private let padding: CGFloat = 5.0
 	private let minimumRuleThickness: CGFloat = 40
+	private var cachedLineCount: Int?
 
 	convenience init(textView: NSTextView) {
 		self.init(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
 		self.textView = textView
 		clientView = textView
 		ruleThickness = minimumRuleThickness
+		updateRuleThickness()
 
 		NotificationCenter.default.addObserver(
 			self,
@@ -70,6 +73,8 @@ class LineNumberRulerView: NSRulerView {
 	}
 
 	@objc private func textDidChange(_ notification: Notification) {
+		cachedLineCount = nil
+		updateRuleThickness()
 		needsDisplay = true
 	}
 
@@ -188,5 +193,37 @@ class LineNumberRulerView: NSRulerView {
 			lineNumber += 1
 			glyphIndex = NSMaxRange(lineRange)
 		}
+	}
+
+	private func updateRuleThickness() {
+		guard let textView = textView else {
+			return
+		}
+
+		let lineCount: Int
+		if let cached = cachedLineCount {
+			lineCount = cached
+		} else {
+			// Use NSString's UTF-16 based scanning for better performance
+			let string = textView.string as NSString
+			var count = 1
+			let length = string.length
+			var index = 0
+
+			while index < length {
+				if string.character(at: index) == 0x0A {
+					count += 1
+				}
+				index += 1
+			}
+
+			lineCount = count
+			cachedLineCount = count
+		}
+
+		let numberOfDigits = max(String(lineCount).count, 2)
+		let widthSample = String(repeating: "8", count: numberOfDigits)
+		let labelWidth = (widthSample as NSString).size(withAttributes: [.font: font]).width
+		ruleThickness = max(minimumRuleThickness, ceil(labelWidth + (padding * 2)))
 	}
 }
