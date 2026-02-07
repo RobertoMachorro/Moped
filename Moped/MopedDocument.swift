@@ -38,7 +38,9 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			let languagesFromUTI = NSDictionary(contentsOfFile: plistPath) {
 			for key in languagesFromUTI.allKeys {
 				if let identifier = key as? String {
-					types.append(UTType(importedAs: identifier))
+					if let type = UTType(identifier) {
+						types.append(type)
+					}
 				}
 			}
 		}
