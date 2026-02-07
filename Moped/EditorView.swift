@@ -33,9 +33,8 @@ struct EditorView: View {
 		VStack(spacing: 0) {
 			TextEditorRepresentable(model: document.model, state: editorState)
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.clipped()
 				.focusedValue(\.documentContent, documentContentBinding)
-
-			Divider()
 
 			HStack(spacing: 12) {
 				Text(document.model.docTypeName)
@@ -53,6 +52,7 @@ struct EditorView: View {
 			}
 			.padding(.horizontal, 10)
 			.frame(height: 20)
+			.background(Color(nsColor: .windowBackgroundColor))
 		}
 		.onAppear {
 			editorState.applyLanguage(document.model.docTypeLanguage)
