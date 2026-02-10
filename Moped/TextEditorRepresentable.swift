@@ -58,6 +58,8 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		textView.string = model.content
 		state.configure(textView: textView, scrollView: scrollView)
 		state.refreshLineNumberRuler()
+		context.coordinator.observeWindowFocusIfNeeded(for: textView)
+		context.coordinator.requestInitialFocusIfNeeded(for: textView)
 
 		return scrollView
 	}
@@ -77,15 +79,90 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			)
 			textView.setSelectedRange(clampedRange)
 		}
+
+		context.coordinator.observeWindowFocusIfNeeded(for: textView)
+		context.coordinator.requestInitialFocusIfNeeded(for: textView)
 	}
 
 	final class Coordinator: NSObject, NSTextViewDelegate {
 		private let model: TextFileModel
 		private let state: EditorState
+		private var didSetInitialFocus = false
+		private weak var observedWindow: NSWindow?
+		private var windowFocusObserver: NSObjectProtocol?
 
 		init(model: TextFileModel, state: EditorState) {
 			self.model = model
 			self.state = state
+		}
+
+		deinit {
+			if let windowFocusObserver {
+				NotificationCenter.default.removeObserver(windowFocusObserver)
+			}
+		}
+
+		func requestInitialFocusIfNeeded(for textView: NSTextView) {
+			requestInitialFocusIfNeeded(for: textView, attempt: 0)
+		}
+
+		private func requestInitialFocusIfNeeded(for textView: NSTextView, attempt: Int) {
+			guard !didSetInitialFocus else {
+				return
+			}
+
+			DispatchQueue.main.async { [weak self, weak textView] in
+				guard let self, let textView, !self.didSetInitialFocus else {
+					return
+				}
+				guard let window = textView.window else {
+					if attempt < 10 {
+						DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self, weak textView] in
+							guard let self, let textView else {
+								return
+							}
+							self.requestInitialFocusIfNeeded(for: textView, attempt: attempt + 1)
+						}
+					}
+					return
+				}
+				self.observeWindowFocus(for: textView, window: window)
+
+				if window.makeFirstResponder(textView) {
+					self.didSetInitialFocus = true
+				}
+			}
+		}
+
+		func observeWindowFocusIfNeeded(for textView: NSTextView) {
+			guard let window = textView.window else {
+				return
+			}
+
+			observeWindowFocus(for: textView, window: window)
+		}
+
+		private func observeWindowFocus(for textView: NSTextView, window: NSWindow) {
+			guard observedWindow !== window else {
+				return
+			}
+
+			if let windowFocusObserver {
+				NotificationCenter.default.removeObserver(windowFocusObserver)
+			}
+
+			observedWindow = window
+			windowFocusObserver = NotificationCenter.default.addObserver(
+				forName: NSWindow.didBecomeKeyNotification,
+				object: window,
+				queue: .main
+			) { [weak textView] _ in
+				guard let textView, let window = textView.window else {
+					return
+				}
+
+				window.makeFirstResponder(textView)
+			}
 		}
 
 		func textDidChange(_ notification: Notification) {
