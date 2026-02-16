@@ -22,6 +22,8 @@ import Cocoa
 import Highlightr
 
 final class EditorState: NSObject, ObservableObject {
+	private static let maxLinesToAnalyzeForIndentStyle = 1000
+
 	let preferences: Preferences
 	let textStorage: CodeAttributedString
 	let supportedLanguages: [String]
@@ -50,14 +52,6 @@ final class EditorState: NSObject, ObservableObject {
 		) { [weak self] _ in
 			self?.applyPreferences()
 		}
-
-		textChangeObserver = NotificationCenter.default.addObserver(
-			forName: NSText.didChangeNotification,
-			object: nil,
-			queue: .main
-		) { [weak self] _ in
-			self?.cachedIndentStyle = nil
-		}
 	}
 
 	deinit {
@@ -79,6 +73,14 @@ final class EditorState: NSObject, ObservableObject {
 
 		setupLineNumberRuler(in: scrollView, textView: textView)
 		applyPreferences()
+
+		textChangeObserver = NotificationCenter.default.addObserver(
+			forName: NSText.didChangeNotification,
+			object: textView,
+			queue: .main
+		) { [weak self] _ in
+			self?.cachedIndentStyle = nil
+		}
 	}
 
 	func applyLanguage(_ language: String) {
@@ -347,7 +349,7 @@ final class MopedTextView: NSTextView {
 		}
 
 		let lines = text.split(whereSeparator: \.isNewline)
-		let maxLinesToAnalyze = 1000
+		let maxLinesToAnalyze = Self.maxLinesToAnalyzeForIndentStyle
 		var tabIndentedLineCount = 0
 		var spaceIndentCounts: [Int: Int] = [:]
 
