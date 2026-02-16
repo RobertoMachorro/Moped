@@ -44,6 +44,13 @@ struct MopedCommands: Commands {
 			.keyboardShortcut("p")
 		}
 
+		CommandMenu("Find") {
+			Button("Find…") {
+				showFindPanel()
+			}
+			.keyboardShortcut("f")
+		}
+
 		CommandMenu("Editor") {
 			Button("Increase") {
 				NSApp.sendAction(
@@ -127,5 +134,15 @@ struct MopedCommands: Commands {
 		} else {
 			printOperation.run()
 		}
+	}
+
+	private func showFindPanel() {
+		let menuItem = NSMenuItem()
+		menuItem.tag = NSTextFinder.Action.showFindInterface.rawValue
+		NSApp.sendAction(
+			#selector(NSTextView.performTextFinderAction(_:)),
+			to: nil,
+			from: menuItem
+		)
 	}
 }

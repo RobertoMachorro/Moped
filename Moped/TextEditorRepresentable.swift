@@ -88,8 +88,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		private let model: TextFileModel
 		private let state: EditorState
 		private var didSetInitialFocus = false
-		private weak var observedWindow: NSWindow?
-		private var windowFocusObserver: NSObjectProtocol?
+		private var appFocusObserver: NSObjectProtocol?
 
 		init(model: TextFileModel, state: EditorState) {
 			self.model = model
@@ -97,8 +96,8 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 
 		deinit {
-			if let windowFocusObserver {
-				NotificationCenter.default.removeObserver(windowFocusObserver)
+			if let appFocusObserver {
+				NotificationCenter.default.removeObserver(appFocusObserver)
 			}
 		}
 
@@ -143,21 +142,22 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 
 		private func observeWindowFocus(for textView: NSTextView, window: NSWindow) {
-			guard observedWindow !== window else {
+			guard appFocusObserver == nil else {
 				return
 			}
 
-			if let windowFocusObserver {
-				NotificationCenter.default.removeObserver(windowFocusObserver)
-			}
-
-			observedWindow = window
-			windowFocusObserver = NotificationCenter.default.addObserver(
-				forName: NSWindow.didBecomeKeyNotification,
-				object: window,
+			appFocusObserver = NotificationCenter.default.addObserver(
+				forName: NSApplication.didBecomeActiveNotification,
+				object: NSApp,
 				queue: .main
 			) { [weak textView] _ in
-				guard let textView, let window = textView.window else {
+				guard let textView, let window = textView.window, window.isKeyWindow else {
+					return
+				}
+				if let responder = window.firstResponder as? NSTextView, responder.isFieldEditor {
+					return
+				}
+				guard window.firstResponder !== textView else {
 					return
 				}
 
