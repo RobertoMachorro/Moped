@@ -200,6 +200,8 @@ final class MopedTextView: NSTextView {
 		}
 	}
 
+	private var cachedIndentStyle: IndentStyle?
+
 	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any?) {
 		editorState?.increaseFontSize()
 	}
@@ -210,6 +212,11 @@ final class MopedTextView: NSTextView {
 
 	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any?) {
 		editorState?.resetFontSize()
+	}
+
+	override func didChangeText() {
+		super.didChangeText()
+		cachedIndentStyle = nil
 	}
 
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
@@ -329,11 +336,16 @@ final class MopedTextView: NSTextView {
 	}
 
 	private func detectIndentStyle(in text: String) -> IndentStyle {
+		if let cached = cachedIndentStyle {
+			return cached
+		}
+
 		let lines = text.split(whereSeparator: \.isNewline)
+		let linesToAnalyze = min(lines.count, 1000)
 		var tabIndentedLineCount = 0
 		var spaceIndentCounts: [Int: Int] = [:]
 
-		for line in lines {
+		for line in lines.prefix(linesToAnalyze) {
 			guard !line.isEmpty else {
 				continue
 			}
@@ -358,14 +370,18 @@ final class MopedTextView: NSTextView {
 		}
 
 		let spaceIndentedLineCount = spaceIndentCounts.values.reduce(0, +)
+		let style: IndentStyle
 		if tabIndentedLineCount == 0, spaceIndentedLineCount == 0 {
-			return .hardTab
+			style = .hardTab
+		} else if tabIndentedLineCount > spaceIndentedLineCount {
+			style = .hardTab
+		} else {
+			let width = inferredSoftTabWidth(from: spaceIndentCounts) ?? 4
+			style = .softSpaces(width)
 		}
-		if tabIndentedLineCount > spaceIndentedLineCount {
-			return .hardTab
-		}
-		let width = inferredSoftTabWidth(from: spaceIndentCounts) ?? 4
-		return .softSpaces(width)
+
+		cachedIndentStyle = style
+		return style
 	}
 
 	private func inferredSoftTabWidth(from counts: [Int: Int]) -> Int? {
