@@ -30,6 +30,7 @@ struct PreferencesView: View {
 	private let fontSizes: [String]
 	private let wrapOptions = ["Yes", "No"]
 	private let lineNumberRulerOptions = ["Yes", "No"]
+	private let appIconOptions = Preferences.AppIcon.allCases.map { $0.rawValue }
 
 	init(preferences: Preferences) {
 		self.preferences = preferences
@@ -96,9 +97,18 @@ struct PreferencesView: View {
 				),
 				options: lineNumberRulerOptions
 			)
+
+			PreferenceRow(
+				title: "Active Icon:",
+				selection: Binding(
+					get: { preferences.appIcon },
+					set: { preferences.appIcon = $0 }
+				),
+				options: appIconOptions
+			)
 		}
 		.padding(20)
-		.frame(width: 345, height: 232, alignment: .topLeading)
+		.frame(width: 345, height: 268, alignment: .topLeading)
 	}
 }
 

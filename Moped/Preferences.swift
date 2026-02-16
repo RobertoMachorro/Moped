@@ -22,6 +22,32 @@ import Combine
 import Foundation
 
 class Preferences: NSObject, ObservableObject {
+	enum AppIcon: String, CaseIterable {
+		case defaultIcon = "Default"
+		case pink = "Pink"
+		case black = "Black"
+		case red = "Red"
+		case rainbow = "Rainbow"
+		case beige = "Beige"
+
+		var appIconSetName: String {
+			switch self {
+			case .defaultIcon:
+				return "AppIconDefault"
+			case .pink:
+				return "AppIconPink"
+			case .black:
+				return "AppIconBlack"
+			case .red:
+				return "AppIconRed"
+			case .rainbow:
+				return "AppIconRainbow"
+			case .beige:
+				return "AppIconBeige"
+			}
+		}
+	}
+
 	// MARK: - Singleton with Custom Setup
 
 	static let userShared: Preferences = {
@@ -85,6 +111,21 @@ class Preferences: NSObject, ObservableObject {
 		}
 	}
 
+	@objc dynamic var appIcon: String {
+		get {
+			let selectedIconName = getStringValue(
+				forKey: "appIcon",
+				otherwiseUse: AppIcon.defaultIcon.rawValue
+			)
+			return AppIcon(rawValue: selectedIconName)?.rawValue ?? AppIcon.defaultIcon.rawValue
+		}
+		set {
+			let selectedIconName = AppIcon(rawValue: newValue)?.rawValue
+				?? AppIcon.defaultIcon.rawValue
+			setStringValue(forKey: "appIcon", to: selectedIconName)
+		}
+	}
+
 	// MARK: - UserDefaults Helpers
 
 	var fontSizeFloat: CGFloat {
@@ -100,6 +141,10 @@ class Preferences: NSObject, ObservableObject {
 
 	var doShowLineNumberRuler: Bool {
 		return showLineNumberRuler == "Yes"
+	}
+
+	var selectedAppIcon: AppIcon {
+		return AppIcon(rawValue: appIcon) ?? .defaultIcon
 	}
 
 	func getStringValue(forKey key: String, otherwiseUse backup: String) -> String {
