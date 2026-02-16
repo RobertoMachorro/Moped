@@ -202,6 +202,8 @@ final class MopedTextView: NSTextView {
 
 	private var cachedIndentStyle: IndentStyle?
 
+	private static let maxLinesToAnalyzeForIndent = 1000
+
 	@IBAction func fontSizeIncreaseMenuItemSelected(_ sender: Any?) {
 		editorState?.increaseFontSize()
 	}
@@ -341,7 +343,7 @@ final class MopedTextView: NSTextView {
 		}
 
 		let lines = text.split(whereSeparator: \.isNewline)
-		let linesToAnalyze = min(lines.count, 1000)
+		let linesToAnalyze = min(lines.count, Self.maxLinesToAnalyzeForIndent)
 		var tabIndentedLineCount = 0
 		var spaceIndentCounts: [Int: Int] = [:]
 
