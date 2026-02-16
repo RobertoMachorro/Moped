@@ -74,6 +74,9 @@ final class EditorState: NSObject, ObservableObject {
 		setupLineNumberRuler(in: scrollView, textView: textView)
 		applyPreferences()
 
+		if let observer = textChangeObserver {
+			NotificationCenter.default.removeObserver(observer)
+		}
 		textChangeObserver = NotificationCenter.default.addObserver(
 			forName: NSText.didChangeNotification,
 			object: textView,
