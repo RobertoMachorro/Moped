@@ -99,7 +99,7 @@ struct PreferencesView: View {
 			)
 
 			PreferenceRow(
-				title: "App Icon:",
+				title: "Active Icon:",
 				selection: Binding(
 					get: { preferences.appIcon },
 					set: { preferences.appIcon = $0 }
