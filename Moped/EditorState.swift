@@ -356,10 +356,7 @@ final class MopedTextView: NSTextView {
 		var tabIndentedLineCount = 0
 		var spaceIndentCounts: [Int: Int] = [:]
 
-		for (index, line) in lines.enumerated() {
-			if index >= maxLinesToAnalyze {
-				break
-			}
+		for line in lines.prefix(maxLinesToAnalyze) {
 			guard !line.isEmpty else {
 				continue
 			}
