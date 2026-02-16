@@ -28,7 +28,9 @@ final class EditorState: NSObject, ObservableObject {
 	let availableThemes: [String]
 
 	private var preferencesObserver: NSObjectProtocol?
+	private var textChangeObserver: NSObjectProtocol?
 	private var currentFontSize: CGFloat
+	private var cachedIndentStyle: IndentStyle?
 
 	weak var textView: MopedTextView?
 	weak var lineNumberRuler: LineNumberRulerView?
@@ -48,10 +50,21 @@ final class EditorState: NSObject, ObservableObject {
 		) { [weak self] _ in
 			self?.applyPreferences()
 		}
+
+		textChangeObserver = NotificationCenter.default.addObserver(
+			forName: NSText.didChangeNotification,
+			object: nil,
+			queue: .main
+		) { [weak self] _ in
+			self?.cachedIndentStyle = nil
+		}
 	}
 
 	deinit {
 		if let observer = preferencesObserver {
+			NotificationCenter.default.removeObserver(observer)
+		}
+		if let observer = textChangeObserver {
 			NotificationCenter.default.removeObserver(observer)
 		}
 	}
@@ -329,11 +342,19 @@ final class MopedTextView: NSTextView {
 	}
 
 	private func detectIndentStyle(in text: String) -> IndentStyle {
+		if let cached = cachedIndentStyle {
+			return cached
+		}
+
 		let lines = text.split(whereSeparator: \.isNewline)
+		let maxLinesToAnalyze = 1000
 		var tabIndentedLineCount = 0
 		var spaceIndentCounts: [Int: Int] = [:]
 
-		for line in lines {
+		for (index, line) in lines.enumerated() {
+			if index >= maxLinesToAnalyze {
+				break
+			}
 			guard !line.isEmpty else {
 				continue
 			}
@@ -358,14 +379,18 @@ final class MopedTextView: NSTextView {
 		}
 
 		let spaceIndentedLineCount = spaceIndentCounts.values.reduce(0, +)
+		let detectedStyle: IndentStyle
 		if tabIndentedLineCount == 0, spaceIndentedLineCount == 0 {
-			return .hardTab
+			detectedStyle = .hardTab
+		} else if tabIndentedLineCount > spaceIndentedLineCount {
+			detectedStyle = .hardTab
+		} else {
+			let width = inferredSoftTabWidth(from: spaceIndentCounts) ?? 4
+			detectedStyle = .softSpaces(width)
 		}
-		if tabIndentedLineCount > spaceIndentedLineCount {
-			return .hardTab
-		}
-		let width = inferredSoftTabWidth(from: spaceIndentCounts) ?? 4
-		return .softSpaces(width)
+
+		cachedIndentStyle = detectedStyle
+		return detectedStyle
 	}
 
 	private func inferredSoftTabWidth(from counts: [Int: Int]) -> Int? {
