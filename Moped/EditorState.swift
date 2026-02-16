@@ -230,15 +230,15 @@ final class MopedTextView: NSTextView {
 
 		switch key {
 		case "[":
-			return shiftIndentationRight(false)
+			return adjustIndentation(false)
 		case "]":
-			return shiftIndentationRight(true)
+			return adjustIndentation(true)
 		default:
 			return super.performKeyEquivalent(with: event)
 		}
 	}
 
-	private func shiftIndentationRight(_ shouldIndent: Bool) -> Bool {
+	private func adjustIndentation(_ shouldIndent: Bool) -> Bool {
 		guard isEditable else {
 			return false
 		}
