@@ -21,11 +21,15 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+	private var preferencesObserver: NSObjectProtocol?
+
 	// MARK: - Application Delegate
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		NSApp.setActivationPolicy(.regular)
 		NSApp.activate(ignoringOtherApps: true)
+		applySelectedAppIcon()
+		startObservingPreferenceChanges()
 	}
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
@@ -44,6 +48,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		true
 	}
 
+	deinit {
+		if let preferencesObserver {
+			NotificationCenter.default.removeObserver(preferencesObserver)
+		}
+	}
+
+	private func startObservingPreferenceChanges() {
+		preferencesObserver = NotificationCenter.default.addObserver(
+			forName: Notification.Name(rawValue: "PreferencesChanged"),
+			object: nil,
+			queue: .main
+		) { [weak self] _ in
+			self?.applySelectedAppIcon()
+		}
+	}
+
+	private func applySelectedAppIcon() {
+		let selectedIcon = Preferences.userShared.selectedAppIcon
+		NSApplication.shared.applicationIconImage = NSImage(named: selectedIcon.assetName)
+	}
 }
 
 extension AppDelegate {
