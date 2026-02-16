@@ -292,7 +292,8 @@ final class MopedTextView: NSTextView {
 
 	private func applyIndent(to block: String, indentUnit: String) -> String {
 		transformLines(in: block) { line in
-			indentUnit + line
+			guard !line.isEmpty else { return line }
+			return indentUnit + line
 		}
 	}
 
