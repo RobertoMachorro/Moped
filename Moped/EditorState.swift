@@ -283,7 +283,9 @@ final class MopedTextView: NSTextView {
 		var normalized = selectedRange
 		if normalized.length > 0 {
 			let end = NSMaxRange(normalized)
-			if end > 0, end <= text.length, text.character(at: end - 1) == 10 {
+			if let newline = "\n".utf16.first,
+			   end > 0, end <= text.length,
+			   text.character(at: end - 1) == newline {
 				normalized.length -= 1
 			}
 		}
