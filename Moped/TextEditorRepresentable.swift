@@ -20,12 +20,6 @@
 
 import SwiftUI
 
-final class BorderlessScrollView: NSScrollView {
-	override func draw(_ dirtyRect: NSRect) {
-		// Avoid default bounds/border drawing artifacts around the editor container.
-	}
-}
-
 struct TextEditorRepresentable: NSViewRepresentable {
 	@ObservedObject var model: TextFileModel
 	@ObservedObject var state: EditorState
@@ -46,9 +40,9 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		textView.isAutomaticDashSubstitutionEnabled = false
 		textView.delegate = context.coordinator
 
-		let scrollView = BorderlessScrollView()
+		let scrollView = NSScrollView()
 		scrollView.borderType = .noBorder
-		scrollView.drawsBackground = false
+		scrollView.drawsBackground = true
 		scrollView.wantsLayer = true
 		scrollView.layer?.masksToBounds = true
 		scrollView.hasVerticalScroller = true

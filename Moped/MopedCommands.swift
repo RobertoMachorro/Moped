@@ -137,12 +137,108 @@ struct MopedCommands: Commands {
 	}
 
 	private func showFindPanel() {
-		let menuItem = NSMenuItem()
-		menuItem.tag = NSTextFinder.Action.showFindInterface.rawValue
-		NSApp.sendAction(
-			#selector(NSTextView.performTextFinderAction(_:)),
+		if let textView = activeTextView() {
+			textView.window?.makeFirstResponder(textView)
+			textView.usesFindBar = true
+			if let scrollView = textView.enclosingScrollView {
+				scrollView.findBarPosition = .aboveContent
+				scrollView.isFindBarVisible = true
+			}
+
+			let textFinderItem = NSMenuItem()
+			textFinderItem.tag = NSTextFinder.Action.showFindInterface.rawValue
+			textView.performTextFinderAction(textFinderItem)
+			if let scrollView = textView.enclosingScrollView {
+				applySystemFindBarAppearanceWhenReady(in: scrollView, window: textView.window)
+			}
+			return
+		}
+
+		let textFinderItem = NSMenuItem()
+		textFinderItem.tag = NSTextFinder.Action.showFindInterface.rawValue
+		if NSApp.sendAction(
+			#selector(NSResponder.performTextFinderAction(_:)),
 			to: nil,
-			from: menuItem
-		)
+			from: textFinderItem
+		) {
+			return
+		}
+
+		NSSound.beep()
+	}
+
+	private func applySystemFindBarAppearanceWhenReady(
+		in scrollView: NSScrollView,
+		window: NSWindow?,
+		attempt: Int = 0
+	) {
+		let applied = applySystemFindBarAppearance(in: scrollView, window: window)
+		guard !applied, attempt < 10 else {
+			return
+		}
+
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
+			applySystemFindBarAppearanceWhenReady(
+				in: scrollView,
+				window: window,
+				attempt: attempt + 1
+			)
+		}
+	}
+
+	@discardableResult
+	private func applySystemFindBarAppearance(in scrollView: NSScrollView, window: NSWindow?) -> Bool {
+		guard let findBarView = scrollView.findBarView else {
+			return false
+		}
+
+		findBarView.clearExplicitAppearanceRecursively()
+		let effectiveAppearance = window?.effectiveAppearance ?? NSApp.effectiveAppearance
+		let match = effectiveAppearance.bestMatch(from: [.darkAqua, .aqua])
+		let appearanceName: NSAppearance.Name = match == .darkAqua ? .darkAqua : .aqua
+		findBarView.appearance = NSAppearance(named: appearanceName)
+		findBarView.wantsLayer = true
+		findBarView.layer?.backgroundColor = (
+			match == .darkAqua
+			? NSColor(calibratedWhite: 0.15, alpha: 1.0)
+			: NSColor(calibratedWhite: 0.95, alpha: 1.0)
+		).cgColor
+		findBarView.needsDisplay = true
+		return true
+	}
+
+	private func activeTextView() -> NSTextView? {
+		guard let window = NSApp.keyWindow else {
+			return nil
+		}
+
+		if let textView = window.firstResponder as? NSTextView, !textView.isFieldEditor {
+			return textView
+		}
+
+		return window.contentView?.firstDescendantTextView()
+	}
+}
+
+private extension NSView {
+	func firstDescendantTextView() -> NSTextView? {
+		if let textView = self as? NSTextView, !textView.isFieldEditor {
+			return textView
+		}
+
+		for subview in subviews {
+			if let textView = subview.firstDescendantTextView() {
+				return textView
+			}
+		}
+
+		return nil
+	}
+
+	func clearExplicitAppearanceRecursively() {
+		appearance = nil
+		for subview in subviews {
+			subview.clearExplicitAppearanceRecursively()
+		}
 	}
 }
