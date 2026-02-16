@@ -30,7 +30,7 @@ class Preferences: NSObject, ObservableObject {
 		case rainbow = "Rainbow"
 		case beige = "Beige"
 
-		var assetName: String {
+		var appIconSetName: String {
 			switch self {
 			case .defaultIcon:
 				return "AppIconDefault"
