@@ -33,6 +33,8 @@ class LineNumberRulerView: NSRulerView {
 	private let padding: CGFloat = 5.0
 	private let minimumRuleThickness: CGFloat = 40
 	private var cachedLineCount: Int?
+	private var deferredRecalcWorkItem: DispatchWorkItem?
+	private var hasScheduledInitialThickness = false
 
 	convenience init(textView: NSTextView) {
 		self.init(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
@@ -54,6 +56,15 @@ class LineNumberRulerView: NSRulerView {
 			name: NSView.boundsDidChangeNotification,
 			object: textView.enclosingScrollView?.contentView
 		)
+		
+		if !hasScheduledInitialThickness {
+			hasScheduledInitialThickness = true
+			let work = DispatchWorkItem { [weak self] in
+				self?.recalculateThicknessFromFullText()
+			}
+			deferredRecalcWorkItem = work
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: work)
+		}
 	}
 
 	override init(scrollView: NSScrollView?, orientation: NSRulerView.Orientation) {
@@ -76,6 +87,13 @@ class LineNumberRulerView: NSRulerView {
 		cachedLineCount = nil
 		updateRuleThickness()
 		needsDisplay = true
+
+		deferredRecalcWorkItem?.cancel()
+		let work = DispatchWorkItem { [weak self] in
+			self?.recalculateThicknessFromFullText()
+		}
+		deferredRecalcWorkItem = work
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: work)
 	}
 
 	@objc private func boundsDidChange(_ notification: Notification) {
@@ -200,30 +218,37 @@ class LineNumberRulerView: NSRulerView {
 			return
 		}
 
-		let lineCount: Int
-		if let cached = cachedLineCount {
-			lineCount = cached
+		let lineCount = cachedLineCount
+		let numberOfDigits: Int
+		if let lineCount {
+			numberOfDigits = max(String(lineCount).count, 2)
 		} else {
-			// Use NSString's UTF-16 based scanning for better performance
-			let string = textView.string as NSString
-			var count = 1
-			let length = string.length
-			var index = 0
-
-			while index < length {
-				if string.character(at: index) == 0x0A {
-					count += 1
-				}
-				index += 1
-			}
-
-			lineCount = count
-			cachedLineCount = count
+			// Avoid scanning the entire text during initial layout/typing; use a minimal estimate.
+			numberOfDigits = 2
 		}
 
-		let numberOfDigits = max(String(lineCount).count, 2)
 		let widthSample = String(repeating: "8", count: numberOfDigits)
 		let labelWidth = (widthSample as NSString).size(withAttributes: [.font: font]).width
 		ruleThickness = max(minimumRuleThickness, ceil(labelWidth + (padding * 2)))
+	}
+
+	private func recalculateThicknessFromFullText() {
+		guard let textView = textView else { return }
+
+		// Use NSString's UTF-16 based scanning for better performance
+		let string = textView.string as NSString
+		var count = 1
+		let length = string.length
+		var index = 0
+
+		while index < length {
+			if string.character(at: index) == 0x0A {
+				count += 1
+			}
+			index += 1
+		}
+
+		cachedLineCount = count
+		updateRuleThickness()
 	}
 }
