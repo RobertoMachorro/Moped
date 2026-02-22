@@ -70,14 +70,15 @@ extension TextFileModel {
 }
 
 extension TextFileModel {
-	func getLanguageForType(typeName: String) -> String {
-		guard let plistPath = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
-			  let languagesFromUTI = NSDictionary(contentsOfFile: plistPath),
-			  let language = languagesFromUTI[typeName] as? String
-		else {
-			print("Unknown doctTypeName: \(docTypeName)")
-			return "plaintext"
+	private static let languagesFromUTI: [String: String] = {
+		guard let path = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
+			  let dict = NSDictionary(contentsOfFile: path) as? [String: String] else {
+			return [:]
 		}
-		return language
+		return dict
+	}()
+
+	func getLanguageForType(typeName: String) -> String {
+		return Self.languagesFromUTI[typeName] ?? "plaintext"
 	}
 }

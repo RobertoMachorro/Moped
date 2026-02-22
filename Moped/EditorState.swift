@@ -36,8 +36,8 @@ final class EditorState: NSObject, ObservableObject {
 	init(preferences: Preferences = .userShared) {
 		self.preferences = preferences
 		textStorage = CodeAttributedString()
-		supportedLanguages = textStorage.highlightr.supportedLanguages().sorted()
-		availableThemes = textStorage.highlightr.availableThemes().sorted()
+		supportedLanguages = HighlightrCatalog.shared.supportedLanguages
+		availableThemes = HighlightrCatalog.shared.availableThemes
 		currentFontSize = preferences.fontSizeFloat
 		super.init()
 
