@@ -54,9 +54,6 @@ struct EditorView: View {
 			.frame(height: 20)
 			.background(Color(nsColor: .windowBackgroundColor))
 		}
-		.onAppear {
-			editorState.applyLanguage(document.model.docTypeLanguage)
-		}
 	}
 
 	private var languageBinding: Binding<String> {
@@ -76,3 +73,4 @@ struct EditorView: View {
 		)
 	}
 }
+

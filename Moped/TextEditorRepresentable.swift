@@ -49,8 +49,14 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		scrollView.documentView = textView
 		scrollView.findBarPosition = .aboveContent
 
-		textView.string = model.content
 		state.configure(textView: textView, scrollView: scrollView)
+		state.applyLanguage(model.docTypeLanguage)
+
+		textView.layoutManager?.allowsNonContiguousLayout = true
+		textView.textStorage?.beginEditing()
+		textView.string = model.content
+		textView.textStorage?.endEditing()
+
 		state.refreshLineNumberRuler()
 		context.coordinator.observeWindowFocusIfNeeded(for: textView)
 		context.coordinator.requestInitialFocusIfNeeded(for: textView)
@@ -203,3 +209,4 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 	}
 }
+
