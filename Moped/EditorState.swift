@@ -108,7 +108,7 @@ final class EditorState: NSObject, ObservableObject {
 		if !requested.isEmpty, supportedLanguages.contains(requested) {
 			finalLanguage = requested
 		} else {
-			finalLanguage = "swift"
+			finalLanguage = "plaintext"
 		}
 		textStorage.language = finalLanguage
 	}
