@@ -26,6 +26,7 @@ class TextFileModel: NSObject, ObservableObject {
 	@Published var docTypeName: String
 	@Published var docTypeLanguage: String
 	var encoding: String.Encoding
+	var isLargeFile: Bool = false
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content
@@ -82,3 +83,4 @@ extension TextFileModel {
 		return Self.languagesFromUTI[typeName] ?? "plaintext"
 	}
 }
+

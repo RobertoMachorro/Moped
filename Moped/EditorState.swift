@@ -29,6 +29,7 @@ final class EditorState: NSObject, ObservableObject {
 
 	private var preferencesObserver: NSObjectProtocol?
 	private var currentFontSize: CGFloat
+	private var highlightingEnabled = true
 
 	weak var textView: MopedTextView?
 	weak var lineNumberRuler: LineNumberRulerView?
@@ -50,6 +51,10 @@ final class EditorState: NSObject, ObservableObject {
 		}
 	}
 
+	func prepareForLargeFileMode() {
+		highlightingEnabled = false
+	}
+
 	deinit {
 		if let observer = preferencesObserver {
 			NotificationCenter.default.removeObserver(observer)
@@ -60,12 +65,15 @@ final class EditorState: NSObject, ObservableObject {
 		self.textView = textView
 		textView.editorState = self
 
-		if let layoutManager = textView.layoutManager {
+		if highlightingEnabled, let layoutManager = textView.layoutManager {
 			textStorage.addLayoutManager(layoutManager)
 		}
 
 		setupLineNumberRuler(in: scrollView, textView: textView)
 		applyPreferences()
+		if !highlightingEnabled {
+			applyPlainStyling(to: textView)
+		}
 	}
 
 	func applyLanguage(_ language: String) {
@@ -104,8 +112,34 @@ final class EditorState: NSObject, ObservableObject {
 		textView.enclosingScrollView?.verticalRulerView?.needsDisplay = true
 	}
 
+	func setHighlightingEnabled(_ enabled: Bool) {
+		highlightingEnabled = enabled
+		guard let textView = textView else { return }
+
+		ensureTextStorageAttachment(for: textView)
+
+		if enabled {
+			applyLanguage(preferences.language)
+			setTheme(to: preferences.theme, fontSize: currentFontSize)
+		} else {
+			applyPlainStyling(to: textView)
+		}
+	}
+
+	func forceLineNumberRulerVisible(_ visible: Bool) {
+		setLineNumberRulerVisible(visible)
+	}
+
 	private func applyPreferences() {
 		currentFontSize = preferences.fontSizeFloat
+		if !highlightingEnabled {
+			setLineWrap(to: preferences.doLineWrap)
+			setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
+			if let textView = textView {
+				applyPlainStyling(to: textView)
+			}
+			return
+		}
 		setLineWrap(to: preferences.doLineWrap)
 		setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
 		setTheme(to: preferences.theme, fontSize: currentFontSize)
@@ -117,6 +151,34 @@ final class EditorState: NSObject, ObservableObject {
 		scrollView.hasVerticalRuler = true
 		scrollView.verticalRulerView = ruler
 		updateLineNumberFont()
+	}
+
+	private func ensureTextStorageAttachment(for textView: NSTextView) {
+		guard let layoutManager = textView.layoutManager else { return }
+		let currentStorage = layoutManager.textStorage
+
+		if highlightingEnabled {
+			// Attach Highlightr storage if not already attached
+			if currentStorage !== textStorage {
+				let existingString = currentStorage?.string ?? textView.string
+				currentStorage?.removeLayoutManager(layoutManager)
+				textStorage.beginEditing()
+				textStorage.setAttributedString(NSAttributedString(string: existingString))
+				textStorage.endEditing()
+				textStorage.addLayoutManager(layoutManager)
+			}
+		} else {
+			// Ensure we're using a plain storage (not the Highlightr storage)
+			if currentStorage === textStorage {
+				let existingString = textStorage.string
+				textStorage.removeLayoutManager(layoutManager)
+				let plain = NSTextStorage()
+				plain.beginEditing()
+				plain.setAttributedString(NSAttributedString(string: existingString))
+				plain.endEditing()
+				plain.addLayoutManager(layoutManager)
+			}
+		}
 	}
 
 	private func setLineNumberRulerVisible(_ visible: Bool) {
@@ -173,13 +235,38 @@ final class EditorState: NSObject, ObservableObject {
 		updateLineNumberFont()
 	}
 
+	private func applyPlainStyling(to textView: NSTextView) {
+		let font = NSFont(name: preferences.font, size: currentFontSize)
+			?? NSFont.userFixedPitchFont(ofSize: currentFontSize)
+			?? NSFont.systemFont(ofSize: currentFontSize)
+		textView.font = font
+		textView.textColor = .textColor
+		textView.backgroundColor = .textBackgroundColor
+		textView.insertionPointColor = caretColor(using: textView.backgroundColor)
+	}
+
 	private func caretColor(using color: NSColor) -> NSColor {
-		// swiftlint:disable:next identifier_name
-		var r: CGFloat = 1.0, g: CGFloat = 1.0, b: CGFloat = 1.0
-		if color.colorSpace == NSColorSpace.sRGB {
-			color.getRed(&r, green: &g, blue: &b, alpha: nil)
+		// Resolve dynamic system colors and convert to an RGB color space before extracting components
+		let resolved = color.usingColorSpace(.sRGB) ??
+					   color.usingColorSpace(.deviceRGB) ??
+					   color.usingColorSpace(.genericRGB)
+
+		var r: CGFloat = 1, g: CGFloat = 1, b: CGFloat = 1, a: CGFloat = 1
+
+		if let rgb = resolved {
+			var rr: CGFloat = 1, gg: CGFloat = 1, bb: CGFloat = 1, aa: CGFloat = 1
+			rgb.getRed(&rr, green: &gg, blue: &bb, alpha: &aa)
+			r = rr; g = gg; b = bb; a = aa
+			return NSColor(red: 1 - r, green: 1 - g, blue: 1 - b, alpha: a)
+		} else {
+			// Fallback: compute a contrasting caret color using perceived luminance to avoid crashes
+			let cg = color.cgColor
+			if let comps = cg.components, comps.count >= 3 {
+				r = comps[0]; g = comps[1]; b = comps[2]
+			}
+			let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+			return luminance > 0.5 ? .black : .white
 		}
-		return NSColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: 1)
 	}
 }
 
@@ -414,3 +501,4 @@ final class MopedTextView: NSTextView {
 		return bestWidth
 	}
 }
+

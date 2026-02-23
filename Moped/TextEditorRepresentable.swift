@@ -49,13 +49,26 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		scrollView.documentView = textView
 		scrollView.findBarPosition = .aboveContent
 
+		// Mark large-file mode before configuring so we don't attach Highlightr storage
+		if model.isLargeFile {
+			state.prepareForLargeFileMode()
+		}
+
 		state.configure(textView: textView, scrollView: scrollView)
-		state.applyLanguage(model.docTypeLanguage)
+
+		// Only apply language when highlighting is enabled (non-large files)
+		if !model.isLargeFile {
+			state.applyLanguage(model.docTypeLanguage)
+		}
 
 		textView.layoutManager?.allowsNonContiguousLayout = true
 		textView.textStorage?.beginEditing()
 		textView.string = model.content
 		textView.textStorage?.endEditing()
+		
+		if model.isLargeFile {
+			state.forceLineNumberRulerVisible(false)
+		}
 
 		state.refreshLineNumberRuler()
 		context.coordinator.observeWindowFocusIfNeeded(for: textView)

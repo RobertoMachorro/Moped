@@ -25,6 +25,7 @@ import UniformTypeIdentifiers
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	/// Maximum file size in bytes (1 MB) to prevent performance issues or crashes
 	private static let maxFileLength = 1_048_576
+	private static let largeFileThreshold = 262_144 // 256 KB
 
 	static var readableContentTypes: [UTType] = {
 		var types: [UTType] = [
@@ -75,6 +76,10 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			typeLanguage: "plaintext"
 		)
 
+		if let data = configuration.file.regularFileContents {
+			model.isLargeFile = data.count > MopedDocument.largeFileThreshold
+		}
+
 		guard let data = configuration.file.regularFileContents else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
@@ -118,3 +123,4 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 	}
 }
+
