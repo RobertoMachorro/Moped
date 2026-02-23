@@ -21,6 +21,9 @@
 import Cocoa
 import Highlightr
 
+// swiftlint:disable file_length
+
+// swiftlint:disable:next type_body_length
 final class EditorState: NSObject, ObservableObject {
 	let preferences: Preferences
 	let textStorage: CodeAttributedString
