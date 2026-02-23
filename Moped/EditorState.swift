@@ -314,11 +314,14 @@ final class EditorState: NSObject, ObservableObject {
 			r = rr; g = gg; b = bb; a = aa
 			return NSColor(red: 1 - r, green: 1 - g, blue: 1 - b, alpha: a)
 		} else {
-			// Fallback: compute a contrasting caret color using perceived luminance to avoid crashes
+			// Fallback: compute a contrasting caret color using perceived luminance.
+			// If components are unavailable, return a safe default caret color.
 			let cg = color.cgColor
-			if let comps = cg.components, comps.count >= 3 {
-				r = comps[0]; g = comps[1]; b = comps[2]
+			guard let comps = cg.components, comps.count >= 3 else {
+				// Safe default when we can't reliably read color components
+				return .black
 			}
+			r = comps[0]; g = comps[1]; b = comps[2]
 			let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
 			return luminance > 0.5 ? .black : .white
 		}
