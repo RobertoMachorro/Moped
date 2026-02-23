@@ -27,6 +27,7 @@ class TextFileModel: NSObject, ObservableObject {
 	@Published var docTypeLanguage: String
 	var encoding: String.Encoding
 	var isLargeFile: Bool = false
+	var programmaticChangeID: Int = 0
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content
@@ -61,6 +62,7 @@ extension TextFileModel {
 		} else {
 			content = "** UNRECOGNIZED FILE **"
 		}
+		programmaticChangeID &+= 1
 	}
 
 	func data(ofType typeName: String) -> Data? {
