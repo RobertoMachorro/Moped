@@ -22,11 +22,11 @@ import SwiftUI
 
 struct EditorView: View {
 	@ObservedObject private var document: MopedDocument
-	@State private var editorState: EditorState
+	@StateObject private var editorState: EditorState
 
 	init(document: MopedDocument) {
 		_document = ObservedObject(wrappedValue: document)
-		_editorState = State(initialValue: EditorState())
+		_editorState = StateObject(wrappedValue: EditorState())
 	}
 
 	var body: some View {
@@ -54,9 +54,6 @@ struct EditorView: View {
 			.frame(height: 20)
 			.background(Color(nsColor: .windowBackgroundColor))
 		}
-		.onAppear {
-			editorState.applyLanguage(document.model.docTypeLanguage)
-		}
 	}
 
 	private var languageBinding: Binding<String> {
@@ -76,3 +73,4 @@ struct EditorView: View {
 		)
 	}
 }
+

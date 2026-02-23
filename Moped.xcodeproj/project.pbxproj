@@ -13,8 +13,8 @@
 		A1B2C3D4E500000000000012 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000112 /* EditorView.swift */; };
 		A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000113 /* PreferencesView.swift */; };
 		A1B2C3D4E500000000000014 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000114 /* AboutView.swift */; };
-		A1B2C3D4E500000000000017 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000117 /* AppActions.swift */; };
 		A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000116 /* WaitManager.swift */; };
+		A1B2C3D4E500000000000017 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000117 /* AppActions.swift */; };
 		A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000220 /* MopedApp.swift */; };
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
 		A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000222 /* MopedCommands.swift */; };
@@ -23,6 +23,7 @@
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
+		E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -34,8 +35,8 @@
 		A1B2C3D4E500000000000112 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000113 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000114 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E500000000000117 /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000116 /* WaitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitManager.swift; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000117 /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000220 /* MopedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000222 /* MopedCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedCommands.swift; sourceTree = "<group>"; };
@@ -43,6 +44,7 @@
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
+		E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightrCatalog.swift; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				A1B2C3D4E500000000000221 /* MopedDocument.swift */,
 				A1B2C3D4E500000000000222 /* MopedCommands.swift */,
 				A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */,
+				E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */,
 				A1B2C3D4E500000000000114 /* AboutView.swift */,
 				A1B2C3D4E500000000000112 /* EditorView.swift */,
 				A1B2C3D4E500000000000110 /* EditorState.swift */,
@@ -223,6 +226,7 @@
 				A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */,
 				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
 				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
+				E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */,
 				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
@@ -235,9 +239,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		E9D042192300A9FE00382715 /* Debug */ = {
@@ -372,8 +373,8 @@
 		E9D0421C2300A9FE00382715 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconDefault AppIconPink AppIconBlack AppIconRed AppIconRainbow AppIconBeige";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_ENTITLEMENTS = Moped/Moped.entitlements;
@@ -404,8 +405,8 @@
 		E9D0421D2300A9FE00382715 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconDefault AppIconPink AppIconBlack AppIconRed AppIconRainbow AppIconBeige";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOLS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = NO;
 				CODE_SIGN_ENTITLEMENTS = Moped/Moped.entitlements;

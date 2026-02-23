@@ -35,9 +35,9 @@ struct PreferencesView: View {
 	init(preferences: Preferences) {
 		self.preferences = preferences
 
-		let highlightrTextStorage = CodeAttributedString()
-		languages = highlightrTextStorage.highlightr.supportedLanguages().sorted()
-		themes = highlightrTextStorage.highlightr.availableThemes().sorted()
+		let catalog = HighlightrCatalog.shared
+		languages = catalog.supportedLanguages
+		themes = catalog.availableThemes
 		fonts = NSFontManager.shared.availableFonts.sorted()
 		fontSizes = (9...24).map { String($0) }
 	}

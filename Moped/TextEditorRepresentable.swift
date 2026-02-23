@@ -30,7 +30,12 @@ struct TextEditorRepresentable: NSViewRepresentable {
 
 	func makeNSView(context: Context) -> NSScrollView {
 		let textView = MopedTextView()
-		textView.isRichText = false
+		// NOTE: isRichText must be enabled so that attributed strings and the Highlightr-
+		// based syntax highlighting can apply font/color attributes to the text. When
+		// isRichText is false, NSTextView treats content as plain text and ignores typing
+		// attributes for display, which would break the highlighting system and related
+		// attribute-based features.
+		textView.isRichText = true
 		textView.isVerticallyResizable = true
 		textView.isHorizontallyResizable = true
 		textView.allowsUndo = true
@@ -49,8 +54,27 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		scrollView.documentView = textView
 		scrollView.findBarPosition = .aboveContent
 
-		textView.string = model.content
+		// Mark large-file mode before configuring so we don't attach Highlightr storage
+		if model.isLargeFile {
+			state.prepareForLargeFileMode()
+		}
+
 		state.configure(textView: textView, scrollView: scrollView)
+
+		// Only apply language when highlighting is enabled (non-large files)
+		if !model.isLargeFile {
+			state.applyLanguage(model.docTypeLanguage)
+		}
+
+		textView.layoutManager?.allowsNonContiguousLayout = true
+		textView.textStorage?.beginEditing()
+		textView.string = model.content
+		textView.textStorage?.endEditing()
+		
+		if model.isLargeFile {
+			state.forceLineNumberRulerVisible(false)
+		}
+
 		state.refreshLineNumberRuler()
 		context.coordinator.observeWindowFocusIfNeeded(for: textView)
 		context.coordinator.requestInitialFocusIfNeeded(for: textView)
@@ -63,7 +87,13 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			return
 		}
 
-		if textView.string != model.content {
+		// Track last programmatic change ID to avoid expensive string comparisons
+		struct ChangeTracker { static var lastID: Int = -1 }
+
+		// Only push programmatic changes, and never while the user is typing
+		if ChangeTracker.lastID != model.programmaticChangeID,
+		   (textView.window?.firstResponder as AnyObject?) !== (textView as AnyObject) {
+			ChangeTracker.lastID = model.programmaticChangeID
 			let existingSelection = textView.selectedRange()
 			textView.string = model.content
 			let textLength = textView.string.utf16.count
@@ -203,3 +233,4 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 	}
 }
+

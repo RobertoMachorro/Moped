@@ -26,6 +26,8 @@ class TextFileModel: NSObject, ObservableObject {
 	@Published var docTypeName: String
 	@Published var docTypeLanguage: String
 	var encoding: String.Encoding
+	var isLargeFile: Bool = false
+	var programmaticChangeID: Int = 0
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content
@@ -60,6 +62,7 @@ extension TextFileModel {
 		} else {
 			content = "** UNRECOGNIZED FILE **"
 		}
+		programmaticChangeID &+= 1
 	}
 
 	func data(ofType typeName: String) -> Data? {
@@ -70,14 +73,16 @@ extension TextFileModel {
 }
 
 extension TextFileModel {
-	func getLanguageForType(typeName: String) -> String {
-		guard let plistPath = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
-			  let languagesFromUTI = NSDictionary(contentsOfFile: plistPath),
-			  let language = languagesFromUTI[typeName] as? String
-		else {
-			print("Unknown doctTypeName: \(docTypeName)")
-			return "plaintext"
+	private static let languagesFromUTI: [String: String] = {
+		guard let path = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
+			  let dict = NSDictionary(contentsOfFile: path) as? [String: String] else {
+			return [:]
 		}
-		return language
+		return dict
+	}()
+
+	func getLanguageForType(typeName: String) -> String {
+		return Self.languagesFromUTI[typeName] ?? "plaintext"
 	}
 }
+
