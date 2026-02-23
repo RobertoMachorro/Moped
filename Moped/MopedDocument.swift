@@ -25,6 +25,9 @@ import UniformTypeIdentifiers
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	/// Maximum file size in bytes (1 MB) to prevent performance issues or crashes
 	private static let maxFileLength = 1_048_576
+	/// Threshold at which we start treating a file as "large" (256 KB = 1/4 of `maxFileLength`).
+	/// Used to disable or simplify expensive features (e.g. syntax highlighting) for better responsiveness,
+	/// based on empirical performance testing with typical project files.
 	private static let largeFileThreshold = 262_144 // 256 KB
 
 	static var readableContentTypes: [UTType] = {
