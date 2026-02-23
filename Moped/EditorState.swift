@@ -563,15 +563,16 @@ final class MopedTextView: NSTextView {
 extension EditorState: NSTextStorageDelegate {
 	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
 		guard let tv = textView else { return }
-		guard editedRange.length > 0 else { return }
 
-		// When highlighting is enabled, clear typing attributes so newly inserted text doesn't fight the highlighter
+		// When highlighting is enabled, clear typing attributes so newly inserted text doesn't fight the highlighter.
+		// This should also happen for zero-length edits (e.g., attribute-only changes or cursor moves).
 		if highlightingEnabled {
 			tv.typingAttributes = [:]
 		}
 
-		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing
-		if let lm = tv.layoutManager, let tc = tv.textContainer {
+		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing.
+		// Only perform layout work when there is a non-zero edited range.
+		if editedRange.length > 0, let lm = tv.layoutManager, let tc = tv.textContainer {
 			// Merge the edited range with any pending range
 			if let existing = pendingEditedRange {
 				let newLocation = min(existing.location, editedRange.location)
