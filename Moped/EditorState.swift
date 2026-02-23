@@ -21,12 +21,6 @@
 import Cocoa
 import Highlightr
 
-#if DEBUG
-private func editorDebug(_ message: String) { print("[Moped][Editor] \(message)") }
-#else
-private func editorDebug(_ message: String) {}
-#endif
-
 final class EditorState: NSObject, ObservableObject {
 	let preferences: Preferences
 	let textStorage: CodeAttributedString
@@ -46,16 +40,11 @@ final class EditorState: NSObject, ObservableObject {
 
 	init(preferences: Preferences = .userShared) {
 		self.preferences = preferences
-		#if DEBUG
-		textStorage = LoggingCodeAttributedString()
-		#else
 		textStorage = CodeAttributedString()
-		#endif
 		supportedLanguages = HighlightrCatalog.shared.supportedLanguages
 		availableThemes = HighlightrCatalog.shared.availableThemes
 		currentFontSize = preferences.fontSizeFloat
 		super.init()
-		editorDebug("EditorState.init: fontSize=\(currentFontSize)")
 		textStorage.delegate = self
 
 		preferencesObserver = NotificationCenter.default.addObserver(
@@ -68,7 +57,6 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	func prepareForLargeFileMode() {
-		editorDebug("prepareForLargeFileMode: disabling highlighting")
 		highlightingEnabled = false
 	}
 
@@ -81,17 +69,14 @@ final class EditorState: NSObject, ObservableObject {
 	func configure(textView: MopedTextView, scrollView: NSScrollView) {
 		self.textView = textView
 		textView.editorState = self
-		editorDebug("configure: highlightingEnabled=\(highlightingEnabled)")
 
 		if highlightingEnabled, let layoutManager = textView.layoutManager {
 			// Ensure the text view uses the Highlightr-backed storage from the start
 			layoutManager.replaceTextStorage(textStorage)
-			editorDebug("configure: replaced layoutManager textStorage with Highlightr storage")
 		}
 		if highlightingEnabled {
 			textView.typingAttributes = [:]
 		}
-		editorDebug("configure: typingAttributes cleared (highlighting path)=\(highlightingEnabled)")
 
 		setupLineNumberRuler(in: scrollView, textView: textView)
 		applyPreferences()
@@ -115,33 +100,17 @@ final class EditorState: NSObject, ObservableObject {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
 		}
 
-		#if DEBUG
-		if let lm = textView.layoutManager, let ts = lm.textStorage {
-			let activeLang = (textStorage.language ?? "<nil>")
-			editorDebug("configure: active language=\(activeLang)")
-			let length = ts.length
-			if length > 0 {
-				let attrs = ts.attributes(at: 0, effectiveRange: nil)
-				editorDebug("configure: attributes at 0=\(attrs)")
-			} else {
-				editorDebug("configure: text storage is empty")
-			}
-		}
-		#endif
 	}
 
 	func applyLanguage(_ language: String) {
-		editorDebug("applyLanguage: requested=\(language)")
 		let requested = language.trimmingCharacters(in: .whitespacesAndNewlines)
 		let finalLanguage: String
 		if !requested.isEmpty, supportedLanguages.contains(requested) {
 			finalLanguage = requested
 		} else {
 			finalLanguage = "swift"
-			editorDebug("applyLanguage: falling back to default language 'swift'")
 		}
 		textStorage.language = finalLanguage
-		editorDebug("applyLanguage: active=\(textStorage.language ?? "<nil>")")
 	}
 
 	func increaseFontSize() {
@@ -165,7 +134,6 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	func refreshLineNumberRuler() {
-		editorDebug("refreshLineNumberRuler")
 		guard let textView = textView,
 			let layoutManager = textView.layoutManager,
 			let textContainer = textView.textContainer else {
@@ -178,7 +146,6 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	func setHighlightingEnabled(_ enabled: Bool) {
-		editorDebug("setHighlightingEnabled: \(enabled)")
 		highlightingEnabled = enabled
 		guard let textView = textView else { return }
 
@@ -214,7 +181,6 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	private func applyPreferences() {
-		editorDebug("applyPreferences: highlightingEnabled=\(highlightingEnabled), fontSize=\(currentFontSize)")
 		currentFontSize = preferences.fontSizeFloat
 		if !highlightingEnabled {
 			setLineWrap(to: preferences.doLineWrap)
@@ -242,7 +208,6 @@ final class EditorState: NSObject, ObservableObject {
 		let currentStorage = layoutManager.textStorage
 
 		if highlightingEnabled {
-			editorDebug("ensureTextStorageAttachment: switching to Highlightr storage (will remove old LM)")
 			// Attach Highlightr storage if not already attached
 			if currentStorage !== textStorage {
 				let existingString = currentStorage?.string ?? textView.string
@@ -252,9 +217,7 @@ final class EditorState: NSObject, ObservableObject {
 				textStorage.endEditing()
 				textStorage.addLayoutManager(layoutManager)
 			}
-			editorDebug("ensureTextStorageAttachment: Highlightr storage attached")
 		} else {
-			editorDebug("ensureTextStorageAttachment: switching to plain NSTextStorage (will detach Highlightr)")
 			// Ensure we're using a plain storage (not the Highlightr storage)
 			if currentStorage === textStorage {
 				let existingString = textStorage.string
@@ -265,7 +228,6 @@ final class EditorState: NSObject, ObservableObject {
 				plain.endEditing()
 				plain.addLayoutManager(layoutManager)
 			}
-			editorDebug("ensureTextStorageAttachment: plain storage attached")
 		}
 	}
 
@@ -313,7 +275,6 @@ final class EditorState: NSObject, ObservableObject {
 		guard let textView = textView else {
 			return
 		}
-		editorDebug("setTheme: theme=\(theme), fontSize=\(fontSize)")
 
 		textStorage.highlightr.setTheme(to: theme)
 		textStorage.highlightr.theme.codeFont = NSFont(name: preferences.font, size: fontSize)
@@ -323,7 +284,6 @@ final class EditorState: NSObject, ObservableObject {
 		textView.insertionPointColor = caretColor(using: textView.backgroundColor)
 		updateLineNumberFont()
 		textView.typingAttributes = [:]
-		editorDebug("setTheme: typingAttributes cleared for highlighting")
 	}
 
 	private func applyPlainStyling(to textView: NSTextView) {
@@ -338,7 +298,6 @@ final class EditorState: NSObject, ObservableObject {
 			.font: font,
 			.foregroundColor: NSColor.textColor
 		]
-		editorDebug("applyPlainStyling: applied plain font/color and typingAttributes")
 	}
 
 	private func caretColor(using color: NSColor) -> NSColor {
@@ -402,8 +361,6 @@ final class MopedTextView: NSTextView {
 	override func didChangeText() {
 		super.didChangeText()
 		cachedIndentStyle = nil
-		let isHighlightrStorage = (self.layoutManager?.textStorage === editorState?.textStorage)
-		editorDebug("didChangeText: isHighlightrStorage=\(isHighlightrStorage), typingAttributes=\(self.typingAttributes)")
 	}
 
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
@@ -602,7 +559,6 @@ final class MopedTextView: NSTextView {
 
 extension EditorState: NSTextStorageDelegate {
 	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
-		editorDebug("NSTextStorage didProcessEditing: mask=\(editedMask.rawValue) range=\(editedRange) delta=\(delta)")
 		guard let tv = textView else { return }
 		guard editedRange.length > 0 else { return }
 
@@ -638,4 +594,3 @@ extension EditorState: NSTextStorageDelegate {
 		}
 	}
 }
-
