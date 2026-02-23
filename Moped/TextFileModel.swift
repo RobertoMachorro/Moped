@@ -85,4 +85,3 @@ extension TextFileModel {
 		return Self.languagesFromUTI[typeName] ?? "plaintext"
 	}
 }
-

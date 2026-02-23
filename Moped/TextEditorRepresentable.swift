@@ -70,7 +70,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		textView.textStorage?.beginEditing()
 		textView.string = model.content
 		textView.textStorage?.endEditing()
-		
+
 		if model.isLargeFile {
 			state.forceLineNumberRulerVisible(false)
 		}
@@ -233,4 +233,3 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 	}
 }
-

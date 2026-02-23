@@ -126,4 +126,3 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 	}
 }
-

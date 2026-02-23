@@ -56,7 +56,7 @@ class LineNumberRulerView: NSRulerView {
 			name: NSView.boundsDidChangeNotification,
 			object: textView.enclosingScrollView?.contentView
 		)
-		
+
 		if !hasScheduledInitialThickness {
 			hasScheduledInitialThickness = true
 			let work = DispatchWorkItem { [weak self] in

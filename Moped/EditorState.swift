@@ -85,16 +85,16 @@ final class EditorState: NSObject, ObservableObject {
 		}
 
 		// If highlighting is enabled and there is already content, schedule a full-range refresh
-		if highlightingEnabled, let lm = textView.layoutManager, let ts = lm.textStorage, ts.length > 0, let tc = textView.textContainer {
-			let fullRange = NSRange(location: 0, length: ts.length)
+		if highlightingEnabled, let layoutManager = textView.layoutManager, let textStorage = layoutManager.textStorage, textStorage.length > 0, let textContainer = textView.textContainer {
+			let fullRange = NSRange(location: 0, length: textStorage.length)
 			pendingEditedRange = fullRange
 			pendingLayoutWorkItem?.cancel()
-			let work = DispatchWorkItem { [weak self, weak lm] in
-				guard let self = self, let lm = lm else { return }
+			let work = DispatchWorkItem { [weak self, weak layoutManager] in
+				guard let self = self, let layoutManager = layoutManager else { return }
 				let range = self.pendingEditedRange ?? fullRange
 				self.pendingEditedRange = nil
-				lm.ensureLayout(for: tc)
-				lm.invalidateDisplay(forCharacterRange: range)
+				layoutManager.ensureLayout(for: textContainer)
+				layoutManager.invalidateDisplay(forCharacterRange: range)
 			}
 			pendingLayoutWorkItem = work
 			DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
@@ -156,17 +156,17 @@ final class EditorState: NSObject, ObservableObject {
 			setTheme(to: preferences.theme, fontSize: currentFontSize)
 
 			// After enabling highlighting, if there is content, schedule a full-range re-tokenization/refresh
-			if let tv = self.textView, let lm = tv.layoutManager, let ts = lm.textStorage, ts.length > 0, let tc = tv.textContainer {
-				let fullRange = NSRange(location: 0, length: ts.length)
+			if let textView = self.textView, let layoutManager = textView.layoutManager, let textStorage = layoutManager.textStorage, textStorage.length > 0, let textContainer = textView.textContainer {
+				let fullRange = NSRange(location: 0, length: textStorage.length)
 				// Use the same debounced mechanism to avoid layout during editing
 				pendingEditedRange = fullRange
 				pendingLayoutWorkItem?.cancel()
-				let work = DispatchWorkItem { [weak self, weak lm] in
-					guard let self = self, let lm = lm else { return }
+				let work = DispatchWorkItem { [weak self, weak layoutManager] in
+					guard let self = self, let layoutManager = layoutManager else { return }
 					let range = self.pendingEditedRange ?? fullRange
 					self.pendingEditedRange = nil
-					lm.ensureLayout(for: tc)
-					lm.invalidateDisplay(forCharacterRange: range)
+					layoutManager.ensureLayout(for: textContainer)
+					layoutManager.invalidateDisplay(forCharacterRange: range)
 				}
 				pendingLayoutWorkItem = work
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
@@ -306,23 +306,34 @@ final class EditorState: NSObject, ObservableObject {
 					   color.usingColorSpace(.deviceRGB) ??
 					   color.usingColorSpace(.genericRGB)
 
-		var r: CGFloat = 1, g: CGFloat = 1, b: CGFloat = 1, a: CGFloat = 1
+		var redComponent: CGFloat = 1
+		var greenComponent: CGFloat = 1
+		var blueComponent: CGFloat = 1
+		var alphaComponent: CGFloat = 1
 
 		if let rgb = resolved {
-			var rr: CGFloat = 1, gg: CGFloat = 1, bb: CGFloat = 1, aa: CGFloat = 1
-			rgb.getRed(&rr, green: &gg, blue: &bb, alpha: &aa)
-			r = rr; g = gg; b = bb; a = aa
-			return NSColor(red: 1 - r, green: 1 - g, blue: 1 - b, alpha: a)
+			var resolvedRed: CGFloat = 1
+			var resolvedGreen: CGFloat = 1
+			var resolvedBlue: CGFloat = 1
+			var resolvedAlpha: CGFloat = 1
+			rgb.getRed(&resolvedRed, green: &resolvedGreen, blue: &resolvedBlue, alpha: &resolvedAlpha)
+			redComponent = resolvedRed
+			greenComponent = resolvedGreen
+			blueComponent = resolvedBlue
+			alphaComponent = resolvedAlpha
+			return NSColor(red: 1 - redComponent, green: 1 - greenComponent, blue: 1 - blueComponent, alpha: alphaComponent)
 		} else {
 			// Fallback: compute a contrasting caret color using perceived luminance.
 			// If components are unavailable, return a safe default caret color.
-			let cg = color.cgColor
-			guard let comps = cg.components, comps.count >= 3 else {
+			let cgColor = color.cgColor
+			guard let comps = cgColor.components, comps.count >= 3 else {
 				// Safe default when we can't reliably read color components
 				return .black
 			}
-			r = comps[0]; g = comps[1]; b = comps[2]
-			let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+			redComponent = comps[0]
+			greenComponent = comps[1]
+			blueComponent = comps[2]
+			let luminance = 0.2126 * redComponent + 0.7152 * greenComponent + 0.0722 * blueComponent
 			return luminance > 0.5 ? .black : .white
 		}
 	}
@@ -562,17 +573,17 @@ final class MopedTextView: NSTextView {
 
 extension EditorState: NSTextStorageDelegate {
 	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
-		guard let tv = textView else { return }
+		guard let textView = textView else { return }
 
 		// When highlighting is enabled, clear typing attributes so newly inserted text doesn't fight the highlighter.
 		// This should also happen for zero-length edits (e.g., attribute-only changes or cursor moves).
 		if highlightingEnabled {
-			tv.typingAttributes = [:]
+			textView.typingAttributes = [:]
 		}
 
 		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing.
 		// Only perform layout work when there is a non-zero edited range.
-		if editedRange.length > 0, let lm = tv.layoutManager, let tc = tv.textContainer {
+		if editedRange.length > 0, let layoutManager = textView.layoutManager, let textContainer = textView.textContainer {
 			// Merge the edited range with any pending range
 			if let existing = pendingEditedRange {
 				let newLocation = min(existing.location, editedRange.location)
@@ -586,12 +597,12 @@ extension EditorState: NSTextStorageDelegate {
 			pendingLayoutWorkItem?.cancel()
 
 			// Schedule a new debounced work item
-			let work = DispatchWorkItem { [weak self, weak lm] in
-				guard let self = self, let lm = lm else { return }
+			let work = DispatchWorkItem { [weak self, weak layoutManager] in
+				guard let self = self, let layoutManager = layoutManager else { return }
 				let range = self.pendingEditedRange ?? editedRange
 				self.pendingEditedRange = nil
-				lm.ensureLayout(for: tc)
-				lm.invalidateDisplay(forCharacterRange: range)
+				layoutManager.ensureLayout(for: textContainer)
+				layoutManager.invalidateDisplay(forCharacterRange: range)
 			}
 			pendingLayoutWorkItem = work
 
