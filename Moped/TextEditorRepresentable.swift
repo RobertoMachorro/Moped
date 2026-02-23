@@ -30,7 +30,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 
 	func makeNSView(context: Context) -> NSScrollView {
 		let textView = MopedTextView()
-		textView.isRichText = false
+		textView.isRichText = true
 		textView.isVerticallyResizable = true
 		textView.isHorizontallyResizable = true
 		textView.allowsUndo = true

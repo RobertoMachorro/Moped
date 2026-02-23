@@ -24,6 +24,7 @@
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */; };
+		E9CA82F82F4BE86E00AC54D7 /* LoggingCodeAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F72F4BE86E00AC54D7 /* LoggingCodeAttributedString.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
 		E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightrCatalog.swift; sourceTree = "<group>"; };
+		E9CA82F72F4BE86E00AC54D7 /* LoggingCodeAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingCodeAttributedString.swift; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				E9D042172300A9FE00382715 /* Info.plist */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
 				E9D042182300A9FE00382715 /* Moped.entitlements */,
+				E9CA82F72F4BE86E00AC54D7 /* LoggingCodeAttributedString.swift */,
 			);
 			path = Moped;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */,
 				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
+				E9CA82F82F4BE86E00AC54D7 /* LoggingCodeAttributedString.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
 				A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
