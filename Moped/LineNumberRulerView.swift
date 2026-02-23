@@ -214,7 +214,7 @@ class LineNumberRulerView: NSRulerView {
 	}
 
 	private func updateRuleThickness() {
-		guard let textView = textView else {
+		guard textView != nil else {
 			return
 		}
 
