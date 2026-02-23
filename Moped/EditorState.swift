@@ -594,7 +594,15 @@ extension EditorState: NSTextStorageDelegate {
 				lm.invalidateDisplay(forCharacterRange: range)
 			}
 			pendingLayoutWorkItem = work
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
+
+			// Adapt delay based on size of pending range to avoid an unbounded backlog
+			let pendingLength = pendingEditedRange?.length ?? editedRange.length
+			if pendingLength > 2000 {
+				// For very large edits, perform layout as soon as possible
+				DispatchQueue.main.async(execute: work)
+			} else {
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
+			}
 		}
 	}
 }
