@@ -30,6 +30,11 @@ struct TextEditorRepresentable: NSViewRepresentable {
 
 	func makeNSView(context: Context) -> NSScrollView {
 		let textView = MopedTextView()
+		// NOTE: isRichText must be enabled so that attributed strings and the Highlightr-
+		// based syntax highlighting can apply font/color attributes to the text. When
+		// isRichText is false, NSTextView treats content as plain text and ignores typing
+		// attributes for display, which would break the highlighting system and related
+		// attribute-based features.
 		textView.isRichText = true
 		textView.isVerticallyResizable = true
 		textView.isHorizontallyResizable = true
