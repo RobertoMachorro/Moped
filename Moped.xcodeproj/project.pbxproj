@@ -210,7 +210,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nCLI_SRC=\"${SRCROOT}/MopedCLI/main.swift\"\nOUT_DIR=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\"\nCLI_OUT=\"${OUT_DIR}/moped\"\nTMP_DIR=\"${TARGET_BUILD_DIR}/moped-cli\"\nmkdir -p \"$OUT_DIR\" \"$TMP_DIR\"\nARCH_COUNT=0\nBINARIES=\"\"\nfor ARCH in $ARCHS; do\n\tBIN_PATH=\"${TMP_DIR}/moped-${ARCH}\"\n\t/usr/bin/xcrun --sdk macosx swiftc -O -swift-version 5 -target \"${ARCH}-apple-macos${MACOSX_DEPLOYMENT_TARGET}\" -framework AppKit -o \"$BIN_PATH\" \"$CLI_SRC\"\n\tBINARIES=\"${BINARIES} ${BIN_PATH}\"\n\tARCH_COUNT=$((ARCH_COUNT + 1))\ndone\nif [ \"$ARCH_COUNT\" -gt 1 ]; then\n\t/usr/bin/lipo -create -output \"$CLI_OUT\" $BINARIES\nelse\n\t/bin/cp \"$BIN_PATH\" \"$CLI_OUT\"\nfi\n";
+			shellScript = "set -euo pipefail\n\nCLI_SRC=\"${SRCROOT}/MopedCLI/main.swift\"\n\nOUT_DIR=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\"\nCLI_OUT=\"${OUT_DIR}/moped\"\n\n# IMPORTANT: keep intermediates OUT of TARGET_BUILD_DIR\nTMP_DIR=\"${TEMP_DIR}/moped-cli-${TARGET_NAME}\"\nmkdir -p \"$OUT_DIR\" \"$TMP_DIR\"\n\nARCH_COUNT=0\nBINARIES=\"\"\n\nfor ARCH in $ARCHS; do\n  BIN_PATH=\"${TMP_DIR}/moped-${ARCH}\"\n  /usr/bin/xcrun --sdk macosx swiftc -O -swift-version 5 \\\n    -target \"${ARCH}-apple-macos${MACOSX_DEPLOYMENT_TARGET}\" \\\n    -framework AppKit \\\n    -o \"$BIN_PATH\" \\\n    \"$CLI_SRC\"\n  BINARIES=\"${BINARIES} ${BIN_PATH}\"\n  ARCH_COUNT=$((ARCH_COUNT + 1))\ndone\n\nif [ \"$ARCH_COUNT\" -gt 1 ]; then\n  /usr/bin/lipo -create -output \"$CLI_OUT\" $BINARIES\nelse\n  /bin/cp \"${TMP_DIR}/moped-${ARCHS}\" \"$CLI_OUT\" 2>/dev/null || /bin/cp $BINARIES \"$CLI_OUT\"\nfi\n\n# Optional: cleanup\nrm -rf \"$TMP_DIR\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -395,7 +395,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0alpha1;
+				MARKETING_VERSION = 2.0beta1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -427,7 +427,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0alpha1;
+				MARKETING_VERSION = 2.0beta1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
