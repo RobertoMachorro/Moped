@@ -43,7 +43,7 @@ final class EditorState: NSObject, ObservableObject {
 
 	init(preferences: Preferences = .userShared) {
 		self.preferences = preferences
-		textStorage = CodeAttributedString()
+		textStorage = SafeCodeAttributedString()
 		supportedLanguages = HighlightrCatalog.shared.supportedLanguages
 		availableThemes = HighlightrCatalog.shared.availableThemes
 		currentFontSize = preferences.fontSizeFloat
@@ -577,12 +577,6 @@ final class MopedTextView: NSTextView {
 extension EditorState: NSTextStorageDelegate {
 	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
 		guard let textView = textView else { return }
-
-		// When highlighting is enabled, clear typing attributes so newly inserted text doesn't fight the highlighter.
-		// This should also happen for zero-length edits (e.g., attribute-only changes or cursor moves).
-		if highlightingEnabled {
-			textView.typingAttributes = [:]
-		}
 
 		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing.
 		// Only perform layout work when there is a non-zero edited range.

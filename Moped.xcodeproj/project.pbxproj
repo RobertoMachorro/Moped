@@ -19,6 +19,7 @@
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
 		A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000222 /* MopedCommands.swift */; };
 		A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */; };
+		A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */; };
 		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
@@ -41,6 +42,7 @@
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000222 /* MopedCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedCommands.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FocusedValues+Moped.swift"; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeCodeAttributedString.swift; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				A1B2C3D4E500000000000221 /* MopedDocument.swift */,
 				A1B2C3D4E500000000000222 /* MopedCommands.swift */,
 				A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */,
+				A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */,
 				E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */,
 				A1B2C3D4E500000000000114 /* AboutView.swift */,
 				A1B2C3D4E500000000000112 /* EditorView.swift */,
@@ -231,6 +234,7 @@
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
 				A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */,
+				A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
 				945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
