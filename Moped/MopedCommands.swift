@@ -114,18 +114,9 @@ struct MopedCommands: Commands {
 			return
 		}
 
-		let pageSize = NSSize(
-			width: NSPrintInfo.shared.paperSize.width,
-			height: NSPrintInfo.shared.paperSize.height
-		)
-		let textView = NSTextView(
-			frame: NSRect(x: 0.0, y: 0.0, width: pageSize.width, height: pageSize.height)
-		)
-		textView.appearance = NSAppearance(named: .aqua)
-		textView.textStorage?.append(NSAttributedString(string: content))
-
 		let printInfo = NSPrintInfo()
-		printInfo.horizontalPagination = .fit
+		printInfo.horizontalPagination = .automatic
+		printInfo.verticalPagination = .automatic
 		printInfo.isHorizontallyCentered = false
 		printInfo.isVerticallyCentered = false
 		printInfo.leftMargin = 72.0
@@ -133,11 +124,21 @@ struct MopedCommands: Commands {
 		printInfo.topMargin = 72.0
 		printInfo.bottomMargin = 72.0
 
-		let printOperation = NSPrintOperation(view: textView, printInfo: printInfo)
-		if let window = NSApp.keyWindow {
-			printOperation.runModal(for: window, delegate: nil, didRun: nil, contextInfo: nil)
-		} else {
-			printOperation.run()
+		let printView = SourcePrintView(content: content, printInfo: printInfo)
+		let printOperation = NSPrintOperation(view: printView, printInfo: printInfo)
+		var exceptionReason: NSString?
+		let didComplete = PrintOperationGuard.run(
+			printOperation,
+			in: NSApp.keyWindow,
+			exceptionReason: &exceptionReason
+		)
+		if !didComplete {
+			let alert = NSAlert()
+			alert.alertStyle = .warning
+			alert.messageText = "Printing Failed"
+			alert.informativeText = exceptionReason as String?
+				?? "An unexpected error occurred while rendering pages."
+			alert.runModal()
 		}
 	}
 
