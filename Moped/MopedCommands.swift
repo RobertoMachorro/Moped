@@ -49,6 +49,11 @@ struct MopedCommands: Commands {
 				showFindPanel()
 			}
 			.keyboardShortcut("f")
+
+			Button("Jump to Line…") {
+				jumpToLine()
+			}
+			.keyboardShortcut("l")
 		}
 
 		CommandMenu("Editor") {
@@ -167,6 +172,46 @@ struct MopedCommands: Commands {
 		NSSound.beep()
 	}
 
+	private func jumpToLine() {
+		guard let textView = activeTextView() else {
+			NSSound.beep()
+			return
+		}
+
+		let alert = NSAlert()
+		alert.messageText = "Jump to Line"
+		alert.informativeText = "Enter a line number."
+		alert.alertStyle = .informational
+		alert.addButton(withTitle: "Jump")
+		alert.addButton(withTitle: "Cancel")
+
+		let inputField = NSTextField(frame: NSRect(x: 0.0, y: 0.0, width: 180.0, height: 24.0))
+		inputField.placeholderString = "Line Number"
+		inputField.stringValue = "\(currentLineNumber(in: textView))"
+		alert.accessoryView = inputField
+
+		let response = alert.runModal()
+		guard response == .alertFirstButtonReturn else {
+			return
+		}
+
+		let input = inputField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+		guard let lineNumber = Int(input), lineNumber > 0 else {
+			NSSound.beep()
+			return
+		}
+
+		guard let targetLocation = locationForLine(lineNumber, in: textView.string as NSString) else {
+			NSSound.beep()
+			return
+		}
+
+		let targetRange = NSRange(location: targetLocation, length: 0)
+		textView.window?.makeFirstResponder(textView)
+		textView.setSelectedRange(targetRange)
+		textView.scrollRangeToVisible(targetRange)
+	}
+
 	private func applySystemFindBarAppearanceWhenReady(
 		in scrollView: NSScrollView,
 		window: NSWindow?,
@@ -217,6 +262,48 @@ struct MopedCommands: Commands {
 		}
 
 		return window.contentView?.firstDescendantTextView()
+	}
+
+	private func currentLineNumber(in textView: NSTextView) -> Int {
+		let text = textView.string as NSString
+		let selectedLocation = min(textView.selectedRange().location, text.length)
+
+		var lineNumber = 1
+		var scanLocation = 0
+		while scanLocation < selectedLocation {
+			let lineRange = text.lineRange(for: NSRange(location: scanLocation, length: 0))
+			let nextLocation = NSMaxRange(lineRange)
+			guard nextLocation > scanLocation else {
+				break
+			}
+			scanLocation = nextLocation
+			lineNumber += 1
+		}
+
+		return lineNumber
+	}
+
+	private func locationForLine(_ lineNumber: Int, in text: NSString) -> Int? {
+		if lineNumber == 1 {
+			return 0
+		}
+
+		var currentLine = 1
+		var location = 0
+		while location < text.length {
+			let lineRange = text.lineRange(for: NSRange(location: location, length: 0))
+			let nextLocation = NSMaxRange(lineRange)
+			guard nextLocation > location else {
+				break
+			}
+			location = nextLocation
+			currentLine += 1
+			if currentLine == lineNumber {
+				return min(location, text.length)
+			}
+		}
+
+		return nil
 	}
 }
 
