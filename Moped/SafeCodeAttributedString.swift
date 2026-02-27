@@ -23,6 +23,10 @@ import Highlightr
 
 /// Guards against out-of-bounds attribute lookups triggered by AppKit/layout timing.
 final class SafeCodeAttributedString: CodeAttributedString {
+	private static let largeInsertCorrectionThreshold = 1024
+	private static let fullRehighlightThreshold = 2048
+	private static let fullRehighlightMultilineThreshold = 256
+
 	override func attributes(at location: Int, effectiveRange range: NSRangePointer?) -> [NSAttributedString.Key: Any] {
 		let length = self.length
 		guard length > 0 else {
@@ -32,5 +36,47 @@ final class SafeCodeAttributedString: CodeAttributedString {
 
 		let safeLocation = min(max(location, 0), length - 1)
 		return super.attributes(at: safeLocation, effectiveRange: range)
+	}
+
+	override func replaceCharacters(in range: NSRange, with str: String) {
+		super.replaceCharacters(in: range, with: str)
+
+		let insertedLength = (str as NSString).length
+		guard insertedLength > 0 else { return }
+		let delta = insertedLength - range.length
+
+		// Highlightr reports insertion edits using the pre-edit range (often zero-length),
+		// which can limit highlighting to one paragraph. For large or multi-line inserts,
+		// emit a corrected character-edit notification so processEditing can rehighlight
+		// the full inserted block.
+		let shouldCorrect = insertedLength >= Self.largeInsertCorrectionThreshold || str.contains("\n")
+		guard shouldCorrect else { return }
+		debugLog(
+			"correcting insertion edit range=\(NSStringFromRange(range)) " +
+			"inserted=\(insertedLength) delta=\(delta) length=\(length)"
+		)
+
+		let correctedRange = NSRange(location: range.location, length: insertedLength)
+		edited(.editedCharacters, range: correctedRange, changeInLength: 0)
+
+		// Fallback for large/medium multi-line pastes: force a full-document rehighlight
+		// because Highlightr incremental range tracking can still miss parts of the insert.
+		let shouldForceFullRehighlight = insertedLength >= Self.fullRehighlightThreshold ||
+			(str.contains("\n") && insertedLength >= Self.fullRehighlightMultilineThreshold)
+		if shouldForceFullRehighlight, let currentLanguage = language {
+			debugLog(
+				"forcing full rehighlight language=\(currentLanguage) " +
+				"inserted=\(insertedLength) multiline=\(str.contains("\n")) length=\(length)"
+			)
+			DispatchQueue.main.async { [weak self] in
+				guard let self else { return }
+				self.language = currentLanguage
+			}
+		}
+	}
+
+	private func debugLog(_ message: String) {
+		guard UserDefaults.standard.bool(forKey: "MopedSyntaxDebug") else { return }
+		print("[MopedSyntaxDebug] \(message)")
 	}
 }

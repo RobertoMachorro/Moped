@@ -578,16 +578,23 @@ extension EditorState: NSTextStorageDelegate {
 	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
 		guard let textView = textView else { return }
 
+		let normalizedRange = normalizedEditedRange(
+			for: textStorage,
+			editedMask: editedMask,
+			editedRange: editedRange,
+			changeInLength: delta
+		)
+		guard normalizedRange.length > 0 else { return }
+
 		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing.
-		// Only perform layout work when there is a non-zero edited range.
-		if editedRange.length > 0, let layoutManager = textView.layoutManager, let textContainer = textView.textContainer {
+		if let layoutManager = textView.layoutManager, let textContainer = textView.textContainer {
 			// Merge the edited range with any pending range
 			if let existing = pendingEditedRange {
-				let newLocation = min(existing.location, editedRange.location)
-				let newMax = max(NSMaxRange(existing), NSMaxRange(editedRange))
+				let newLocation = min(existing.location, normalizedRange.location)
+				let newMax = max(NSMaxRange(existing), NSMaxRange(normalizedRange))
 				pendingEditedRange = NSRange(location: newLocation, length: newMax - newLocation)
 			} else {
-				pendingEditedRange = editedRange
+				pendingEditedRange = normalizedRange
 			}
 
 			// Cancel any pending work
@@ -596,15 +603,17 @@ extension EditorState: NSTextStorageDelegate {
 			// Schedule a new debounced work item
 			let work = DispatchWorkItem { [weak self, weak layoutManager] in
 				guard let self = self, let layoutManager = layoutManager else { return }
-				let range = self.pendingEditedRange ?? editedRange
+				let targetRange = self.pendingEditedRange ?? normalizedRange
 				self.pendingEditedRange = nil
+				let range = self.clampedRange(targetRange, toTextStorage: textStorage)
+				guard range.length > 0 else { return }
 				layoutManager.ensureLayout(for: textContainer)
 				layoutManager.invalidateDisplay(forCharacterRange: range)
 			}
 			pendingLayoutWorkItem = work
 
 			// Adapt delay based on size of pending range to avoid an unbounded backlog
-			let pendingLength = pendingEditedRange?.length ?? editedRange.length
+			let pendingLength = pendingEditedRange?.length ?? normalizedRange.length
 			if pendingLength > 2000 {
 				// For very large edits, perform layout as soon as possible
 				DispatchQueue.main.async(execute: work)
@@ -612,5 +621,49 @@ extension EditorState: NSTextStorageDelegate {
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
 			}
 		}
+	}
+
+	private func normalizedEditedRange(
+		for textStorage: NSTextStorage,
+		editedMask: NSTextStorageEditActions,
+		editedRange: NSRange,
+		changeInLength delta: Int
+	) -> NSRange {
+		let length = textStorage.length
+		guard length > 0 else {
+			return NSRange(location: 0, length: 0)
+		}
+
+		let safeLocation = min(max(editedRange.location, 0), length - 1)
+
+		if editedRange.length > 0 {
+			let maxLength = length - safeLocation
+			return NSRange(location: safeLocation, length: min(editedRange.length, maxLength))
+		}
+
+		// Deletions arrive as zero-length character edits; invalidate at least the containing
+		// line so shifted text repaints with updated token attributes.
+		if editedMask.contains(.editedCharacters), delta < 0 {
+			let string = textStorage.string as NSString
+			let lineRange = string.lineRange(for: NSRange(location: safeLocation, length: 0))
+			let lineLocation = min(max(lineRange.location, 0), length - 1)
+			let maxLength = length - lineLocation
+			let lineLength = min(max(lineRange.length, 1), maxLength)
+			return NSRange(location: lineLocation, length: lineLength)
+		}
+
+		return NSRange(location: safeLocation, length: 1)
+	}
+
+	private func clampedRange(_ range: NSRange, toTextStorage textStorage: NSTextStorage) -> NSRange {
+		let length = textStorage.length
+		guard length > 0 else {
+			return NSRange(location: 0, length: 0)
+		}
+
+		let safeLocation = min(max(range.location, 0), length - 1)
+		let maxLength = length - safeLocation
+		let safeLength = min(max(range.length, 0), maxLength)
+		return NSRange(location: safeLocation, length: safeLength)
 	}
 }
