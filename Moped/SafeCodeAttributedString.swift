@@ -51,10 +51,6 @@ final class SafeCodeAttributedString: CodeAttributedString {
 		// the full inserted block.
 		let shouldCorrect = insertedLength >= Self.largeInsertCorrectionThreshold || str.contains("\n")
 		guard shouldCorrect else { return }
-		debugLog(
-			"correcting insertion edit range=\(NSStringFromRange(range)) " +
-			"inserted=\(insertedLength) delta=\(delta) length=\(length)"
-		)
 
 		let correctedRange = NSRange(location: range.location, length: insertedLength)
 		edited(.editedCharacters, range: correctedRange, changeInLength: 0)
@@ -64,19 +60,10 @@ final class SafeCodeAttributedString: CodeAttributedString {
 		let shouldForceFullRehighlight = insertedLength >= Self.fullRehighlightThreshold ||
 			(str.contains("\n") && insertedLength >= Self.fullRehighlightMultilineThreshold)
 		if shouldForceFullRehighlight, let currentLanguage = language {
-			debugLog(
-				"forcing full rehighlight language=\(currentLanguage) " +
-				"inserted=\(insertedLength) multiline=\(str.contains("\n")) length=\(length)"
-			)
 			DispatchQueue.main.async { [weak self] in
 				guard let self else { return }
 				self.language = currentLanguage
 			}
 		}
-	}
-
-	private func debugLog(_ message: String) {
-		guard UserDefaults.standard.bool(forKey: "MopedSyntaxDebug") else { return }
-		print("[MopedSyntaxDebug] \(message)")
 	}
 }
