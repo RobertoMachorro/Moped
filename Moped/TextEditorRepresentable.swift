@@ -70,6 +70,8 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		textView.textStorage?.beginEditing()
 		textView.string = model.content
 		textView.textStorage?.endEditing()
+		textView.setSelectedRange(NSRange(location: 0, length: 0))
+		textView.scrollRangeToVisible(NSRange(location: 0, length: 0))
 
 		if model.isLargeFile {
 			state.forceLineNumberRulerVisible(false)
@@ -152,6 +154,8 @@ struct TextEditorRepresentable: NSViewRepresentable {
 				self.observeWindowFocus(for: textView, window: window)
 
 				if window.makeFirstResponder(textView) {
+					textView.setSelectedRange(NSRange(location: 0, length: 0))
+					textView.scrollRangeToVisible(NSRange(location: 0, length: 0))
 					self.didSetInitialFocus = true
 				}
 			}

@@ -43,7 +43,6 @@ final class SafeCodeAttributedString: CodeAttributedString {
 
 		let insertedLength = (str as NSString).length
 		guard insertedLength > 0 else { return }
-		let delta = insertedLength - range.length
 
 		// Highlightr reports insertion edits using the pre-edit range (often zero-length),
 		// which can limit highlighting to one paragraph. For large or multi-line inserts,
