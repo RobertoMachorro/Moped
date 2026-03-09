@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install ripgrep
+        run: brew install ripgrep
       - name: Build
         run: |
           rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
