@@ -29,7 +29,7 @@ If you come from the Windows world, you may be missing a small utility: [Notepad
 
 It kind of feels heavier than it should and in the way. There are [known settings](https://www.techjunkie.com/textedit-plain-text-mode/) to make it look and feel lighter, but inside it's still the same. You can [get the source](https://developer.apple.com/library/archive/samplecode/TextEdit/Introduction/Intro.html) and peek inside. It's bigger and with older code than it needs to be.
 
-*Moped* intends on feeling like Notepad, while being a full native of macOS, with a touch of modern syntax highlight and themes.
+*Moped* intends on feeling like Notepad, while being a full native of macOS, with a touch of modern syntax highlight and themes. And now with support for line numbering, auto-indenting and other modern editor features.
 
 ## Manifesto - Advanced Users
 
@@ -48,10 +48,8 @@ Most of the technology used in this App comes straight from Apple, we are just r
 ## Wanted Features
 
 * Status bar with word/paragraph count, etc.
-* Command line launcher tool, with support for waiting (usable as $EDITOR)
 * [Comprehensive Help File](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OnlineHelp/Tasks/SpecifyHelpFile.html#//apple_ref/doc/uid/20000020)
 * Native Syntax highlight, ideally supporting TextMate files - this could be a nice Framework for the community
-* Line number column(s)
 * Code folding support
 * Prompt user for Encoding when it is not recognized automatically
 
@@ -76,6 +74,24 @@ x86_64 arm64
 ```
 
 Having trouble building / you are new to contributing? Check the following Issue and the video I posted: https://github.com/RobertoMachorro/Moped/issues/36
+
+## Localization Workflow
+
+Moped uses Xcode String Catalogs (`Localizable.xcstrings`) as the source of truth for translations.
+
+To translate without sharing source code:
+
+1. In Xcode, run `Product > Export Localizations...` and generate `.xcloc` packages.
+2. Share the `.xcloc` package with translators.
+3. Translators edit the package (XLIFF/CAT-tool compatible) and return it.
+4. In Xcode, run `Product > Import Localizations...` to apply translated strings.
+5. Build and ship the app release with the imported translations.
+
+Adding a new language:
+
+1. Add the language in project localization settings.
+2. Export localizations for that language.
+3. Import completed translations and release.
 
 ## Resources
 

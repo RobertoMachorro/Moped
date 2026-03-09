@@ -36,8 +36,8 @@ final class AppActions: NSObject {
 	func setupMopedCLI() {
 		guard let cliURL = Bundle.main.url(forResource: "moped", withExtension: nil) else {
 			showCLIAlert(
-				title: "moped CLI not found.",
-				message: "Reinstall Moped to restore the embedded CLI tool."
+				title: String(localized: "alert.cli.not_found.title"),
+				message: String(localized: "alert.cli.not_found.message")
 			)
 			return
 		}
@@ -47,13 +47,26 @@ final class AppActions: NSObject {
 		do {
 			let alreadyInstalled = try installCLI(from: cliURL, to: targetURL)
 			let message = alreadyInstalled
-				? "moped is already installed at /usr/local/bin/moped."
-				: "moped is now available at /usr/local/bin/moped."
-			showCLIAlert(title: "Setup Complete", message: message)
-		} catch {
+				? String(localized: "alert.cli.setup_complete.message.already_installed")
+				: String(localized: "alert.cli.setup_complete.message.installed")
 			showCLIAlert(
-				title: "Unable to install moped.",
-				message: "Try running: sudo ln -sf \(shellEscape(cliURL.path)) \(shellEscape(targetURL.path))"
+				title: String(localized: "alert.cli.setup_complete.title"),
+				message: message
+			)
+		} catch {
+			let cliPath = shellEscape(cliURL.path)
+			let targetPath = shellEscape(targetURL.path)
+			let commandHint = String(
+				format: String(localized: "alert.cli.install_failed.command_format"),
+				cliPath,
+				targetPath
+			)
+			showCLIAlert(
+				title: String(localized: "alert.cli.install_failed.title"),
+				message: String(
+					format: String(localized: "alert.cli.install_failed.message_format"),
+					commandHint
+				)
 			)
 		}
 	}
@@ -78,7 +91,7 @@ final class AppActions: NSObject {
 		let view = AboutView()
 		let hostingController = NSHostingController(rootView: view)
 		let window = NSWindow(contentViewController: hostingController)
-		window.title = "About"
+		window.title = String(localized: "window.about.title")
 		window.styleMask = [.titled, .closable]
 		window.setContentSize(NSSize(width: 340, height: 250))
 		window.minSize = NSSize(width: 340, height: 250)

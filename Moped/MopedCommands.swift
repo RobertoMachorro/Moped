@@ -26,38 +26,38 @@ struct MopedCommands: Commands {
 
 	var body: some Commands {
 		CommandGroup(replacing: .appInfo) {
-			Button("About Moped") {
+			Button("menu.app.about") {
 				AppActions.shared.showAboutWindow()
 			}
 		}
 
 		CommandGroup(after: .appInfo) {
-			Button("Setup moped CLI") {
+			Button("menu.app.setup_cli") {
 				AppActions.shared.setupMopedCLI()
 			}
 		}
 
 		CommandGroup(replacing: .printItem) {
-			Button("Print…") {
+			Button("menu.file.print") {
 				printDocument()
 			}
 			.keyboardShortcut("p")
 		}
 
-		CommandMenu("Find") {
-			Button("Find…") {
+		CommandMenu("menu.find.title") {
+			Button("menu.find.find") {
 				showFindPanel()
 			}
 			.keyboardShortcut("f")
 
-			Button("Jump to Line…") {
+			Button("menu.find.jump_to_line") {
 				jumpToLine()
 			}
 			.keyboardShortcut("l")
 		}
 
-		CommandMenu("Editor") {
-			Button("Increase") {
+		CommandMenu("menu.editor.title") {
+			Button("menu.editor.increase") {
 				NSApp.sendAction(
 					#selector(MopedTextView.fontSizeIncreaseMenuItemSelected(_:)),
 					to: nil,
@@ -66,7 +66,7 @@ struct MopedCommands: Commands {
 			}
 			.keyboardShortcut("+")
 
-			Button("Decrease") {
+			Button("menu.editor.decrease") {
 				NSApp.sendAction(
 					#selector(MopedTextView.fontSizeDecreaseMenuItemSelected(_:)),
 					to: nil,
@@ -77,7 +77,7 @@ struct MopedCommands: Commands {
 
 			Divider()
 
-			Button("Reset") {
+			Button("menu.editor.reset") {
 				NSApp.sendAction(
 					#selector(MopedTextView.fontSizeResetMenuItemSelected(_:)),
 					to: nil,
@@ -88,20 +88,20 @@ struct MopedCommands: Commands {
 		}
 
 		CommandGroup(replacing: .help) {
-			Button("Read License") {
+			Button("menu.help.read_license") {
 				AppActions.shared.linkToLicense()
 			}
-			Button("Get Source Code") {
+			Button("menu.help.get_source") {
 				AppActions.shared.linkToSources()
 			}
-			Button("Report an Issue") {
+			Button("menu.help.report_issue") {
 				AppActions.shared.linkToIssues()
 			}
-			Button("Logo by BSGStudio") {
+			Button("menu.help.logo_credit") {
 				AppActions.shared.linkToIconSite()
 			}
 			Divider()
-			Button("Moped Help") {
+			Button("menu.help.moped_help") {
 				NSApp.sendAction(#selector(NSApplication.showHelp(_:)), to: nil, from: nil)
 			}
 			.keyboardShortcut("?")
@@ -135,9 +135,9 @@ struct MopedCommands: Commands {
 		if !didComplete {
 			let alert = NSAlert()
 			alert.alertStyle = .warning
-			alert.messageText = "Printing Failed"
+			alert.messageText = String(localized: "alert.printing_failed.title")
 			alert.informativeText = exceptionReason as String?
-				?? "An unexpected error occurred while rendering pages."
+				?? String(localized: "alert.printing_failed.message")
 			alert.runModal()
 		}
 	}
@@ -180,14 +180,14 @@ struct MopedCommands: Commands {
 		}
 
 		let alert = NSAlert()
-		alert.messageText = "Jump to Line"
-		alert.informativeText = "Enter a line number."
+		alert.messageText = String(localized: "alert.jump_to_line.title")
+		alert.informativeText = String(localized: "alert.jump_to_line.message")
 		alert.alertStyle = .informational
-		alert.addButton(withTitle: "Jump")
-		alert.addButton(withTitle: "Cancel")
+		alert.addButton(withTitle: String(localized: "alert.jump_to_line.button_jump"))
+		alert.addButton(withTitle: String(localized: "alert.jump_to_line.button_cancel"))
 
 		let inputField = NSTextField(frame: NSRect(x: 0.0, y: 0.0, width: 180.0, height: 24.0))
-		inputField.placeholderString = "Line Number"
+		inputField.placeholderString = String(localized: "alert.jump_to_line.placeholder")
 		inputField.stringValue = "\(currentLineNumber(in: textView))"
 		alert.accessoryView = inputField
 
