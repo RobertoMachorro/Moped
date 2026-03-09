@@ -135,7 +135,7 @@ private struct PreferenceRow: View {
 			Text(title)
 				.frame(width: 125, alignment: .leading)
 			Picker("", selection: $selection) {
-				ForEach(options, id: \.self) { option in
+				ForEach(options, id: \.value) { option in
 					Text(option.label)
 						.tag(option.value)
 				}
