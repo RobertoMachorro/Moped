@@ -18,6 +18,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Install ripgrep
         run: brew install ripgrep
+      - name: Check localized string usage
+        run: ./scripts/check_localized_strings.sh
       - name: Build
         run: |
           rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

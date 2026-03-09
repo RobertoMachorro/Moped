@@ -21,6 +21,11 @@
 import Highlightr
 import SwiftUI
 
+private struct PreferenceOption: Hashable {
+	let value: String
+	let label: String
+}
+
 struct PreferencesView: View {
 	@ObservedObject var preferences: Preferences
 
@@ -28,8 +33,8 @@ struct PreferencesView: View {
 	private let themes: [String]
 	private let fonts: [String]
 	private let fontSizes: [String]
-	private let wrapOptions = ["Yes", "No"]
-	private let lineNumberRulerOptions = ["Yes", "No"]
+	private let wrapOptions: [PreferenceOption]
+	private let lineNumberRulerOptions: [PreferenceOption]
 	private let appIconOptions = Preferences.AppIcon.allCases.map { $0.rawValue }
 
 	init(preferences: Preferences) {
@@ -40,48 +45,56 @@ struct PreferencesView: View {
 		themes = catalog.availableThemes
 		fonts = NSFontManager.shared.availableFonts.sorted()
 		fontSizes = (9...24).map { String($0) }
+		wrapOptions = [
+			PreferenceOption(value: "Yes", label: String(localized: "option.yes")),
+			PreferenceOption(value: "No", label: String(localized: "option.no"))
+		]
+		lineNumberRulerOptions = [
+			PreferenceOption(value: "Yes", label: String(localized: "option.yes")),
+			PreferenceOption(value: "No", label: String(localized: "option.no"))
+		]
 	}
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 12) {
 			PreferenceRow(
-				title: "Language:",
+				title: "pref.language.title",
 				selection: Binding(
 					get: { preferences.language },
 					set: { preferences.language = $0 }
 				),
-				options: languages
+				options: languages.map { PreferenceOption(value: $0, label: $0) }
 			)
 
 			PreferenceRow(
-				title: "Theme:",
+				title: "pref.theme.title",
 				selection: Binding(
 					get: { preferences.theme },
 					set: { preferences.theme = $0 }
 				),
-				options: themes
+				options: themes.map { PreferenceOption(value: $0, label: $0) }
 			)
 
 			PreferenceRow(
-				title: "Font:",
+				title: "pref.font.title",
 				selection: Binding(
 					get: { preferences.font },
 					set: { preferences.font = $0 }
 				),
-				options: fonts
+				options: fonts.map { PreferenceOption(value: $0, label: $0) }
 			)
 
 			PreferenceRow(
-				title: "Font Size:",
+				title: "pref.font_size.title",
 				selection: Binding(
 					get: { preferences.fontSize },
 					set: { preferences.fontSize = $0 }
 				),
-				options: fontSizes
+				options: fontSizes.map { PreferenceOption(value: $0, label: $0) }
 			)
 
 			PreferenceRow(
-				title: "Word Wrap:",
+				title: "pref.word_wrap.title",
 				selection: Binding(
 					get: { preferences.lineWrap },
 					set: { preferences.lineWrap = $0 }
@@ -90,7 +103,7 @@ struct PreferencesView: View {
 			)
 
 			PreferenceRow(
-				title: "Line Numbers:",
+				title: "pref.line_numbers.title",
 				selection: Binding(
 					get: { preferences.showLineNumberRuler },
 					set: { preferences.showLineNumberRuler = $0 }
@@ -99,31 +112,32 @@ struct PreferencesView: View {
 			)
 
 			PreferenceRow(
-				title: "Active Icon:",
+				title: "pref.active_icon.title",
 				selection: Binding(
 					get: { preferences.appIcon },
 					set: { preferences.appIcon = $0 }
 				),
-				options: appIconOptions
+				options: appIconOptions.map { PreferenceOption(value: $0, label: $0) }
 			)
 		}
 		.padding(20)
-		.frame(width: 345, height: 268, alignment: .topLeading)
+		.frame(width: 430, height: 268, alignment: .topLeading)
 	}
 }
 
 private struct PreferenceRow: View {
-	let title: String
+	let title: LocalizedStringKey
 	@Binding var selection: String
-	let options: [String]
+	let options: [PreferenceOption]
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
 			Text(title)
-				.frame(width: 90, alignment: .leading)
+				.frame(width: 125, alignment: .leading)
 			Picker("", selection: $selection) {
-				ForEach(options, id: \.self) { option in
-					Text(option)
+				ForEach(options, id: \.value) { option in
+					Text(option.label)
+						.tag(option.value)
 				}
 			}
 			.labelsHidden()
