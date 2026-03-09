@@ -29,7 +29,33 @@
 		E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
+		F0A1B2C3D4E5000000000031 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000001 /* main.swift */; };
+		F0A1B2C3D4E5000000000032 /* moped in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F0A1B2C3D4E5000000000039 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9D042012300A9FE00382715 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F0A1B2C3D4E5000000000037;
+			remoteInfo = MopedCLI;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F0A1B2C3D4E5000000000035 /* Embed moped CLI */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				F0A1B2C3D4E5000000000032 /* moped in Embed moped CLI */,
+			);
+			name = "Embed moped CLI";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
@@ -59,6 +85,8 @@
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F0A1B2C3D4E5000000000033 /* moped */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = moped; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MopedCLI.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +95,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0A1B2C3D4E5000000000034 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				E9D042092300A9FE00382715 /* Moped.app */,
+				F0A1B2C3D4E5000000000033 /* moped */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				F0A1B2C3D4E5000000000001 /* main.swift */,
+				F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */,
 			);
 			path = MopedCLI;
 			sourceTree = "<group>";
@@ -138,13 +175,14 @@
 			buildConfigurationList = E9D0421B2300A9FE00382715 /* Build configuration list for PBXNativeTarget "Moped" */;
 			buildPhases = (
 				E9D042052300A9FE00382715 /* Sources */,
-				F0A1B2C3D4E5000000000020 /* Build moped CLI */,
 				E9D042062300A9FE00382715 /* Frameworks */,
 				E9D042072300A9FE00382715 /* Resources */,
+				F0A1B2C3D4E5000000000035 /* Embed moped CLI */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F0A1B2C3D4E5000000000038 /* PBXTargetDependency */,
 			);
 			name = Moped;
 			packageProductDependencies = (
@@ -153,6 +191,24 @@
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F0A1B2C3D4E5000000000037 /* MopedCLI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0A1B2C3D4E5000000000040 /* Build configuration list for PBXNativeTarget "MopedCLI" */;
+			buildPhases = (
+				F0A1B2C3D4E5000000000036 /* Sources */,
+				F0A1B2C3D4E5000000000034 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MopedCLI;
+			packageProductDependencies = (
+			);
+			productName = moped;
+			productReference = F0A1B2C3D4E5000000000033 /* moped */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -173,6 +229,9 @@
 							};
 						};
 					};
+					F0A1B2C3D4E5000000000037 = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = E9D042042300A9FE00382715 /* Build configuration list for PBXProject "Moped" */;
@@ -192,6 +251,7 @@
 			projectRoot = "";
 			targets = (
 				E9D042082300A9FE00382715 /* Moped */,
+				F0A1B2C3D4E5000000000037 /* MopedCLI */,
 			);
 		};
 /* End PBXProject section */
@@ -207,25 +267,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		F0A1B2C3D4E5000000000020 /* Build moped CLI */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/MopedCLI/main.swift",
-			);
-			name = "Build moped CLI";
-			outputPaths = (
-				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/moped",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\nset -euo pipefail\n\n# Source file for CLI helper\nCLI_SRC=\"${SRCROOT}/MopedCLI/main.swift\"\n\n# Final location inside app bundle\nOUT_DIR=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Resources\"\nCLI_OUT=\"${OUT_DIR}/moped\"\n\n# IMPORTANT: keep intermediates OUT of TARGET_BUILD_DIR\nTMP_DIR=\"${TEMP_DIR}/moped-cli-${TARGET_NAME}\"\n\nmkdir -p \"$OUT_DIR\" \"$TMP_DIR\"\n\nARCH_COUNT=0\nBINARIES=\"\"\n\nfor ARCH in $ARCHS; do\n  BIN_PATH=\"${TMP_DIR}/moped-${ARCH}\"\n\n  /usr/bin/xcrun --sdk macosx swiftc -O -swift-version 5 \\\n    -target \"${ARCH}-apple-macos${MACOSX_DEPLOYMENT_TARGET}\" \\\n    -framework AppKit \\\n    -o \"$BIN_PATH\" \\\n    \"$CLI_SRC\"\n\n  BINARIES=\"${BINARIES} ${BIN_PATH}\"\n  ARCH_COUNT=$((ARCH_COUNT + 1))\ndone\n\n# Create universal binary if needed\nif [ \"$ARCH_COUNT\" -gt 1 ]; then\n  /usr/bin/lipo -create -output \"$CLI_OUT\" $BINARIES\nelse\n  /bin/cp $BINARIES \"$CLI_OUT\"\nfi\n\n# Ensure executable permissions (explicitly set)\n /bin/chmod 0755 \"$CLI_OUT\"\n\n# Sign helper for Hardened Runtime + notarization\nif [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ]; then\n  /usr/bin/codesign --force --sign \"$EXPANDED_CODE_SIGN_IDENTITY\" \\\n    --options runtime \\\n    --timestamp \\\n    \"$CLI_OUT\"\nfi\n\n# Cleanup\n/bin/rm -rf \"$TMP_DIR\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E9D042052300A9FE00382715 /* Sources */ = {
@@ -254,7 +295,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F0A1B2C3D4E5000000000036 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0A1B2C3D4E5000000000031 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F0A1B2C3D4E5000000000038 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F0A1B2C3D4E5000000000037 /* MopedCLI */;
+			targetProxy = F0A1B2C3D4E5000000000039 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E9D042192300A9FE00382715 /* Debug */ = {
@@ -402,7 +459,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Moped;
@@ -411,7 +468,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0beta1;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
@@ -435,7 +492,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Moped/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Moped;
@@ -444,10 +501,51 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0beta1;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F0A1B2C3D4E5000000000041 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MopedCLI/MopedCLI.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
+				PRODUCT_NAME = moped;
+				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_ALL_SOURCES = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F0A1B2C3D4E5000000000042 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = MopedCLI/MopedCLI.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 26;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.1;
+				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
+				PRODUCT_NAME = moped;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_INCLUDE_ALL_SOURCES = NO;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -469,6 +567,15 @@
 			buildConfigurations = (
 				E9D0421C2300A9FE00382715 /* Debug */,
 				E9D0421D2300A9FE00382715 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0A1B2C3D4E5000000000040 /* Build configuration list for PBXNativeTarget "MopedCLI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0A1B2C3D4E5000000000041 /* Debug */,
+				F0A1B2C3D4E5000000000042 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
