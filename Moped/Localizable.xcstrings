@@ -30,7 +30,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un editor de texto de uso general, pequeno y ligero.\nCopyright (C) 2019-2026 Roberto Machorro. Todos los derechos reservados.\n\nEste programa es software libre: puedes redistribuirlo y/o modificarlo bajo los terminos de la Licencia Publica General GNU publicada por la Free Software Foundation, ya sea la version 3 de la licencia o (a tu eleccion) cualquier version posterior.\n\nEste programa se distribuye con la esperanza de que sea util, pero SIN NINGUNA GARANTIA; incluso sin la garantia implicita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPOSITO PARTICULAR. Consulta la Licencia Publica General GNU para mas detalles."
+            "value" : "Un editor de texto de uso general, pequeño y ligero.\nCopyright (C) 2019-2026 Roberto Machorro. Todos los derechos reservados.\n\nEste programa es software libre: puedes redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Free Software Foundation, ya sea la version 3 de la licencia o (a tu elección) cualquier versión posterior.\n\nEste programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de COMERCIALIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Consulta la Licencia Pública General GNU para más detalles."
           }
         }
       }
@@ -135,7 +135,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No se encontro moped CLI."
+            "value" : "No se encontró moped CLI."
           }
         }
       }
@@ -152,7 +152,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "moped ya esta instalado en /usr/local/bin/moped."
+            "value" : "moped ya está instalado en /usr/local/bin/moped."
           }
         }
       }
@@ -169,7 +169,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "moped ahora esta disponible en /usr/local/bin/moped."
+            "value" : "moped ahora está disponible en /usr/local/bin/moped."
           }
         }
       }
@@ -186,7 +186,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Configuracion completa"
+            "value" : "Configuración Finalizada"
           }
         }
       }
@@ -237,7 +237,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ingresa un numero de linea."
+            "value" : "Ingresa un número de línea."
           }
         }
       }
@@ -254,7 +254,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numero de linea"
+            "value" : "Número de línea"
           }
         }
       }
@@ -271,7 +271,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ir a linea"
+            "value" : "Ir a línea"
           }
         }
       }
@@ -288,7 +288,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ocurrio un error inesperado al renderizar las paginas."
+            "value" : "Ocurrió un error inesperado al representar las páginas."
           }
         }
       }
@@ -305,7 +305,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fallo la impresion"
+            "value" : "Falló la impresión"
           }
         }
       }
@@ -458,7 +458,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ir a linea..."
+            "value" : "Ir a línea..."
           }
         }
       }
@@ -492,7 +492,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtener codigo fuente"
+            "value" : "Obtener código fuente"
           }
         }
       }
@@ -628,7 +628,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamano de fuente:"
+            "value" : "Tamaño del fuente:"
           }
         }
       }
@@ -679,7 +679,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numeros de linea:"
+            "value" : "Números de línea:"
           }
         }
       }
@@ -713,7 +713,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajuste de linea:"
+            "value" : "Ajuste de línea:"
           }
         }
       }
