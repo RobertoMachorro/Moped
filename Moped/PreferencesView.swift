@@ -121,7 +121,7 @@ struct PreferencesView: View {
 			)
 		}
 		.padding(20)
-		.frame(width: 345, height: 268, alignment: .topLeading)
+		.frame(width: 430, height: 268, alignment: .topLeading)
 	}
 }
 
@@ -133,7 +133,7 @@ private struct PreferenceRow: View {
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
 			Text(title)
-				.frame(width: 90, alignment: .leading)
+				.frame(width: 125, alignment: .leading)
 			Picker("", selection: $selection) {
 				ForEach(options, id: \.self) { option in
 					Text(option.label)
