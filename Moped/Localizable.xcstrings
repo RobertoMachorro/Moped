@@ -418,13 +418,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Print..."
+            "value" : "Print…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Imprimir..."
+            "value" : "Imprimir…"
           }
         }
       }
@@ -435,13 +435,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Find..."
+            "value" : "Find…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscar..."
+            "value" : "Buscar…"
           }
         }
       }
@@ -452,13 +452,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jump to Line..."
+            "value" : "Jump to Line…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ir a línea..."
+            "value" : "Ir a línea…"
           }
         }
       }
