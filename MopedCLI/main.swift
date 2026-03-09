@@ -35,7 +35,15 @@ private func usage() -> String {
 }
 
 private func resolveFileURLs(from paths: [String]) -> [URL] {
-	let currentDirectory = FileManager.default.currentDirectoryPath
+	let environment = ProcessInfo.processInfo.environment
+	let shellPWD = environment["PWD"] ?? ""
+	let fileManager = FileManager.default
+	let currentDirectory = (
+		shellPWD.hasPrefix("/") &&
+		fileManager.fileExists(atPath: shellPWD)
+	)
+		? shellPWD
+		: fileManager.currentDirectoryPath
 	let currentDirectoryPath = currentDirectory as NSString
 
 	return paths.map { path in
@@ -49,28 +57,43 @@ private func resolveFileURLs(from paths: [String]) -> [URL] {
 	}
 }
 
-private func openFiles(_ urls: [URL]) -> Bool {
-	guard let appURL = NSWorkspace.shared.urlForApplication(
-		withBundleIdentifier: CLIConstants.bundleIdentifier
-	) else {
-		return false
+struct OpenFilesResult {
+	let didOpen: Bool
+	let errorDescription: String?
+}
+
+private func runOpenCommand(arguments: [String]) -> OpenFilesResult {
+	let process = Process()
+	process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+	process.arguments = arguments
+	let errorPipe = Pipe()
+	process.standardError = errorPipe
+
+	do {
+		try process.run()
+		process.waitUntilExit()
+		if process.terminationStatus == 0 {
+			return OpenFilesResult(didOpen: true, errorDescription: nil)
+		}
+
+		let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+		let output = String(data: errorData, encoding: .utf8)?
+			.trimmingCharacters(in: .whitespacesAndNewlines)
+		let details = output?.isEmpty == false
+			? output
+			: "open exited with non-zero status."
+		return OpenFilesResult(didOpen: false, errorDescription: details)
+	} catch {
+		return OpenFilesResult(
+			didOpen: false,
+			errorDescription: error.localizedDescription
+		)
 	}
+}
 
-	let configuration = NSWorkspace.OpenConfiguration()
-	let semaphore = DispatchSemaphore(value: 0)
-	var didOpen = false
-
-	NSWorkspace.shared.open(
-		urls,
-		withApplicationAt: appURL,
-		configuration: configuration
-	) { _, error in
-		didOpen = (error == nil)
-		semaphore.signal()
-	}
-
-	_ = semaphore.wait(timeout: .now() + 10.0)
-	return didOpen
+private func openFiles(_ urls: [URL]) -> OpenFilesResult {
+	let arguments = ["-b", CLIConstants.bundleIdentifier] + urls.map(\.path)
+	return runOpenCommand(arguments: arguments)
 }
 
 private func ensureAppRunning() -> Bool {
@@ -82,26 +105,8 @@ private func ensureAppRunning() -> Bool {
 		return true
 	}
 
-	guard let appURL = NSWorkspace.shared.urlForApplication(
-		withBundleIdentifier: CLIConstants.bundleIdentifier
-	) else {
-		return false
-	}
-
-	let configuration = NSWorkspace.OpenConfiguration()
-	let semaphore = DispatchSemaphore(value: 0)
-	var didLaunch = false
-
-	NSWorkspace.shared.openApplication(
-		at: appURL,
-		configuration: configuration
-	) { _, error in
-		didLaunch = (error == nil)
-		semaphore.signal()
-	}
-
-	_ = semaphore.wait(timeout: .now() + 10.0)
-	if !didLaunch {
+	let launchResult = runOpenCommand(arguments: ["-b", CLIConstants.bundleIdentifier])
+	if !launchResult.didOpen {
 		return false
 	}
 
@@ -171,8 +176,10 @@ if parsedArguments.filePaths.isEmpty {
 let fileURLs = resolveFileURLs(from: parsedArguments.filePaths)
 
 if !parsedArguments.waitMode {
-	if !openFiles(fileURLs) {
-		fputs("Unable to open files in Moped.\n", stderr)
+	let openResult = openFiles(fileURLs)
+	if !openResult.didOpen {
+		let details = openResult.errorDescription ?? "Unknown error."
+		fputs("Unable to open files in Moped: \(details)\n", stderr)
 		exit(1)
 	}
 	exit(0)
@@ -209,9 +216,11 @@ guard let sessionFilePath = createSessionFile(sessionID: sessionID) else {
 }
 
 postWaitRequest(sessionID: sessionID, fileURLs: fileURLs, sessionFilePath: sessionFilePath)
-if !openFiles(fileURLs) {
+let openResult = openFiles(fileURLs)
+if !openResult.didOpen {
 	completionCenter.removeObserver(completionObserver)
-	fputs("Unable to open files in Moped.\n", stderr)
+	let details = openResult.errorDescription ?? "Unknown error."
+	fputs("Unable to open files in Moped: \(details)\n", stderr)
 	exit(1)
 }
 postWaitRequest(sessionID: sessionID, fileURLs: fileURLs, sessionFilePath: sessionFilePath)
