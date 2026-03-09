@@ -133,11 +133,13 @@ struct MopedCommands: Commands {
 			exceptionReason: &exceptionReason
 		)
 		if !didComplete {
+			if let reason = exceptionReason as String? {
+				NSLog("Printing failed: %@", reason)
+			}
 			let alert = NSAlert()
 			alert.alertStyle = .warning
 			alert.messageText = String(localized: "alert.printing_failed.title")
-			alert.informativeText = exceptionReason as String?
-				?? String(localized: "alert.printing_failed.message")
+			alert.informativeText = String(localized: "alert.printing_failed.message")
 			alert.runModal()
 		}
 	}
