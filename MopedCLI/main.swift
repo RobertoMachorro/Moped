@@ -92,8 +92,41 @@ private func runOpenCommand(arguments: [String]) -> OpenFilesResult {
 }
 
 private func openFiles(_ urls: [URL]) -> OpenFilesResult {
-	let arguments = ["-b", CLIConstants.bundleIdentifier] + urls.map(\.path)
-	return runOpenCommand(arguments: arguments)
+	guard let appURL = NSWorkspace.shared.urlForApplication(
+		withBundleIdentifier: CLIConstants.bundleIdentifier
+	) else {
+		return OpenFilesResult(
+			didOpen: false,
+			errorDescription: "Moped application not found."
+		)
+	}
+
+	var result: OpenFilesResult?
+
+	NSWorkspace.shared.open(
+		urls,
+		withApplicationAt: appURL,
+		configuration: NSWorkspace.OpenConfiguration()
+	) { _, error in
+		if let error = error {
+			result = OpenFilesResult(
+				didOpen: false,
+				errorDescription: error.localizedDescription
+			)
+		} else {
+			result = OpenFilesResult(didOpen: true, errorDescription: nil)
+		}
+	}
+
+	let deadline = Date().addingTimeInterval(10.0)
+	while result == nil && Date() < deadline {
+		RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.1))
+	}
+
+	return result ?? OpenFilesResult(
+		didOpen: false,
+		errorDescription: "Timed out waiting for Moped to open files."
+	)
 }
 
 private func ensureAppRunning() -> Bool {
