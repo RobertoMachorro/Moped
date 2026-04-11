@@ -31,7 +31,8 @@
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		F0A1B2C3D4E5000000000031 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000001 /* main.swift */; };
-		F0A1B2C3D4E5000000000032 /* moped in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped */; };
+		F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped-wait */; };
+		F0A1B2C3D4E5000000000051 /* Resources/moped in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000050 /* Resources/moped */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +52,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				F0A1B2C3D4E5000000000032 /* moped in Embed moped CLI */,
+				F0A1B2C3D4E5000000000051 /* Resources/moped in Embed moped CLI */,
+				F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */,
 			);
 			name = "Embed moped CLI";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,8 +89,9 @@
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		F0A1B2C3D4E5000000000033 /* moped */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = moped; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0A1B2C3D4E5000000000033 /* moped-wait */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "moped-wait"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MopedCLI.entitlements; sourceTree = "<group>"; };
+		F0A1B2C3D4E5000000000050 /* Resources/moped */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Resources/moped; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				E9D042092300A9FE00382715 /* Moped.app */,
-				F0A1B2C3D4E5000000000033 /* moped */,
+				F0A1B2C3D4E5000000000033 /* moped-wait */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				B1C2D3E4F500000000000902 /* Localizable.xcstrings */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
 				E9D042182300A9FE00382715 /* Moped.entitlements */,
+				F0A1B2C3D4E5000000000050 /* Resources/moped */,
 			);
 			path = Moped;
 			sourceTree = "<group>";
@@ -209,8 +213,8 @@
 			name = MopedCLI;
 			packageProductDependencies = (
 			);
-			productName = moped;
-			productReference = F0A1B2C3D4E5000000000033 /* moped */;
+			productName = "moped-wait";
+			productReference = F0A1B2C3D4E5000000000033 /* moped-wait */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -526,7 +530,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
-				PRODUCT_NAME = moped;
+				PRODUCT_NAME = "moped-wait";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;
 				SWIFT_VERSION = 5.0;
@@ -547,7 +551,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
-				PRODUCT_NAME = moped;
+				PRODUCT_NAME = "moped-wait";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;

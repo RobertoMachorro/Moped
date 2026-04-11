@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# moped — open files in the Moped.app text editor
+#
+# Moped - A general purpose text editor, small and light.
+# Copyright © 2019-2026 Roberto Machorro. All rights reserved.
+#
+# This script is licensed under the GNU General Public License v3 or later;
+# see <https://www.gnu.org/licenses/> for details.
+#
+# Why a shell script and not a Swift binary? Mac App Store validation requires
+# every bundled Mach-O to be sandboxed (validation rule 90296), and a sandboxed
+# CLI cannot access files handed to it as argv — `files.user-selected.*`
+# entitlements only grant access to files the user picked via an Open panel.
+# An interpreted script is not a Mach-O, so rule 90296 does not apply; this
+# script runs unsandboxed under the user's shell, and /usr/bin/open inherits
+# that same unsandboxed context, so the resulting kAEOpenDocuments AppleEvent
+# crosses into Moped.app the normal way (with a proper powerbox grant).
+#
+# The --wait flag delegates to moped-wait, a small sandboxed helper sitting
+# next to this script in Contents/Resources/. moped-wait never touches the
+# user's files; it only posts a DistributedNotification to WaitManager and
+# blocks until the session completes.
+
+set -e
+
+BUNDLE_ID="net.machorro.roberto.Moped"
+
+usage() {
+	printf 'Usage: moped [--wait] <file>...\n' >&2
+	exit 1
+}
+
+# Resolve this script's own directory, following symlinks. The install path
+# is /usr/local/bin/moped -> /Applications/Moped.app/Contents/Resources/moped,
+# so $0 starts out as a symlink and we need to walk it to find the sibling
+# moped-wait helper.
+source_path="$0"
+while [ -L "$source_path" ]; do
+	link="$(readlink "$source_path")"
+	case "$link" in
+		/*) source_path="$link" ;;
+		*)  source_path="$(dirname "$source_path")/$link" ;;
+	esac
+done
+script_dir="$(cd -P "$(dirname "$source_path")" && pwd)"
+
+wait_mode=0
+files=()
+for arg in "$@"; do
+	case "$arg" in
+		--wait)     wait_mode=1 ;;
+		-h|--help)  usage ;;
+		*)          files+=("$arg") ;;
+	esac
+done
+
+[ ${#files[@]} -eq 0 ] && usage
+
+# Convert each file path to absolute form. WaitManager canonicalizes paths on
+# the receiving side (resolvingSymlinksInPath + standardizedFileURL), so we
+# only need absoluteness here — we don't have to chase symlinks ourselves.
+abs_files=()
+for f in "${files[@]}"; do
+	case "$f" in
+		/*) abs_files+=("$f") ;;
+		*)  abs_files+=("$PWD/$f") ;;
+	esac
+done
+
+/usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}"
+
+if [ "$wait_mode" = "1" ]; then
+	exec "$script_dir/moped-wait" "${abs_files[@]}"
+fi
