@@ -17,33 +17,22 @@
 # that same unsandboxed context, so the resulting kAEOpenDocuments AppleEvent
 # crosses into Moped.app the normal way (with a proper powerbox grant).
 #
-# The --wait flag delegates to moped-wait, a small sandboxed helper sitting
-# next to this script in Contents/Resources/. moped-wait never touches the
-# user's files; it only posts a DistributedNotification to WaitManager and
-# blocks until the session completes.
+# --wait mode: the script posts a DistributedNotification to WaitManager via
+# osascript (unsandboxed, so DNC posting works), creates a session file inside
+# the app's sandbox container, and polls for its deletion. WaitManager deletes
+# the session file when all tracked documents close. A sandboxed Mach-O binary
+# cannot post distributed notifications — that's why --wait is also handled
+# here rather than in the moped-wait helper.
 
 set -e
 
 BUNDLE_ID="net.machorro.roberto.Moped"
+NOTIFICATION_NAME="net.machorro.roberto.Moped.CLIWaitRequest"
 
 usage() {
 	printf 'Usage: moped [--wait] <file>...\n' >&2
 	exit 1
 }
-
-# Resolve this script's own directory, following symlinks. The install path
-# is /usr/local/bin/moped -> /Applications/Moped.app/Contents/Resources/moped,
-# so $0 starts out as a symlink and we need to walk it to find the sibling
-# moped-wait helper.
-source_path="$0"
-while [ -L "$source_path" ]; do
-	link="$(readlink "$source_path")"
-	case "$link" in
-		/*) source_path="$link" ;;
-		*)  source_path="$(dirname "$source_path")/$link" ;;
-	esac
-done
-script_dir="$(cd -P "$(dirname "$source_path")" && pwd)"
 
 wait_mode=0
 files=()
@@ -68,8 +57,69 @@ for f in "${files[@]}"; do
 	esac
 done
 
+# Hand the files to Moped via Launch Services. Because this script runs
+# unsandboxed under the user's shell, /usr/bin/open is also unsandboxed,
+# and the resulting Apple Event reaches Moped.app with a proper powerbox
+# grant for the opened documents.
 /usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}"
 
 if [ "$wait_mode" = "1" ]; then
-	exec "$script_dir/moped-wait" "${abs_files[@]}"
+	session_id="$(uuidgen)"
+	container_dir="$HOME/Library/Containers/$BUNDLE_ID/Data/Library/Application Support/MopedCLI"
+	session_file="$container_dir/$session_id.wait"
+
+	mkdir -p "$container_dir"
+	touch "$session_file"
+
+	# Clean up session file on interrupt / termination.
+	cleanup() { rm -f "$session_file"; }
+	trap cleanup INT TERM EXIT
+
+	# Give Moped a moment to create document windows before posting the
+	# wait request. Without this, WaitManager's first poll (500 ms after
+	# request) could find no matching window and complete the session
+	# immediately.
+	sleep 1
+
+	# Post the CLIWaitRequest notification to WaitManager via osascript.
+	# osascript runs unsandboxed so DistributedNotificationCenter posting
+	# is allowed. We pass data through environment variables to avoid
+	# shell-escaping headaches with file paths.
+	export MOPED_SESSION_ID="$session_id"
+	export MOPED_SESSION_FILE="$session_file"
+	export MOPED_NOTIFICATION="$NOTIFICATION_NAME"
+	export MOPED_FILES="$(printf '%s\n' "${abs_files[@]}")"
+
+	osascript -l JavaScript -e '
+	ObjC.import("Foundation");
+	var env = $.NSProcessInfo.processInfo.environment;
+	var sessionId   = env.objectForKey($("MOPED_SESSION_ID")).js;
+	var sessionFile = env.objectForKey($("MOPED_SESSION_FILE")).js;
+	var notifName   = env.objectForKey($("MOPED_NOTIFICATION")).js;
+	var filesStr    = env.objectForKey($("MOPED_FILES")).js;
+	var filesArr    = filesStr.split("\n").filter(function(s) { return s.length > 0; });
+
+	var center  = $.NSDistributedNotificationCenter.defaultCenter;
+	var nsFiles = $.NSMutableArray.alloc.init;
+	for (var i = 0; i < filesArr.length; i++) {
+		nsFiles.addObject($(filesArr[i]));
+	}
+	var userInfo = $.NSMutableDictionary.alloc.init;
+	userInfo.setObjectForKey($(sessionId),   $("sessionID"));
+	userInfo.setObjectForKey(nsFiles,        $("files"));
+	userInfo.setObjectForKey($(sessionFile), $("sessionFilePath"));
+
+	center.postNotificationNameObjectUserInfoOptions(
+		$(notifName), $.nil, userInfo, 0
+	);
+	'
+
+	# Block until WaitManager deletes the session file (documents closed)
+	# or the app quits entirely.
+	while [ -f "$session_file" ]; do
+		if ! pgrep -qx Moped 2>/dev/null; then
+			break
+		fi
+		sleep 0.5
+	done
 fi
