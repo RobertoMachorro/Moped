@@ -90,5 +90,7 @@
 	<string>markdown</string>
 	<key>public.markdown</key>
 	<string>markdown</string>
+	<key>public.go-source</key>
+	<string>go</string>
 </dict>
 </plist>
