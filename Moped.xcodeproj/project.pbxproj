@@ -154,7 +154,7 @@
 				A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */,
 				929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */,
 				A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */,
-			A1B2C3D4E500000000000116 /* WaitManager.swift */,
+				A1B2C3D4E500000000000116 /* WaitManager.swift */,
 				E990B6F0230A38930010CF5D /* TextFileModel.swift */,
 				A1B2C3D4E500000000000113 /* PreferencesView.swift */,
 				E94A91A923106CC900BE978A /* Preferences.swift */,
@@ -302,7 +302,7 @@
 				A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */,
 				A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */,
 				A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */,
-			A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
+				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
 				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
 				E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */,
 				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
@@ -479,7 +479,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -492,7 +492,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
@@ -512,7 +512,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -525,7 +525,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
