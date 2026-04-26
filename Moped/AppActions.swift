@@ -25,10 +25,18 @@ final class AppActions: NSObject {
 	static let shared = AppActions()
 
 	private var aboutWindowController: NSWindowController?
+	private var defaultEditorSelectorController: NSWindowController?
 
 	func showAboutWindow() {
 		let controller = aboutWindowController ?? makeAboutWindowController()
 		aboutWindowController = controller
+		controller.showWindow(nil)
+		controller.window?.makeKeyAndOrderFront(nil)
+	}
+
+	func showDefaultEditorSelector() {
+		let controller = defaultEditorSelectorController ?? makeDefaultEditorSelectorController()
+		defaultEditorSelectorController = controller
 		controller.showWindow(nil)
 		controller.window?.makeKeyAndOrderFront(nil)
 	}
@@ -85,6 +93,24 @@ final class AppActions: NSObject {
 
 	func linkToIconSite() {
 		showWebsite(using: "https://all-free-download.com/free-vector/download/scooter-icons-collection-classical-colored-sketch_6832617.html")
+	}
+
+	private func makeDefaultEditorSelectorController() -> NSWindowController {
+		var view = DefaultEditorSelectorView()
+		let window = NSWindow(
+			contentRect: NSRect(x: 0, y: 0, width: 560, height: 480),
+			styleMask: [.titled, .closable, .resizable],
+			backing: .buffered,
+			defer: false
+		)
+		window.title = String(localized: "window.default_editor.title")
+		window.minSize = NSSize(width: 480, height: 360)
+		window.isReleasedWhenClosed = false
+		window.center()
+		let controller = NSWindowController(window: window)
+		view.onClose = { [weak controller] in controller?.close() }
+		window.contentViewController = NSHostingController(rootView: view)
+		return controller
 	}
 
 	private func makeAboutWindowController() -> NSWindowController {

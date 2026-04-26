@@ -28,7 +28,6 @@ private struct PreferenceOption: Hashable {
 
 struct PreferencesView: View {
 	@ObservedObject var preferences: Preferences
-	@State private var isSettingDefault = false
 
 	private let languages: [String]
 	private let themes: [String]
@@ -141,20 +140,12 @@ struct PreferencesView: View {
 				Text("pref.default_editor.title")
 					.frame(width: 125, alignment: .leading)
 				Button("pref.default_editor.button") {
-					isSettingDefault = true
-					AppActions.shared.setAsDefaultTextEditor {
-						isSettingDefault = false
-					}
-				}
-				.disabled(isSettingDefault)
-				if isSettingDefault {
-					ProgressView()
-						.scaleEffect(0.6)
+					AppActions.shared.showDefaultEditorSelector()
 				}
 			}
 		}
 		.padding(20)
-		.frame(width: 430, height: 340, alignment: .topLeading)
+		.frame(width: 430, height: 380, alignment: .topLeading)
 	}
 }
 
