@@ -18,7 +18,7 @@ patterns=(
 	'\.title\s*=\s*"[A-Za-z]'
 )
 
-allowed_prefix='(about\.|alert\.|menu\.|option\.|pref\.|window\.)'
+allowed_prefix='(about\.|alert\.|default_editor\.|menu\.|option\.|pref\.|window\.)'
 violations=""
 
 for pattern in "${patterns[@]}"; do
