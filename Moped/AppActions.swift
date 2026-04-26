@@ -101,6 +101,21 @@ final class AppActions: NSObject {
 		return NSWindowController(window: window)
 	}
 
+	func setAsDefaultTextEditor(completion: @escaping () -> Void) {
+		let appURL = Bundle.main.bundleURL
+		let types = MopedDocument.readableContentTypes
+		let group = DispatchGroup()
+		for utType in types {
+			group.enter()
+			NSWorkspace.shared.setDefaultApplication(
+				at: appURL,
+				toOpen: utType,
+				completion: { _ in group.leave() }
+			)
+		}
+		group.notify(queue: .main) { completion() }
+	}
+
 	private func showWebsite(using address: String) {
 		if let url = URL(string: address) {
 			NSWorkspace.shared.open(url)

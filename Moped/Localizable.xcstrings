@@ -650,6 +650,38 @@
         }
       }
     },
+    "pref.default_editor.button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set as Default"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establecer como predeterminado"
+          }
+        }
+      }
+    },
+    "pref.default_editor.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default Editor:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editor predeterminado:"
+          }
+        }
+      }
+    },
     "pref.active_icon.title" : {
       "extractionState" : "stale",
       "localizations" : {
