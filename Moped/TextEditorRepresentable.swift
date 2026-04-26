@@ -193,6 +193,11 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			}
 		}
 
+		func textViewDidChangeSelection(_ notification: Notification) {
+			guard let textView = notification.object as? NSTextView else { return }
+			state.updateCursorPosition(for: textView)
+		}
+
 		func textDidChange(_ notification: Notification) {
 			guard let textView = notification.object as? NSTextView else {
 				return

@@ -43,6 +43,10 @@ struct EditorView: View {
 
 				Spacer()
 
+				Text(editorState.cursorPosition)
+					.font(.system(size: 11).monospacedDigit())
+					.padding(.trailing, 8)
+
 				Picker("", selection: languageBinding) {
 					ForEach(editorState.supportedLanguages, id: \.self) { language in
 						Text(language)

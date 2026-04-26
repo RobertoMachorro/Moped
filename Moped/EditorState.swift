@@ -38,6 +38,8 @@ final class EditorState: NSObject, ObservableObject {
 	private var currentFontSize: CGFloat
 	private var highlightingEnabled = true
 
+	@Published var cursorPosition: String = "1:0"
+
 	weak var textView: MopedTextView?
 	weak var lineNumberRuler: LineNumberRulerView?
 
@@ -134,6 +136,14 @@ final class EditorState: NSObject, ObservableObject {
 	func resetFontSize() {
 		currentFontSize = preferences.fontSizeFloat
 		setTheme(to: preferences.theme, fontSize: currentFontSize)
+	}
+
+	func updateCursorPosition(for textView: NSTextView) {
+		let nsText = textView.string as NSString
+		let location = min(textView.selectedRange().location, nsText.length)
+		let preceding = nsText.substring(to: location)
+		let components = preceding.components(separatedBy: "\n")
+		cursorPosition = "\(components.count):\(components.last?.count ?? 0)"
 	}
 
 	func refreshLineNumberRuler() {
