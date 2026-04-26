@@ -18,6 +18,7 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+import Cocoa
 import SwiftUI
 
 struct EditorView: View {
@@ -62,6 +63,8 @@ struct EditorView: View {
 			set: { newValue in
 				document.model.docTypeLanguage = newValue
 				editorState.applyLanguage(newValue)
+				let utTypeId = TextFileModel.getUTTypeForLanguage(newValue)
+				NSDocumentController.shared.currentDocument?.fileType = utTypeId
 			}
 		)
 	}

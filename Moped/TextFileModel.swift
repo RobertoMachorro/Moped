@@ -84,4 +84,22 @@ extension TextFileModel {
 	func getLanguageForType(typeName: String) -> String {
 		return Self.languagesFromUTI[typeName] ?? "plaintext"
 	}
+
+	private static let utiFromLanguages: [String: String] = {
+		var result: [String: String] = [:]
+		for (uti, language) in languagesFromUTI {
+			if let existing = result[language] {
+				if uti.hasPrefix("public.") && !existing.hasPrefix("public.") {
+					result[language] = uti
+				}
+			} else {
+				result[language] = uti
+			}
+		}
+		return result
+	}()
+
+	static func getUTTypeForLanguage(_ language: String) -> String {
+		return utiFromLanguages[language] ?? "public.plain-text"
+	}
 }

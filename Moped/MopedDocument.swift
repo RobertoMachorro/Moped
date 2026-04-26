@@ -49,7 +49,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			}
 		}
 
-		return Array(Set(types))
+		var seen = Set<UTType>()
+		return types.filter { seen.insert($0).inserted }
 	}()
 
 	@Published var model: TextFileModel
