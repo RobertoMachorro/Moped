@@ -50,6 +50,11 @@ struct MopedCommands: Commands {
 			}
 			.keyboardShortcut("f")
 
+			Button("menu.find.find_and_replace") {
+				showFindReplacePanel()
+			}
+			.keyboardShortcut("f", modifiers: [.command, .option])
+
 			Button("menu.find.jump_to_line") {
 				jumpToLine()
 			}
@@ -150,7 +155,6 @@ struct MopedCommands: Commands {
 			textView.usesFindBar = true
 			if let scrollView = textView.enclosingScrollView {
 				scrollView.findBarPosition = .aboveContent
-				scrollView.isFindBarVisible = true
 			}
 
 			let textFinderItem = NSMenuItem()
@@ -164,6 +168,36 @@ struct MopedCommands: Commands {
 
 		let textFinderItem = NSMenuItem()
 		textFinderItem.tag = NSTextFinder.Action.showFindInterface.rawValue
+		if NSApp.sendAction(
+			#selector(NSResponder.performTextFinderAction(_:)),
+			to: nil,
+			from: textFinderItem
+		) {
+			return
+		}
+
+		NSSound.beep()
+	}
+
+	private func showFindReplacePanel() {
+		if let textView = activeTextView() {
+			textView.window?.makeFirstResponder(textView)
+			textView.usesFindBar = true
+			if let scrollView = textView.enclosingScrollView {
+				scrollView.findBarPosition = .aboveContent
+			}
+
+			let textFinderItem = NSMenuItem()
+			textFinderItem.tag = NSTextFinder.Action.showReplaceInterface.rawValue
+			textView.performTextFinderAction(textFinderItem)
+			if let scrollView = textView.enclosingScrollView {
+				applySystemFindBarAppearanceWhenReady(in: scrollView, window: textView.window)
+			}
+			return
+		}
+
+		let textFinderItem = NSMenuItem()
+		textFinderItem.tag = NSTextFinder.Action.showReplaceInterface.rawValue
 		if NSApp.sendAction(
 			#selector(NSResponder.performTextFinderAction(_:)),
 			to: nil,

@@ -446,6 +446,23 @@
         }
       }
     },
+    "menu.find.find_and_replace" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find and Replace…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar y Reemplazar…"
+          }
+        }
+      }
+    },
     "menu.find.jump_to_line" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -662,7 +679,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamaño del fuente:"
+            "value" : "Tamaño de fuente:"
           }
         }
       }
