@@ -8,6 +8,12 @@
     "about.app.name" : {
       "comment" : "App name in about window.",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19,12 +25,30 @@
             "state" : "translated",
             "value" : "Moped"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped"
+          }
         }
       }
     },
     "about.info_text" : {
       "comment" : "Main informational text shown in the about window.",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein universeller Texteditor, klein und leicht.\nCopyright (C) 2019-2026 Roberto Machorro. Alle Rechte vorbehalten.\n\nDieses Programm ist freie Software: Sie können es unter den Bedingungen der GNU General Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder ändern, entweder gemäß Version 3 der Lizenz oder (nach Ihrer Wahl) jeder späteren Version.\n\nDieses Programm wird in der Hoffnung verbreitet, dass es nützlich sein wird, jedoch OHNE JEDE GEWÄHRLEISTUNG; sogar ohne die implizite Gewährleistung der MARKTGÄNGIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK. Weitere Einzelheiten finden Sie in der GNU General Public License."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -36,6 +60,18 @@
             "state" : "translated",
             "value" : "Un editor de texto de uso general, pequeño y ligero.\nCopyright (C) 2019-2026 Roberto Machorro. Todos los derechos reservados.\n\nEste programa es software libre: puedes redistribuirlo y/o modificarlo bajo los términos de la Licencia Pública General GNU publicada por la Free Software Foundation, ya sea la version 3 de la licencia o (a tu elección) cualquier versión posterior.\n\nEste programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de COMERCIALIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR. Consulta la Licencia Pública General GNU para más detalles."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un éditeur de texte généraliste, petit et léger.\nCopyright (C) 2019-2026 Roberto Machorro. Tous droits réservés.\n\nCe programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence Publique Générale GNU publiée par la Free Software Foundation, soit la version 3 de la licence, soit (à votre choix) toute version ultérieure.\n\nCe programme est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GARANTIE ; sans même la garantie implicite de QUALITÉ MARCHANDE ou d'ADÉQUATION À UN USAGE PARTICULIER. Consultez la Licence Publique Générale GNU pour plus de détails."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een algemene teksteditor, klein en licht.\nCopyright (C) 2019-2026 Roberto Machorro. Alle rechten voorbehouden.\n\nDit programma is vrije software: je kunt het verspreiden en/of wijzigen onder de voorwaarden van de GNU General Public License zoals gepubliceerd door de Free Software Foundation, ofwel versie 3 van de licentie, ofwel (naar keuze) een latere versie.\n\nDit programma wordt verspreid in de hoop dat het nuttig zal zijn, maar ZONDER ENIGE GARANTIE; zelfs zonder de impliciete garantie van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL. Zie de GNU General Public License voor meer details."
+          }
         }
       }
     },
@@ -43,6 +79,12 @@
       "comment" : "Version label in about window. First placeholder is version, second is build number.",
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ (%@)"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -50,6 +92,18 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "v%@ (%@)"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "v%@ (%@)"
@@ -61,6 +115,12 @@
       "comment" : "Command suggestion for failed CLI install. First placeholder is source path, second is destination path.",
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sudo ln -sf %@ %@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -68,6 +128,18 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sudo ln -sf %@ %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sudo ln -sf %@ %@"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "sudo ln -sf %@ %@"
@@ -79,6 +151,12 @@
       "comment" : "CLI install failure explanation. Placeholder is shell command hint.",
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versuchen Sie auszuführen: %@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -90,12 +168,30 @@
             "state" : "translated",
             "value" : "Prueba ejecutar: %@"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez d'exécuter : %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probeer uit te voeren: %@"
+          }
         }
       }
     },
     "alert.cli.install_failed.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped konnte nicht installiert werden."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -107,12 +203,30 @@
             "state" : "translated",
             "value" : "No se pudo instalar moped."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'installer moped."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan moped niet installeren."
+          }
         }
       }
     },
     "alert.cli.not_found.message" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installieren Sie Moped erneut, um das eingebettete CLI-Tool wiederherzustellen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -124,12 +238,30 @@
             "state" : "translated",
             "value" : "Reinstala Moped para restaurar la herramienta CLI incluida."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinstallez Moped pour restaurer l'outil CLI intégré."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installeer Moped opnieuw om het ingebouwde CLI-hulpprogramma te herstellen."
+          }
         }
       }
     },
     "alert.cli.not_found.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped CLI nicht gefunden."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -141,12 +273,30 @@
             "state" : "translated",
             "value" : "No se encontró moped CLI."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped CLI introuvable."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped CLI niet gevonden."
+          }
         }
       }
     },
     "alert.cli.setup_complete.message.already_installed" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped ist bereits unter /usr/local/bin/moped installiert."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -158,12 +308,30 @@
             "state" : "translated",
             "value" : "moped ya está instalado en /usr/local/bin/moped."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped est déjà installé dans /usr/local/bin/moped."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped is al geïnstalleerd in /usr/local/bin/moped."
+          }
         }
       }
     },
     "alert.cli.setup_complete.message.installed" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped ist jetzt unter /usr/local/bin/moped verfügbar."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -175,12 +343,30 @@
             "state" : "translated",
             "value" : "moped ahora está disponible en /usr/local/bin/moped."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped est désormais disponible dans /usr/local/bin/moped."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped is nu beschikbaar in /usr/local/bin/moped."
+          }
         }
       }
     },
     "alert.cli.setup_complete.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einrichtung abgeschlossen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -192,12 +378,30 @@
             "state" : "translated",
             "value" : "Configuración Finalizada"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuration terminée"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellen voltooid"
+          }
         }
       }
     },
     "alert.jump_to_line.button_cancel" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -209,12 +413,30 @@
             "state" : "translated",
             "value" : "Cancelar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuleer"
+          }
         }
       }
     },
     "alert.jump_to_line.button_jump" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Springen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -226,12 +448,30 @@
             "state" : "translated",
             "value" : "Ir"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aller"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga"
+          }
         }
       }
     },
     "alert.jump_to_line.message" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geben Sie eine Zeilennummer ein."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -243,12 +483,30 @@
             "state" : "translated",
             "value" : "Ingresa un número de línea."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisissez un numéro de ligne."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voer een regelnummer in."
+          }
         }
       }
     },
     "alert.jump_to_line.placeholder" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeilennummer"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -260,12 +518,30 @@
             "state" : "translated",
             "value" : "Número de línea"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numéro de ligne"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regelnummer"
+          }
         }
       }
     },
     "alert.jump_to_line.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu Zeile springen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -277,12 +553,30 @@
             "state" : "translated",
             "value" : "Ir a línea"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aller à la ligne"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga naar regel"
+          }
         }
       }
     },
     "alert.printing_failed.message" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Rendern der Seiten ist ein unerwarteter Fehler aufgetreten."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -294,12 +588,30 @@
             "state" : "translated",
             "value" : "Ocurrió un error inesperado al representar las páginas."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une erreur inattendue est survenue lors du rendu des pages."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er is een onverwachte fout opgetreden bij het renderen van pagina's."
+          }
         }
       }
     },
     "alert.printing_failed.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drucken fehlgeschlagen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -311,12 +623,30 @@
             "state" : "translated",
             "value" : "Falló la impresión"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de l'impression"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afdrukken mislukt"
+          }
         }
       }
     },
     "default_editor.already_moped" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped (aktuell)"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -328,12 +658,30 @@
             "state" : "translated",
             "value" : "Moped (actual)"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped (actuel)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped (huidig)"
+          }
         }
       }
     },
     "default_editor.apply_button" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anwenden (%lld)"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -345,12 +693,30 @@
             "state" : "translated",
             "value" : "Aplicar (%lld)"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliquer (%lld)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toepassen (%lld)"
+          }
         }
       }
     },
     "default_editor.applying" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird angewendet…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -362,12 +728,30 @@
             "state" : "translated",
             "value" : "Aplicando…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Application…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toepassen…"
+          }
         }
       }
     },
     "default_editor.cancel" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -379,12 +763,30 @@
             "state" : "translated",
             "value" : "Cancelar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuleer"
+          }
         }
       }
     },
     "default_editor.loading" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateizuordnungen werden geladen…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -396,12 +798,30 @@
             "state" : "translated",
             "value" : "Cargando asociaciones de archivos…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement des associations de fichiers…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestandskoppelingen worden geladen…"
+          }
         }
       }
     },
     "default_editor.n_selected" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Typ(en) ausgewählt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -413,11 +833,29 @@
             "state" : "translated",
             "value" : "%lld tipo(s) seleccionado(s)"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld type(s) sélectionné(s)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld type(s) geselecteerd"
+          }
         }
       }
     },
     "default_editor.sandbox_warning" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HINWEIS: macOS fragt bei jeder Auswahl nach Bestätigung, da dies eine Sandbox-App ist."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -429,12 +867,30 @@
             "state" : "translated",
             "value" : "NOTA: macOS pedirá confirmación por cada selección, ya que esta es una app en modo Sandbox."
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "REMARQUE : macOS demandera de confirmer chaque sélection, car cette app est en mode Sandbox."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OPMERKING: macOS vraagt om elke selectie te bevestigen, aangezien dit een Sandbox-app is."
+          }
         }
       }
     },
     "default_editor.no_app" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine App zugewiesen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -446,12 +902,30 @@
             "state" : "translated",
             "value" : "Sin app asignada"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune app assignée"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen app toegewezen"
+          }
         }
       }
     },
     "default_editor.none_selected" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts ausgewählt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -463,12 +937,30 @@
             "state" : "translated",
             "value" : "Nada seleccionado"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien de sélectionné"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niets geselecteerd"
+          }
         }
       }
     },
     "default_editor.search_placeholder" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Name, Erweiterung oder App suchen…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -480,12 +972,30 @@
             "state" : "translated",
             "value" : "Buscar por nombre, extensión o app…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher par nom, extension ou app…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoeken op naam, extensie of app…"
+          }
         }
       }
     },
     "default_editor.select_all" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle auswählen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -497,12 +1007,30 @@
             "state" : "translated",
             "value" : "Seleccionar todo"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout sélectionner"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecteer alles"
+          }
         }
       }
     },
     "default_editor.select_none" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswahl aufheben"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -514,12 +1042,30 @@
             "state" : "translated",
             "value" : "Deseleccionar todo"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout désélectionner"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecteer niets"
+          }
         }
       }
     },
     "default_editor.select_textedit" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TextEdit auswählen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -531,11 +1077,29 @@
             "state" : "translated",
             "value" : "Seleccionar TextEdit"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner TextEdit"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecteer TextEdit"
+          }
         }
       }
     },
     "default_editor.subtitle" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählen Sie Typen, die Moped zugewiesen werden sollen:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -547,12 +1111,30 @@
             "state" : "translated",
             "value" : "Selecciona tipos para reasignar a Moped:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez les types à réassigner à Moped :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selecteer typen om aan Moped toe te wijzen:"
+          }
         }
       }
     },
     "menu.app.about" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Moped"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -564,12 +1146,30 @@
             "state" : "translated",
             "value" : "Acerca de Moped"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos de Moped"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Over Moped"
+          }
         }
       }
     },
     "menu.app.setup_cli" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped CLI einrichten"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -581,12 +1181,30 @@
             "state" : "translated",
             "value" : "Configurar moped CLI"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer moped CLI"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "moped CLI instellen"
+          }
         }
       }
     },
     "menu.editor.decrease" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkleinern"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -598,12 +1216,30 @@
             "state" : "translated",
             "value" : "Disminuir"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diminuer"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkleinen"
+          }
         }
       }
     },
     "menu.editor.increase" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vergrößern"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -615,12 +1251,30 @@
             "state" : "translated",
             "value" : "Aumentar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenter"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vergroten"
+          }
         }
       }
     },
     "menu.editor.reset" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -632,12 +1286,30 @@
             "state" : "translated",
             "value" : "Restablecer"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstel"
+          }
         }
       }
     },
     "menu.editor.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editor"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -649,12 +1321,30 @@
             "state" : "translated",
             "value" : "Editor"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditeur"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editor"
+          }
         }
       }
     },
     "menu.file.print" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drucken…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -666,12 +1356,30 @@
             "state" : "translated",
             "value" : "Imprimir…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imprimer…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afdrukken…"
+          }
         }
       }
     },
     "menu.find.find" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchen…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -683,12 +1391,30 @@
             "state" : "translated",
             "value" : "Buscar…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek…"
+          }
         }
       }
     },
     "menu.find.find_and_replace" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchen und Ersetzen…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -700,12 +1426,30 @@
             "state" : "translated",
             "value" : "Buscar y Reemplazar…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher et remplacer…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek en vervang…"
+          }
         }
       }
     },
     "menu.find.jump_to_line" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu Zeile springen…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -717,12 +1461,30 @@
             "state" : "translated",
             "value" : "Ir a línea…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aller à la ligne…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga naar regel…"
+          }
         }
       }
     },
     "menu.find.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suchen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -734,12 +1496,30 @@
             "state" : "translated",
             "value" : "Buscar"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek"
+          }
         }
       }
     },
     "menu.help.get_source" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quellcode abrufen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -751,12 +1531,30 @@
             "state" : "translated",
             "value" : "Obtener código fuente"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obtenir le code source"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Broncode ophalen"
+          }
         }
       }
     },
     "menu.help.logo_credit" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo von BSGStudio"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -768,12 +1566,30 @@
             "state" : "translated",
             "value" : "Logo por BSGStudio"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo par BSGStudio"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logo door BSGStudio"
+          }
         }
       }
     },
     "menu.help.moped_help" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped Hilfe"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -785,12 +1601,30 @@
             "state" : "translated",
             "value" : "Ayuda de Moped"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aide Moped"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped Help"
+          }
         }
       }
     },
     "menu.help.read_license" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenz lesen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -802,12 +1636,30 @@
             "state" : "translated",
             "value" : "Leer licencia"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire la licence"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licentie lezen"
+          }
         }
       }
     },
     "menu.help.report_issue" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem melden"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -819,12 +1671,30 @@
             "state" : "translated",
             "value" : "Reportar un problema"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signaler un problème"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probleem melden"
+          }
         }
       }
     },
     "option.empty_editor" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leerer Editor"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -836,12 +1706,30 @@
             "state" : "translated",
             "value" : "Editor vacío"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditeur vide"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lege editor"
+          }
         }
       }
     },
     "option.file_open_dialog" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei-Öffnen-Dialog"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -853,12 +1741,30 @@
             "state" : "translated",
             "value" : "Diálogo de apertura"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Boîte de dialogue d'ouverture"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestand openen-dialoog"
+          }
         }
       }
     },
     "option.no" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nein"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -870,12 +1776,30 @@
             "state" : "translated",
             "value" : "No"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nee"
+          }
         }
       }
     },
     "option.yes" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -887,12 +1811,30 @@
             "state" : "translated",
             "value" : "Sí"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oui"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ja"
+          }
         }
       }
     },
     "pref.active_icon.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktives Symbol:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -904,12 +1846,30 @@
             "state" : "translated",
             "value" : "Icono activo:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icône active :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actief icoon:"
+          }
         }
       }
     },
     "pref.default_editor.button" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuordnungen verwalten…"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -921,11 +1881,29 @@
             "state" : "translated",
             "value" : "Gestionar predeterminados…"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gérer les associations…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppelingen beheren…"
+          }
         }
       }
     },
     "pref.default_editor.title" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standardeditor:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -937,12 +1915,30 @@
             "state" : "translated",
             "value" : "Editor predeterminado:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditeur par défaut :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standaardeditor:"
+          }
         }
       }
     },
     "pref.font_size.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftgröße:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -954,12 +1950,30 @@
             "state" : "translated",
             "value" : "Tamaño de fuente:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille de police :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lettergrootte:"
+          }
         }
       }
     },
     "pref.font.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftart:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -971,12 +1985,30 @@
             "state" : "translated",
             "value" : "Fuente:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Police :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lettertype:"
+          }
         }
       }
     },
     "pref.language.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -988,12 +2020,30 @@
             "state" : "translated",
             "value" : "Lenguaje:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langage :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taal:"
+          }
         }
       }
     },
     "pref.launch_behavior.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beim Start:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1005,12 +2055,30 @@
             "state" : "translated",
             "value" : "Al iniciar:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au démarrage :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bij opstarten:"
+          }
         }
       }
     },
     "pref.line_numbers.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeilennummern:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1022,12 +2090,30 @@
             "state" : "translated",
             "value" : "Números de línea:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Numéros de ligne :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regelnummers:"
+          }
         }
       }
     },
     "pref.theme.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thema:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1039,12 +2125,30 @@
             "state" : "translated",
             "value" : "Tema:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thème :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thema:"
+          }
         }
       }
     },
     "pref.word_wrap.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeilenumbruch:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1056,12 +2160,30 @@
             "state" : "translated",
             "value" : "Ajuste de línea:"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retour à la ligne :"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regelterugloop:"
+          }
         }
       }
     },
     "window.about.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1073,12 +2195,30 @@
             "state" : "translated",
             "value" : "Acerca de"
           }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Over"
+          }
         }
       }
     },
     "window.default_editor.title" : {
       "extractionState" : "stale",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard-Dateizuordnungen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1089,6 +2229,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Asociaciones de archivo predeterminadas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Associations de fichiers par défaut"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standaard bestandskoppelingen"
           }
         }
       }
