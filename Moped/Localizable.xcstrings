@@ -582,23 +582,6 @@
         }
       }
     },
-    "option.no" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No"
-          }
-        }
-      }
-    },
     "option.empty_editor" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -633,6 +616,23 @@
         }
       }
     },
+    "option.no" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No"
+          }
+        }
+      }
+    },
     "option.yes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -650,7 +650,25 @@
         }
       }
     },
+    "pref.active_icon.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active Icon:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icono activo:"
+          }
+        }
+      }
+    },
     "pref.default_editor.button" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -678,23 +696,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Editor predeterminado:"
-          }
-        }
-      }
-    },
-    "pref.active_icon.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Active Icon:"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Icono activo:"
           }
         }
       }
@@ -750,23 +751,6 @@
         }
       }
     },
-    "pref.line_numbers.title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Line Numbers:"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Números de línea:"
-          }
-        }
-      }
-    },
     "pref.launch_behavior.title" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -780,6 +764,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Al iniciar:"
+          }
+        }
+      }
+    },
+    "pref.line_numbers.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line Numbers:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Números de línea:"
           }
         }
       }
