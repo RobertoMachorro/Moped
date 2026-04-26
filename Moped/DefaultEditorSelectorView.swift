@@ -109,8 +109,8 @@ final class DefaultEditorSelectorModel: ObservableObject {
 			return Array(items.indices)
 		}
 		let query = searchText.lowercased()
-		return items.indices.filter { i in
-			let item = items[i]
+		return items.indices.filter { idx in
+			let item = items[idx]
 			return item.description.lowercased().contains(query)
 				|| item.extensions.joined(separator: " ").lowercased().contains(query)
 				|| item.currentAppName.lowercased().contains(query)
@@ -122,24 +122,24 @@ final class DefaultEditorSelectorModel: ObservableObject {
 	}
 
 	func selectAll() {
-		for i in items.indices where !items[i].isMopedAlready {
-			items[i].isSelected = true
+		for idx in items.indices where !items[idx].isMopedAlready {
+			items[idx].isSelected = true
 		}
 	}
 
 	func selectTextEdit() {
-		for i in items.indices {
-			guard !items[i].isMopedAlready else { continue }
-			let bundleID = items[i].currentAppURL.flatMap {
+		for idx in items.indices {
+			guard !items[idx].isMopedAlready else { continue }
+			let bundleID = items[idx].currentAppURL.flatMap {
 				Bundle(url: $0)?.bundleIdentifier
 			} ?? ""
-			items[i].isSelected = bundleID == "com.apple.TextEdit"
+			items[idx].isSelected = bundleID == "com.apple.TextEdit"
 		}
 	}
 
 	func selectNone() {
-		for i in items.indices {
-			items[i].isSelected = false
+		for idx in items.indices {
+			items[idx].isSelected = false
 		}
 	}
 
@@ -236,40 +236,40 @@ struct DefaultEditorSelectorView: View {
 
 	private var itemList: some View {
 		List {
-			ForEach(model.filteredIndices, id: \.self) { i in
-				itemRow(index: i)
+			ForEach(model.filteredIndices, id: \.self) { idx in
+				itemRow(index: idx)
 					.listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
 			}
 		}
 		.listStyle(.inset)
 	}
 
-	private func itemRow(index i: Int) -> some View {
+	private func itemRow(index idx: Int) -> some View {
 		HStack(spacing: 10) {
-			Toggle("", isOn: $model.items[i].isSelected)
+			Toggle("", isOn: $model.items[idx].isSelected)
 				.labelsHidden()
-				.disabled(model.items[i].isMopedAlready)
+				.disabled(model.items[idx].isMopedAlready)
 
 			VStack(alignment: .leading, spacing: 2) {
-				Text(model.items[i].description)
+				Text(model.items[idx].description)
 					.font(.body)
-				Text(model.items[i].extensions.map { ".\($0)" }.joined(separator: "  "))
+				Text(model.items[idx].extensions.map { ".\($0)" }.joined(separator: "  "))
 					.font(.caption)
 					.foregroundStyle(.secondary)
 			}
 			.frame(maxWidth: .infinity, alignment: .leading)
 
 			HStack(spacing: 6) {
-				if let icon = model.items[i].currentAppIcon {
+				if let icon = model.items[idx].currentAppIcon {
 					Image(nsImage: icon)
 						.resizable()
 						.frame(width: 20, height: 20)
 				}
-				Text(model.items[i].isMopedAlready
+				Text(model.items[idx].isMopedAlready
 					? String(localized: "default_editor.already_moped")
-					: model.items[i].currentAppName)
+					: model.items[idx].currentAppName)
 					.font(.caption)
-					.foregroundStyle(model.items[i].isMopedAlready ? .secondary : .primary)
+					.foregroundStyle(model.items[idx].isMopedAlready ? .secondary : .primary)
 					.frame(width: 140, alignment: .trailing)
 			}
 		}
