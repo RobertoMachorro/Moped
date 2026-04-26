@@ -15,6 +15,12 @@ This FREE software is licensed under [GNU GPLv3 or later](https://www.gnu.org/li
 
 ![GNU GPLv3 Logo](https://www.gnu.org/graphics/gplv3-127x51.png)
 
+## Language Translations
+
+Proudly supporting the following languages: German, English, Spanish, Finnish, French, Hebrew, Hindi, Italian, Japanese, Dutch, Portuguese, Brazilian Portuguese, and Ukranian.
+
+Want to see another language? Volunteer to translate!
+
 ## Download Binary App
 
 [![Logo](https://github.com/RobertoMachorro/Moped/raw/master/Moped/Assets.xcassets/Logo.imageset/moped-64.png)](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12)
