@@ -254,6 +254,14 @@
 				fr,
 				de,
 				nl,
+				uk,
+				he,
+				fi,
+				ja,
+				hi,
+				it,
+				pt,
+				"pt-BR",
 				Base,
 			);
 			mainGroup = E9D042002300A9FE00382715;
