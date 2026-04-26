@@ -30,6 +30,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApp.activate(ignoringOtherApps: true)
 		applySelectedAppIcon()
 		startObservingPreferenceChanges()
+		if Preferences.userShared.openEmptyOnLaunch {
+			NSDocumentController.shared.newDocument(nil)
+		}
 	}
 
 	func applicationWillFinishLaunching(_ notification: Notification) {

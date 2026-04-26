@@ -582,6 +582,40 @@
         }
       }
     },
+    "option.empty_editor" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Editor"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editor vacío"
+          }
+        }
+      }
+    },
+    "option.file_open_dialog" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Open Dialog"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diálogo de apertura"
+          }
+        }
+      }
+    },
     "option.yes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -680,6 +714,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Números de línea:"
+          }
+        }
+      }
+    },
+    "pref.launch_behavior.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On Launch:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Al iniciar:"
           }
         }
       }

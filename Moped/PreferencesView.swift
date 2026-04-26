@@ -35,6 +35,7 @@ struct PreferencesView: View {
 	private let fontSizes: [String]
 	private let wrapOptions: [PreferenceOption]
 	private let lineNumberRulerOptions: [PreferenceOption]
+	private let launchBehaviorOptions: [PreferenceOption]
 	private let appIconOptions = Preferences.AppIcon.allCases.map { $0.rawValue }
 
 	init(preferences: Preferences) {
@@ -52,6 +53,10 @@ struct PreferencesView: View {
 		lineNumberRulerOptions = [
 			PreferenceOption(value: "Yes", label: String(localized: "option.yes")),
 			PreferenceOption(value: "No", label: String(localized: "option.no"))
+		]
+		launchBehaviorOptions = [
+			PreferenceOption(value: "FileOpenDialog", label: String(localized: "option.file_open_dialog")),
+			PreferenceOption(value: "EmptyEditor", label: String(localized: "option.empty_editor"))
 		]
 	}
 
@@ -112,6 +117,15 @@ struct PreferencesView: View {
 			)
 
 			PreferenceRow(
+				title: "pref.launch_behavior.title",
+				selection: Binding(
+					get: { preferences.launchBehavior },
+					set: { preferences.launchBehavior = $0 }
+				),
+				options: launchBehaviorOptions
+			)
+
+			PreferenceRow(
 				title: "pref.active_icon.title",
 				selection: Binding(
 					get: { preferences.appIcon },
@@ -121,7 +135,7 @@ struct PreferencesView: View {
 			)
 		}
 		.padding(20)
-		.frame(width: 430, height: 268, alignment: .topLeading)
+		.frame(width: 430, height: 302, alignment: .topLeading)
 	}
 }
 

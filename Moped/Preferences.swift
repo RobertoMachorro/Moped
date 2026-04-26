@@ -111,6 +111,15 @@ class Preferences: NSObject, ObservableObject {
 		}
 	}
 
+	@objc dynamic var launchBehavior: String {
+		get {
+			getStringValue(forKey: "launchBehavior", otherwiseUse: "FileOpenDialog")
+		}
+		set {
+			setStringValue(forKey: "launchBehavior", to: newValue)
+		}
+	}
+
 	@objc dynamic var appIcon: String {
 		get {
 			let selectedIconName = getStringValue(
@@ -133,6 +142,10 @@ class Preferences: NSObject, ObservableObject {
 			return CGFloat(9)
 		}
 		return CGFloat(truncating: number)
+	}
+
+	var openEmptyOnLaunch: Bool {
+		return launchBehavior == "EmptyEditor"
 	}
 
 	var doLineWrap: Bool {
