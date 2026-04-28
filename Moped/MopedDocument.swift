@@ -50,7 +50,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 
 		var seen = Set<UTType>()
-		return types.filter { seen.insert($0).inserted }
+		let unique = types.filter { seen.insert($0).inserted }
+		return unique.sorted { ($0.localizedDescription ?? $0.identifier) < ($1.localizedDescription ?? $1.identifier) }
 	}()
 
 	@Published var model: TextFileModel
@@ -65,10 +66,12 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	private var modelCancellable: AnyCancellable?
 
 	init(content: String = "") {
+		let preferredLanguage = Preferences.userShared.language
+		let preferredTypeName = TextFileModel.getUTTypeForLanguage(preferredLanguage)
 		model = TextFileModel(
 			content: content,
-			typeName: "public.plain-text",
-			typeLanguage: "plaintext"
+			typeName: preferredTypeName,
+			typeLanguage: preferredLanguage
 		)
 		setupModelObservation()
 	}

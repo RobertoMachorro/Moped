@@ -36,6 +36,11 @@ struct EditorView: View {
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 				.clipped()
 				.focusedValue(\.documentContent, documentContentBinding)
+				.onAppear {
+					DispatchQueue.main.async {
+						NSDocumentController.shared.currentDocument?.fileType = document.model.docTypeName
+					}
+				}
 
 			HStack(spacing: 12) {
 				Text(document.model.docTypeName)
@@ -65,9 +70,10 @@ struct EditorView: View {
 		Binding(
 			get: { document.model.docTypeLanguage },
 			set: { newValue in
+				let utTypeId = TextFileModel.getUTTypeForLanguage(newValue)
+				document.model.docTypeName = utTypeId
 				document.model.docTypeLanguage = newValue
 				editorState.applyLanguage(newValue)
-				let utTypeId = TextFileModel.getUTTypeForLanguage(newValue)
 				NSDocumentController.shared.currentDocument?.fileType = utTypeId
 			}
 		)

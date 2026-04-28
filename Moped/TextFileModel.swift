@@ -100,6 +100,7 @@ extension TextFileModel {
 	}()
 
 	static func getUTTypeForLanguage(_ language: String) -> String {
+		guard language != "plaintext" else { return "public.plain-text" }
 		return utiFromLanguages[language] ?? "public.plain-text"
 	}
 }
