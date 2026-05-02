@@ -194,6 +194,7 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	private func applyPreferences() {
+		textView?.invalidateIndentStyleCache()
 		currentFontSize = preferences.fontSizeFloat
 		if !highlightingEnabled {
 			setLineWrap(to: preferences.doLineWrap)
@@ -390,6 +391,32 @@ final class MopedTextView: NSTextView {
 		cachedIndentStyle = nil
 	}
 
+	func invalidateIndentStyleCache() {
+		cachedIndentStyle = nil
+	}
+
+	override func insertTab(_ sender: Any?) {
+		let selectedRange = selectedRange()
+		if selectedRange.length > 0 {
+			_ = adjustIndentation(true)
+			return
+		}
+
+		let style = detectIndentStyle(in: string)
+		switch style {
+		case .hardTab:
+			super.insertTab(sender)
+		case .softSpaces(let width):
+			let text = string as NSString
+			let searchRange = NSRange(location: 0, length: selectedRange.location)
+			let previousNewline = text.range(of: "\n", options: .backwards, range: searchRange)
+			let lineStart = previousNewline.location == NSNotFound ? 0 : previousNewline.location + 1
+			let column = selectedRange.location - lineStart
+			let spacesToInsert = width - (column % width)
+			insertText(String(repeating: " ", count: spacesToInsert), replacementRange: selectedRange)
+		}
+	}
+
 	override func performKeyEquivalent(with event: NSEvent) -> Bool {
 		let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
 		guard modifiers == .command,
@@ -546,7 +573,11 @@ final class MopedTextView: NSTextView {
 		let spaceIndentedLineCount = spaceIndentCounts.values.reduce(0, +)
 		let style: IndentStyle
 		if tabIndentedLineCount == 0, spaceIndentedLineCount == 0 {
-			style = .hardTab
+			switch editorState?.preferences.selectedDefaultIndentation ?? .tab {
+			case .tab:        style = .hardTab
+			case .twoSpaces:  style = .softSpaces(2)
+			case .fourSpaces: style = .softSpaces(4)
+			}
 		} else if tabIndentedLineCount > spaceIndentedLineCount {
 			style = .hardTab
 		} else {
