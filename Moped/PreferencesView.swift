@@ -59,9 +59,11 @@ struct PreferencesView: View {
 			PreferenceOption(value: "FileOpenDialog", label: String(localized: "option.file_open_dialog")),
 			PreferenceOption(value: "EmptyEditor", label: String(localized: "option.empty_editor"))
 		]
-		defaultIndentationOptions = Preferences.DefaultIndentation.allCases.map {
-			PreferenceOption(value: $0.rawValue, label: $0.rawValue)
-		}
+		defaultIndentationOptions = [
+			PreferenceOption(value: Preferences.DefaultIndentation.tab.rawValue, label: String(localized: "option.indent.tab")),
+			PreferenceOption(value: Preferences.DefaultIndentation.twoSpaces.rawValue, label: String(localized: "option.indent.two_spaces")),
+			PreferenceOption(value: Preferences.DefaultIndentation.fourSpaces.rawValue, label: String(localized: "option.indent.four_spaces"))
+		]
 	}
 
 	var body: some View {

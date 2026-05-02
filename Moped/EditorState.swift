@@ -194,6 +194,7 @@ final class EditorState: NSObject, ObservableObject {
 	}
 
 	private func applyPreferences() {
+		textView?.invalidateIndentStyleCache()
 		currentFontSize = preferences.fontSizeFloat
 		if !highlightingEnabled {
 			setLineWrap(to: preferences.doLineWrap)
@@ -390,6 +391,10 @@ final class MopedTextView: NSTextView {
 		cachedIndentStyle = nil
 	}
 
+	func invalidateIndentStyleCache() {
+		cachedIndentStyle = nil
+	}
+
 	override func insertTab(_ sender: Any?) {
 		let selectedRange = selectedRange()
 		if selectedRange.length > 0 {
@@ -568,7 +573,7 @@ final class MopedTextView: NSTextView {
 		let spaceIndentedLineCount = spaceIndentCounts.values.reduce(0, +)
 		let style: IndentStyle
 		if tabIndentedLineCount == 0, spaceIndentedLineCount == 0 {
-			switch Preferences.userShared.selectedDefaultIndentation {
+			switch editorState?.preferences.selectedDefaultIndentation ?? .tab {
 			case .tab:        style = .hardTab
 			case .twoSpaces:  style = .softSpaces(2)
 			case .fourSpaces: style = .softSpaces(4)

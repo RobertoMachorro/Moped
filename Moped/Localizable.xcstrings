@@ -3990,6 +3990,36 @@
         }
       }
     },
+    "option.indent.four_spaces" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4 Spaces"
+          }
+        }
+      }
+    },
+    "option.indent.tab" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tab"
+          }
+        }
+      }
+    },
+    "option.indent.two_spaces" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 Spaces"
+          }
+        }
+      }
+    },
     "option.empty_editor" : {
       "extractionState" : "stale",
       "localizations" : {
