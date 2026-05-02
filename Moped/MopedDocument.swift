@@ -100,7 +100,13 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	}
 
 	func snapshot(contentType: UTType) throws -> Snapshot {
-		Snapshot(
+		// If the content has characters the detected encoding can't represent (e.g. CJK
+		// added to a file originally read as ASCII), upgrade the live model to UTF-8 so
+		// the change persists for the rest of the session.
+		if model.content.data(using: model.encoding) == nil {
+			model.encoding = .utf8
+		}
+		return Snapshot(
 			content: model.content,
 			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
