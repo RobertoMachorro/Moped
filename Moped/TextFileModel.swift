@@ -68,7 +68,13 @@ extension TextFileModel {
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		return content.data(using: encoding)
+		if let data = content.data(using: encoding) {
+			return data
+		}
+		// Content contains characters (e.g. CJK, emoji) that the originally-detected
+		// encoding cannot represent. Upgrade to UTF-8 so the save succeeds.
+		encoding = .utf8
+		return content.data(using: .utf8)
 	}
 }
 
