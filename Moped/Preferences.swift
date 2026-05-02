@@ -22,6 +22,20 @@ import Combine
 import Foundation
 
 class Preferences: NSObject, ObservableObject {
+	enum DefaultIndentation: String, CaseIterable {
+		case tab = "Tab"
+		case twoSpaces = "2 Spaces"
+		case fourSpaces = "4 Spaces"
+
+		var indentStyle: (isTab: Bool, width: Int) {
+			switch self {
+			case .tab:        return (true, 1)
+			case .twoSpaces:  return (false, 2)
+			case .fourSpaces: return (false, 4)
+			}
+		}
+	}
+
 	enum AppIcon: String, CaseIterable {
 		case defaultIcon = "Default"
 		case pink = "Pink"
@@ -56,6 +70,19 @@ class Preferences: NSObject, ObservableObject {
 	}()
 
 	// MARK: - Preferences / Properties
+
+	@objc dynamic var defaultIndentation: String {
+		get {
+			getStringValue(forKey: "defaultIndentation", otherwiseUse: DefaultIndentation.tab.rawValue)
+		}
+		set {
+			setStringValue(forKey: "defaultIndentation", to: newValue)
+		}
+	}
+
+	var selectedDefaultIndentation: DefaultIndentation {
+		DefaultIndentation(rawValue: defaultIndentation) ?? .tab
+	}
 
 	@objc dynamic var language: String {
 		get {

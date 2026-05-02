@@ -36,6 +36,7 @@ struct PreferencesView: View {
 	private let wrapOptions: [PreferenceOption]
 	private let lineNumberRulerOptions: [PreferenceOption]
 	private let launchBehaviorOptions: [PreferenceOption]
+	private let defaultIndentationOptions: [PreferenceOption]
 	private let appIconOptions = Preferences.AppIcon.allCases.map { $0.rawValue }
 
 	init(preferences: Preferences) {
@@ -58,6 +59,9 @@ struct PreferencesView: View {
 			PreferenceOption(value: "FileOpenDialog", label: String(localized: "option.file_open_dialog")),
 			PreferenceOption(value: "EmptyEditor", label: String(localized: "option.empty_editor"))
 		]
+		defaultIndentationOptions = Preferences.DefaultIndentation.allCases.map {
+			PreferenceOption(value: $0.rawValue, label: $0.rawValue)
+		}
 	}
 
 	var body: some View {
@@ -126,6 +130,15 @@ struct PreferencesView: View {
 			)
 
 			PreferenceRow(
+				title: "pref.default_indentation.title",
+				selection: Binding(
+					get: { preferences.defaultIndentation },
+					set: { preferences.defaultIndentation = $0 }
+				),
+				options: defaultIndentationOptions
+			)
+
+			PreferenceRow(
 				title: "pref.active_icon.title",
 				selection: Binding(
 					get: { preferences.appIcon },
@@ -145,7 +158,7 @@ struct PreferencesView: View {
 			}
 		}
 		.padding(20)
-		.frame(width: 430, height: 380, alignment: .topLeading)
+		.frame(width: 430, height: 410, alignment: .topLeading)
 	}
 }
 

@@ -4902,6 +4902,16 @@
         }
       }
     },
+    "pref.default_indentation.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default Indent:"
+          }
+        }
+      }
+    },
     "pref.line_numbers.title" : {
       "extractionState" : "stale",
       "localizations" : {
