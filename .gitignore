@@ -6,6 +6,7 @@
 xcuserdata/
 xcshareddata/
 .claude/settings.local.json
+.claude/worktrees
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
