@@ -12,7 +12,7 @@
 - Xcode project: `Moped.xcodeproj`
 
 ## Coding Guidelines
-- Preserve SwiftUI view structure and identifiers when editing UI
+- Preserve SwiftUI view hierarchy and structure when editing UI
 - Match existing Swift style and keep indentation as tabs
 - Keep SwiftLint rules in mind; avoid adding long lines even while `line_length` is disabled
 - Prefer small, focused changes that match existing patterns
@@ -25,4 +25,4 @@
 ## Validation
 - Run SwiftLint when making Swift changes (if available)
 - Build in Xcode and verify basic app launch
-- Recheck SwiftUI previews and warnings after UI changes
+- Verify UI by running the app after UI changes; check SwiftUI previews if present
