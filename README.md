@@ -49,7 +49,7 @@ General developer audience has been loosing interest in macOS development and ga
 
 Most of the technology used in this App comes straight from Apple, we are just re-using the built-in stuff in a smart, clean way. If you scroll through the commit history, you'll (hopefully) understand how it was all pieced together. Please check the *Resources* section here for references and links.
 
-*Moped* intends to be a showcase application and reference of a Document-Based Application, built on Swift, newest Cocoa API and fully Storyboard based.
+*Moped* intends to be a showcase application and reference of a Document-Based Application, built with Swift and the latest Cocoa APIs, SwiftUI-based with AppKit integration.
 
 ## Wanted Features
 
