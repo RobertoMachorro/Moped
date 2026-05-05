@@ -29,13 +29,31 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 <img width="1483" height="698" alt="image" src="https://github.com/user-attachments/assets/d3f11bd8-b5d8-49c8-b6e6-5e486ae110de" />
 
+## Features
+
+* **Syntax highlighting** — powered by [Highlightr](https://github.com/raspu/Highlightr), supporting dozens of languages with switchable themes
+* **Line numbers** — toggleable gutter ruler
+* **Word wrap** — configurable per preference
+* **Auto-indentation** — configurable default: tab, 2 spaces, or 4 spaces
+* **Status bar** — shows document type, cursor position (line:column), and an inline language picker to override detection on the fly
+* **Find & Replace** — system find bar with full regex support (⌘F / ⌘⌥F)
+* **Jump to Line** — ⌘L dialog that pre-fills the current line
+* **Font & size** — any system font, sizes 9–24, with in-window zoom (⌘+ / ⌘− / ⌘0)
+* **Print** — syntax-aware print view with standard page margins
+* **External change detection** — watches the file on disk and prompts to reload when another app modifies it
+* **Large file mode** — gracefully disables syntax highlighting for very large files to keep the editor responsive
+* **Launch behavior** — open with a file dialog or start with a blank editor
+* **Alternate app icons** — Default, Pink, Black, Red, Rainbow, and Beige
+* **CLI tool** — install a `moped` command to `/usr/local/bin` via *Moped > Set Up CLI Tool*
+* **Set as default editor** — register Moped as the system default for all supported plain-text file types from Preferences
+
 ## Manifesto - General Audience
 
 If you come from the Windows world, you may be missing a small utility: [Notepad](https://en.wikipedia.org/wiki/Microsoft_Notepad), a simple but essential tool for editing plain text files. While macOS counts on its own built-in text editor: [TextEdit](https://support.apple.com/guide/textedit/welcome/mac), it is actually more like a *Rich Text Editor* with full images, fonts and layout support. Similar to the built-in [Windows Write](https://en.wikipedia.org/wiki/Microsoft_Write) or [WordPad](https://en.wikipedia.org/wiki/WordPad).
 
 It kind of feels heavier than it should and in the way. There are [known settings](https://www.techjunkie.com/textedit-plain-text-mode/) to make it look and feel lighter, but inside it's still the same. You can [get the source](https://developer.apple.com/library/archive/samplecode/TextEdit/Introduction/Intro.html) and peek inside. It's bigger and with older code than it needs to be.
 
-*Moped* intends on feeling like Notepad, while being a full native of macOS, with a touch of modern syntax highlight and themes. And now with support for line numbering, auto-indenting and other modern editor features.
+*Moped* intends on feeling like Notepad, while being a full native of macOS, with syntax highlighting, themes, line numbers, auto-indenting, and other modern editor conveniences — without getting in the way.
 
 ## Manifesto - Advanced Users
 
@@ -45,17 +63,13 @@ While you can install the best text editors on your macOS system ([BBEdit](https
 
 ## Manifesto - Developers
 
-General developer audience has been loosing interest in macOS development and gained interest in [iOS cross platform development like Apple Marzipan](https://techcrunch.com/2018/06/04/apple-is-bringing-the-best-of-ios-to-macos/). Yet, macOS has gotten more powerful and feature rich, which makes it still an enticing platform to develop on. The big problem is that documentation, tutorials and QA/Forums materials are getting stale, with older API that no longer applies, it's getting harder as a developer to find up-to-date macOS support.
+*Moped* intends to be a showcase application and reference for a Document-Based Application built with Swift, SwiftUI, and AppKit. The project deliberately avoids third-party UI frameworks and keeps its dependency footprint small — [Highlightr](https://github.com/raspu/Highlightr) for syntax highlighting is the main external dependency.
 
-Most of the technology used in this App comes straight from Apple, we are just re-using the built-in stuff in a smart, clean way. If you scroll through the commit history, you'll (hopefully) understand how it was all pieced together. Please check the *Resources* section here for references and links.
-
-*Moped* intends to be a showcase application and reference of a Document-Based Application, built with Swift and the latest Cocoa APIs, SwiftUI-based with AppKit integration.
+If you scroll through the commit history you can see how the pieces fit together. Please check the *Resources* section for references and links.
 
 ## Wanted Features
 
-* Status bar with word/paragraph count, etc.
 * [Comprehensive Help File](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OnlineHelp/Tasks/SpecifyHelpFile.html#//apple_ref/doc/uid/20000020)
-* Native Syntax highlight, ideally supporting TextMate files - this could be a nice Framework for the community
 * Code folding support
 * Prompt user for Encoding when it is not recognized automatically
 
@@ -63,7 +77,7 @@ Most of the technology used in this App comes straight from Apple, we are just r
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
 
-All Pull Requests are automatically evaluated using [Github Actions](https://github.com/RobertoMachorro/Moped/actions), Codacy/PR Quality Review, Hound and [Codebeat](https://codebeat.co/projects/github-com-robertomachorro-moped-master).
+All Pull Requests are automatically evaluated using [GitHub Actions](https://github.com/RobertoMachorro/Moped/actions).
 
 If your document is not being identified and syntax highlighted, please send its content identifier information. It can be obtained with the following command:
 
