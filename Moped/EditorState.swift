@@ -536,6 +536,21 @@ final class MopedTextView: NSTextView {
 		return transformed
 	}
 
+	private func countLeadingSpaces(in line: Substring) -> Int {
+		var count = 0
+		for character in line {
+			if character == " " {
+				count += 1
+				continue
+			}
+			if character == "\t" {
+				count = 0
+			}
+			break
+		}
+		return count
+	}
+
 	private func detectIndentStyle(in text: String) -> IndentStyle {
 		if let cached = cachedIndentStyle {
 			return cached
@@ -547,24 +562,12 @@ final class MopedTextView: NSTextView {
 		var spaceIndentCounts: [Int: Int] = [:]
 
 		for line in lines.prefix(linesToAnalyze) {
-			guard !line.isEmpty else {
-				continue
-			}
+			guard !line.isEmpty else { continue }
 			if line.first == "\t" {
 				tabIndentedLineCount += 1
 				continue
 			}
-			var leadingSpaces = 0
-			for character in line {
-				if character == " " {
-					leadingSpaces += 1
-					continue
-				}
-				if character == "\t" {
-					leadingSpaces = 0
-				}
-				break
-			}
+			let leadingSpaces = countLeadingSpaces(in: line)
 			if leadingSpaces >= 2 {
 				spaceIndentCounts[leadingSpaces, default: 0] += 1
 			}

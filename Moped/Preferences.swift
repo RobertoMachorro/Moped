@@ -23,9 +23,9 @@ import Foundation
 
 class Preferences: NSObject, ObservableObject {
 	enum DefaultIndentation: String, CaseIterable {
-		case tab = "tab"
-		case twoSpaces = "twoSpaces"
-		case fourSpaces = "fourSpaces"
+		case tab
+		case twoSpaces
+		case fourSpaces
 	}
 
 	enum AppIcon: String, CaseIterable {

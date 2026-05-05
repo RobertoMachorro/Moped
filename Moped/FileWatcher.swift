@@ -29,12 +29,12 @@ final class FileWatcher {
 		// Security-scoped access is needed in sandboxed builds to open a file descriptor
 		// even with O_EVTONLY. The scope can be released once the fd is open.
 		let didStartAccess = url.startAccessingSecurityScopedResource()
-		let fd = open(url.path, O_EVTONLY)
+		let openedFd = open(url.path, O_EVTONLY)
 		if didStartAccess { url.stopAccessingSecurityScopedResource() }
-		guard fd != -1 else { return }
-		fileDescriptor = fd
+		guard openedFd != -1 else { return }
+		fileDescriptor = openedFd
 		let src = DispatchSource.makeFileSystemObjectSource(
-			fileDescriptor: fd, eventMask: .write, queue: .main)
+			fileDescriptor: openedFd, eventMask: .write, queue: .main)
 		src.setEventHandler(handler: onChange)
 		src.setCancelHandler { [weak self] in
 			guard let self, self.fileDescriptor != -1 else { return }
