@@ -23,6 +23,7 @@
 		A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */; };
 		A1B2C3D4E500000000000125 /* SourcePrintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000225 /* SourcePrintView.swift */; };
 		A1B2C3D4E500000000000126 /* PrintOperationGuard.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */; };
+		A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000229 /* FileWatcher.swift */; };
 		B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000902 /* Localizable.xcstrings */; };
 		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
@@ -80,6 +81,7 @@
 		A1B2C3D4E500000000000226 /* PrintOperationGuard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrintOperationGuard.h; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PrintOperationGuard.mm; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000228 /* Moped-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moped-Bridging-Header.h"; sourceTree = "<group>"; };
+		A1B2C3D4E500000000000229 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		B1C2D3E4F500000000000902 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				A1B2C3D4E500000000000226 /* PrintOperationGuard.h */,
 				A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */,
 				A1B2C3D4E500000000000228 /* Moped-Bridging-Header.h */,
+				A1B2C3D4E500000000000229 /* FileWatcher.swift */,
 				E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */,
 				A1B2C3D4E500000000000114 /* AboutView.swift */,
 				A1B2C3D4E500000000000112 /* EditorView.swift */,
@@ -312,6 +315,7 @@
 				A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */,
 				A1B2C3D4E500000000000125 /* SourcePrintView.swift in Sources */,
 				A1B2C3D4E500000000000126 /* PrintOperationGuard.mm in Sources */,
+				A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
 				945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,

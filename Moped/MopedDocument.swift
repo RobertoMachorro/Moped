@@ -64,6 +64,36 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	}
 
 	private var modelCancellable: AnyCancellable?
+	private var fileWatcher: FileWatcher?
+	private var suppressWatchUntil: Date = .distantPast
+
+	@Published var hasExternalChange = false
+
+	var fileURL: URL? {
+		didSet {
+			guard oldValue != fileURL else { return }
+			updateWatcher()
+		}
+	}
+
+	private func updateWatcher() {
+		fileWatcher?.stop()
+		guard let url = fileURL else { return }
+		fileWatcher = FileWatcher()
+		fileWatcher?.start(url: url) { [weak self] in
+			guard let self, Date() > self.suppressWatchUntil else { return }
+			self.hasExternalChange = true
+		}
+	}
+
+	func reloadFromDisk() {
+		guard let url = fileURL,
+			  let data = try? Data(contentsOf: url) else { return }
+		model.isForceReload = true
+		model.read(from: data, ofType: model.docTypeName)
+		hasExternalChange = false
+		suppressWatchUntil = Date().addingTimeInterval(2.0)
+	}
 
 	init(content: String = "") {
 		let preferredLanguage = Preferences.userShared.language
@@ -127,6 +157,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			throw CocoaError(.fileWriteUnknown)
 		}
 
+		suppressWatchUntil = Date().addingTimeInterval(2.0)
 		return .init(regularFileWithContents: data)
 	}
 

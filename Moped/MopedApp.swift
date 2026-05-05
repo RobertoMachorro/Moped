@@ -29,6 +29,9 @@ struct MopedApp: App {
 			newDocument: { MopedDocument() },
 			editor: { file in
 				EditorView(document: file.document)
+					.onChange(of: file.fileURL, initial: true) { _, newURL in
+						file.document.fileURL = newURL
+					}
 			}
 		)
 		.commands {

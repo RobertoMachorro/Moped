@@ -92,10 +92,13 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		// Track last programmatic change ID to avoid expensive string comparisons
 		struct ChangeTracker { static var lastID: Int = -1 }
 
-		// Only push programmatic changes, and never while the user is typing
+		// Only push programmatic changes, and never while the user is typing.
+		// Exception: isForceReload bypasses the first-responder guard for explicit user-initiated reloads.
+		let isForceReload = model.isForceReload
 		if ChangeTracker.lastID != model.programmaticChangeID,
-		   (textView.window?.firstResponder as AnyObject?) !== (textView as AnyObject) {
+		   isForceReload || (textView.window?.firstResponder as AnyObject?) !== (textView as AnyObject) {
 			ChangeTracker.lastID = model.programmaticChangeID
+			model.isForceReload = false
 			let existingSelection = textView.selectedRange()
 			textView.string = model.content
 			let textLength = textView.string.utf16.count

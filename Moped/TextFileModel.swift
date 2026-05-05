@@ -28,6 +28,7 @@ class TextFileModel: NSObject, ObservableObject {
 	var encoding: String.Encoding
 	var isLargeFile: Bool = false
 	var programmaticChangeID: Int = 0
+	var isForceReload: Bool = false
 
 	public init(content: String, typeName: String, typeLanguage: String) {
 		self.content = content

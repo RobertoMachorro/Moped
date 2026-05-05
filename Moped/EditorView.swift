@@ -64,6 +64,12 @@ struct EditorView: View {
 			.frame(height: 20)
 			.background(Color(nsColor: .windowBackgroundColor))
 		}
+		.alert("File Changed on Disk", isPresented: $document.hasExternalChange) {
+			Button("Keep Mine", role: .cancel) { document.hasExternalChange = false }
+			Button("Reload") { document.reloadFromDisk() }
+		} message: {
+			Text("This file was modified by another application. Would you like to reload it?")
+		}
 	}
 
 	private var languageBinding: Binding<String> {
