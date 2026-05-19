@@ -104,4 +104,19 @@ extension TextFileModel {
 		guard language != "plaintext" else { return "public.plain-text" }
 		return utiFromLanguages[language] ?? "public.plain-text"
 	}
+
+	private static let lineCommentMarkers: [String: String] = {
+		guard let path = Bundle.main.path(forResource: "LanguageComments", ofType: "plist"),
+			  let dict = NSDictionary(contentsOfFile: path) as? [String: String] else {
+			return [:]
+		}
+		return dict
+	}()
+
+	static func lineCommentMarker(forLanguage language: String) -> String? {
+		guard let marker = lineCommentMarkers[language], !marker.isEmpty else {
+			return nil
+		}
+		return marker
+	}
 }

@@ -62,6 +62,17 @@ struct MopedCommands: Commands {
 		}
 
 		CommandMenu("menu.editor.title") {
+			Button("menu.editor.toggle_comment") {
+				NSApp.sendAction(
+					#selector(MopedTextView.toggleLineCommentMenuItemSelected(_:)),
+					to: nil,
+					from: nil
+				)
+			}
+			.keyboardShortcut("/")
+
+			Divider()
+
 			Button("menu.editor.increase") {
 				NSApp.sendAction(
 					#selector(MopedTextView.fontSizeIncreaseMenuItemSelected(_:)),

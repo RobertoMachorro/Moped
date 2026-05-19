@@ -353,6 +353,7 @@ final class EditorState: NSObject, ObservableObject {
 	}
 }
 
+// swiftlint:disable:next type_body_length
 final class MopedTextView: NSTextView {
 	weak var editorState: EditorState?
 
@@ -384,6 +385,10 @@ final class MopedTextView: NSTextView {
 
 	@IBAction func fontSizeResetMenuItemSelected(_ sender: Any?) {
 		editorState?.resetFontSize()
+	}
+
+	@IBAction func toggleLineCommentMenuItemSelected(_ sender: Any?) {
+		_ = toggleLineComment()
 	}
 
 	override func didChangeText() {
@@ -432,6 +437,144 @@ final class MopedTextView: NSTextView {
 		default:
 			return super.performKeyEquivalent(with: event)
 		}
+	}
+
+	private func toggleLineComment() -> Bool {
+		guard isEditable else {
+			return false
+		}
+
+		let language = editorState?.textStorage.language ?? ""
+		guard language != "plaintext",
+			  let marker = TextFileModel.lineCommentMarker(forLanguage: language) else {
+			NSSound.beep()
+			return false
+		}
+
+		let text = string as NSString
+		let originalSelection = selectedRange()
+		let lineRange = normalizedLineRange(for: originalSelection, in: text)
+		let originalBlock = text.substring(with: lineRange)
+		let lines = splitBlockIntoLines(originalBlock)
+		let nonEmptyIndices = Set(lines.indices.filter { !lines[$0].content.allSatisfy(\.isWhitespace) })
+
+		guard !nonEmptyIndices.isEmpty else {
+			NSSound.beep()
+			return false
+		}
+
+		let allCommented = nonEmptyIndices.allSatisfy { idx in
+			lines[idx].content.drop(while: { $0 == " " || $0 == "\t" }).hasPrefix(marker)
+		}
+
+		let transformedBlock = allCommented
+			? uncommentedBlock(lines: lines, nonEmptyIndices: nonEmptyIndices, marker: marker)
+			: commentedBlock(lines: lines, nonEmptyIndices: nonEmptyIndices, marker: marker)
+
+		guard transformedBlock != originalBlock else {
+			return true
+		}
+		guard shouldChangeText(in: lineRange, replacementString: transformedBlock) else {
+			return true
+		}
+
+		textStorage?.replaceCharacters(in: lineRange, with: transformedBlock)
+		didChangeText()
+
+		let replacementLength = (transformedBlock as NSString).length
+		let replacementRange = NSRange(location: lineRange.location, length: replacementLength)
+		if originalSelection.length == 0 {
+			let delta = replacementRange.length - lineRange.length
+			let newLocation = max(originalSelection.location + delta, lineRange.location)
+			setSelectedRange(NSRange(location: newLocation, length: 0))
+		} else {
+			setSelectedRange(replacementRange)
+		}
+		return true
+	}
+
+	private func commentedBlock(
+		lines: [(content: String, ending: String)],
+		nonEmptyIndices: Set<Int>,
+		marker: String
+	) -> String {
+		let prefix = commonLeadingWhitespace(in: nonEmptyIndices.map { lines[$0].content })
+		let insertionOffset = prefix.count
+		var result = ""
+		for (idx, line) in lines.enumerated() {
+			guard nonEmptyIndices.contains(idx) else {
+				result += line.content + line.ending
+				continue
+			}
+			let splitAt = line.content.index(line.content.startIndex, offsetBy: insertionOffset)
+			result += line.content[..<splitAt] + marker + " " + line.content[splitAt...] + line.ending
+		}
+		return result
+	}
+
+	private func uncommentedBlock(
+		lines: [(content: String, ending: String)],
+		nonEmptyIndices: Set<Int>,
+		marker: String
+	) -> String {
+		var result = ""
+		for (idx, line) in lines.enumerated() {
+			guard nonEmptyIndices.contains(idx) else {
+				result += line.content + line.ending
+				continue
+			}
+			let leadingCount = line.content.prefix(while: { $0 == " " || $0 == "\t" }).count
+			let leadingEnd = line.content.index(line.content.startIndex, offsetBy: leadingCount)
+			var rest = String(line.content[leadingEnd...])
+			if rest.hasPrefix(marker) {
+				rest = String(rest.dropFirst(marker.count))
+				if rest.first == " " {
+					rest = String(rest.dropFirst())
+				}
+			}
+			result += line.content[..<leadingEnd] + rest + line.ending
+		}
+		return result
+	}
+
+	private func splitBlockIntoLines(_ block: String) -> [(content: String, ending: String)] {
+		let blockText = block as NSString
+		let blockRange = NSRange(location: 0, length: blockText.length)
+		var result: [(content: String, ending: String)] = []
+		blockText.enumerateSubstrings(
+			in: blockRange,
+			options: [.byLines, .substringNotRequired]
+		) { _, lineRange, enclosingRange, _ in
+			let line = blockText.substring(with: lineRange)
+			let suffixRange = NSRange(
+				location: NSMaxRange(lineRange),
+				length: enclosingRange.length - lineRange.length
+			)
+			let ending = blockText.substring(with: suffixRange)
+			result.append((line, ending))
+		}
+		return result
+	}
+
+	private func commonLeadingWhitespace(in lines: [String]) -> String {
+		guard let first = lines.first else {
+			return ""
+		}
+		var prefix = String(first.prefix(while: { $0 == " " || $0 == "\t" }))
+		for line in lines.dropFirst() {
+			var updated = ""
+			for (lhs, rhs) in zip(prefix, line) {
+				guard lhs == rhs, lhs == " " || lhs == "\t" else {
+					break
+				}
+				updated.append(lhs)
+			}
+			prefix = updated
+			if prefix.isEmpty {
+				break
+			}
+		}
+		return prefix
 	}
 
 	private func adjustIndentation(_ shouldIndent: Bool) -> Bool {

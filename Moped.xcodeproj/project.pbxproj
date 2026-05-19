@@ -28,6 +28,7 @@
 		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
+		B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000911 /* LanguageComments.plist */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
@@ -85,6 +86,7 @@
 		B1C2D3E4F500000000000902 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
+		B1C2D3E4F500000000000911 /* LanguageComments.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguageComments.plist; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
 		E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightrCatalog.swift; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +167,7 @@
 				E9D042172300A9FE00382715 /* Info.plist */,
 				B1C2D3E4F500000000000902 /* Localizable.xcstrings */,
 				E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */,
+				B1C2D3E4F500000000000911 /* LanguageComments.plist */,
 				E9D042182300A9FE00382715 /* Moped.entitlements */,
 				F0A1B2C3D4E5000000000050 /* Resources/moped */,
 			);
@@ -287,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */,
+				B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */,
 				E9D042132300A9FE00382715 /* Assets.xcassets in Resources */,
 				B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */,
 			);
