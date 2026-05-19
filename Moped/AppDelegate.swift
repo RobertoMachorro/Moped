@@ -105,9 +105,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				options: .withSecurityScope,
 				relativeTo: nil,
 				bookmarkDataIsStale: &isStale
-			) else { continue }
+			) else {
+				refreshedAny = true
+				continue
+			}
 
-			let didStart = url.startAccessingSecurityScopedResource()
+			guard url.startAccessingSecurityScopedResource() else {
+				refreshedAny = true
+				continue
+			}
 
 			if isStale,
 			   let refreshed = try? url.bookmarkData(
@@ -126,9 +132,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				withContentsOf: url,
 				display: true
 			) { [weak self] document, _, _ in
-				if didStart {
-					url.stopAccessingSecurityScopedResource()
-				}
+				url.stopAccessingSecurityScopedResource()
 				if let document, let frame = savedFrame, !NSEqualRects(frame, .zero) {
 					self?.applyFrame(frame, to: document, retriesLeft: 5)
 				}
