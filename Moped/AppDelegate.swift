@@ -30,7 +30,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApp.activate(ignoringOtherApps: true)
 		applySelectedAppIcon()
 		startObservingPreferenceChanges()
-		if Preferences.userShared.openEmptyOnLaunch {
+
+		// Skip launch behavior if documents were already opened externally
+		// (e.g., via Finder double-click or `moped <file>` from the CLI).
+		guard NSDocumentController.shared.documents.isEmpty else { return }
+
+		let prefs = Preferences.userShared
+		if prefs.reopenPreviousOnLaunch {
+			reopenPreviousDocuments()
+		} else if prefs.openEmptyOnLaunch {
 			NSDocumentController.shared.newDocument(nil)
 		}
 	}
@@ -40,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
-		// Insert code here to tear down your application
+		savePreviousDocuments()
 	}
 
 	func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
@@ -64,6 +72,64 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			queue: .main
 		) { [weak self] _ in
 			self?.applySelectedAppIcon()
+		}
+	}
+
+	private func savePreviousDocuments() {
+		let urls = NSDocumentController.shared.documents.compactMap { $0.fileURL }
+		let bookmarks: [Data] = urls.compactMap { url in
+			try? url.bookmarkData(
+				options: .withSecurityScope,
+				includingResourceValuesForKeys: nil,
+				relativeTo: nil
+			)
+		}
+		Preferences.userShared.lastOpenDocumentBookmarks = bookmarks
+	}
+
+	private func reopenPreviousDocuments() {
+		let bookmarks = Preferences.userShared.lastOpenDocumentBookmarks
+		var refreshedBookmarks: [Data] = []
+		var refreshedAny = false
+
+		for bookmarkData in bookmarks {
+			var isStale = false
+			guard let url = try? URL(
+				resolvingBookmarkData: bookmarkData,
+				options: .withSecurityScope,
+				relativeTo: nil,
+				bookmarkDataIsStale: &isStale
+			) else { continue }
+
+			let didStart = url.startAccessingSecurityScopedResource()
+
+			if isStale {
+				if let refreshed = try? url.bookmarkData(
+					options: .withSecurityScope,
+					includingResourceValuesForKeys: nil,
+					relativeTo: nil
+				) {
+					refreshedBookmarks.append(refreshed)
+					refreshedAny = true
+				} else {
+					refreshedBookmarks.append(bookmarkData)
+				}
+			} else {
+				refreshedBookmarks.append(bookmarkData)
+			}
+
+			NSDocumentController.shared.openDocument(
+				withContentsOf: url,
+				display: true
+			) { _, _, _ in
+				if didStart {
+					url.stopAccessingSecurityScopedResource()
+				}
+			}
+		}
+
+		if refreshedAny {
+			Preferences.userShared.lastOpenDocumentBookmarks = refreshedBookmarks
 		}
 	}
 

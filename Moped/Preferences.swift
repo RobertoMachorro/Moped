@@ -173,6 +173,19 @@ class Preferences: NSObject, ObservableObject {
 		return launchBehavior == "EmptyEditor"
 	}
 
+	var reopenPreviousOnLaunch: Bool {
+		return launchBehavior == "ReopenPrevious"
+	}
+
+	var lastOpenDocumentBookmarks: [Data] {
+		get {
+			UserDefaults.standard.array(forKey: "lastOpenDocumentBookmarks") as? [Data] ?? []
+		}
+		set {
+			UserDefaults.standard.set(newValue, forKey: "lastOpenDocumentBookmarks")
+		}
+	}
+
 	var doLineWrap: Bool {
 		return lineWrap == "Yes"
 	}
