@@ -21,6 +21,11 @@
 import Combine
 import Foundation
 
+struct RestoredDocument: Codable {
+	let bookmark: Data
+	let frame: String?
+}
+
 class Preferences: NSObject, ObservableObject {
 	enum DefaultIndentation: String, CaseIterable {
 		case tab
@@ -171,6 +176,24 @@ class Preferences: NSObject, ObservableObject {
 
 	var openEmptyOnLaunch: Bool {
 		return launchBehavior == "EmptyEditor"
+	}
+
+	var reopenPreviousOnLaunch: Bool {
+		return launchBehavior == "ReopenPrevious"
+	}
+
+	var lastOpenDocuments: [RestoredDocument] {
+		get {
+			guard let data = UserDefaults.standard.data(forKey: "lastOpenDocuments"),
+				  let decoded = try? JSONDecoder().decode([RestoredDocument].self, from: data) else {
+				return []
+			}
+			return decoded
+		}
+		set {
+			guard let data = try? JSONEncoder().encode(newValue) else { return }
+			UserDefaults.standard.set(data, forKey: "lastOpenDocuments")
+		}
 	}
 
 	var doLineWrap: Bool {

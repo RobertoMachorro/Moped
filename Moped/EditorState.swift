@@ -507,7 +507,7 @@ final class MopedTextView: NSTextView {
 				continue
 			}
 			let splitAt = line.content.index(line.content.startIndex, offsetBy: insertionOffset)
-			result += line.content[..<splitAt] + marker + " " + line.content[splitAt...] + line.ending
+			result += String(line.content[..<splitAt]) + marker + " " + String(line.content[splitAt...]) + line.ending
 		}
 		return result
 	}
@@ -532,7 +532,7 @@ final class MopedTextView: NSTextView {
 					rest = String(rest.dropFirst())
 				}
 			}
-			result += line.content[..<leadingEnd] + rest + line.ending
+			result += String(line.content[..<leadingEnd]) + rest + line.ending
 		}
 		return result
 	}

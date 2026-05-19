@@ -30,7 +30,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NSApp.activate(ignoringOtherApps: true)
 		applySelectedAppIcon()
 		startObservingPreferenceChanges()
-		if Preferences.userShared.openEmptyOnLaunch {
+
+		// Skip launch behavior if documents were already opened externally
+		// (e.g., via Finder double-click or `moped <file>` from the CLI).
+		guard NSDocumentController.shared.documents.isEmpty else { return }
+
+		let prefs = Preferences.userShared
+		if prefs.reopenPreviousOnLaunch {
+			reopenPreviousDocuments()
+		} else if prefs.openEmptyOnLaunch {
 			NSDocumentController.shared.newDocument(nil)
 		}
 	}
@@ -40,7 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
-		// Insert code here to tear down your application
+		savePreviousDocuments()
 	}
 
 	func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
@@ -64,6 +72,90 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			queue: .main
 		) { [weak self] _ in
 			self?.applySelectedAppIcon()
+		}
+	}
+
+	private func savePreviousDocuments() {
+		let entries: [RestoredDocument] = NSDocumentController.shared.documents.compactMap { document in
+			guard let url = document.fileURL,
+				  let bookmark = try? url.bookmarkData(
+					options: .withSecurityScope,
+					includingResourceValuesForKeys: nil,
+					relativeTo: nil
+				  ) else { return nil }
+
+			let window = document.windowControllers.first?.window
+				?? NSApp.windows.first(where: { $0.windowController?.document as AnyObject === document })
+			let frameString = window.map { NSStringFromRect($0.frame) }
+
+			return RestoredDocument(bookmark: bookmark, frame: frameString)
+		}
+		Preferences.userShared.lastOpenDocuments = entries
+	}
+
+	private func reopenPreviousDocuments() {
+		let entries = Preferences.userShared.lastOpenDocuments
+		var refreshedEntries: [RestoredDocument] = []
+		var refreshedAny = false
+
+		for entry in entries {
+			var isStale = false
+			guard let url = try? URL(
+				resolvingBookmarkData: entry.bookmark,
+				options: .withSecurityScope,
+				relativeTo: nil,
+				bookmarkDataIsStale: &isStale
+			) else {
+				refreshedAny = true
+				continue
+			}
+
+			guard url.startAccessingSecurityScopedResource() else {
+				refreshedAny = true
+				continue
+			}
+
+			if isStale,
+			   let refreshed = try? url.bookmarkData(
+				options: .withSecurityScope,
+				includingResourceValuesForKeys: nil,
+				relativeTo: nil
+			   ) {
+				refreshedEntries.append(RestoredDocument(bookmark: refreshed, frame: entry.frame))
+				refreshedAny = true
+			} else {
+				refreshedEntries.append(entry)
+			}
+
+			let savedFrame = entry.frame.map { NSRectFromString($0) }
+			NSDocumentController.shared.openDocument(
+				withContentsOf: url,
+				display: true
+			) { [weak self] document, _, _ in
+				url.stopAccessingSecurityScopedResource()
+				if let document, let frame = savedFrame, !NSEqualRects(frame, .zero) {
+					self?.applyFrame(frame, to: document, retriesLeft: 5)
+				}
+			}
+		}
+
+		if refreshedAny {
+			Preferences.userShared.lastOpenDocuments = refreshedEntries
+		}
+	}
+
+	private func applyFrame(_ rect: NSRect, to document: NSDocument, retriesLeft: Int) {
+		if let window = document.windowControllers.first?.window
+			?? NSApp.windows.first(where: { $0.windowController?.document as AnyObject === document }) {
+			let onAnyScreen = NSScreen.screens.contains { $0.visibleFrame.intersects(rect) }
+			if onAnyScreen {
+				window.setFrame(rect, display: true)
+			}
+			return
+		}
+		guard retriesLeft > 0 else { return }
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+			self?.applyFrame(rect, to: document, retriesLeft: retriesLeft - 1)
 		}
 	}
 

@@ -57,7 +57,8 @@ struct PreferencesView: View {
 		]
 		launchBehaviorOptions = [
 			PreferenceOption(value: "FileOpenDialog", label: String(localized: "option.file_open_dialog")),
-			PreferenceOption(value: "EmptyEditor", label: String(localized: "option.empty_editor"))
+			PreferenceOption(value: "EmptyEditor", label: String(localized: "option.empty_editor")),
+			PreferenceOption(value: "ReopenPrevious", label: String(localized: "option.reopen_previous"))
 		]
 		defaultIndentationOptions = [
 			PreferenceOption(value: Preferences.DefaultIndentation.tab.rawValue, label: String(localized: "option.indent.tab")),
