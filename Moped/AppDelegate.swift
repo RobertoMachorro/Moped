@@ -143,7 +143,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	private func applyFrame(_ rect: NSRect, to document: NSDocument, retriesLeft: Int) {
 		if let window = document.windowControllers.first?.window
 			?? NSApp.windows.first(where: { $0.windowController?.document as AnyObject === document }) {
-			window.setFrame(rect, display: true)
+			let onAnyScreen = NSScreen.screens.contains { $0.visibleFrame.intersects(rect) }
+			if onAnyScreen {
+				window.setFrame(rect, display: true)
+			}
 			return
 		}
 		guard retriesLeft > 0 else { return }
