@@ -64,11 +64,11 @@ struct EditorView: View {
 			.frame(height: 20)
 			.background(Color(nsColor: .windowBackgroundColor))
 		}
-		.alert("File Changed on Disk", isPresented: $document.hasExternalChange) {
-			Button("Keep Mine", role: .cancel) { document.hasExternalChange = false }
-			Button("Reload") { document.reloadFromDisk() }
+		.alert("alert.file_changed.title", isPresented: $document.hasExternalChange) {
+			Button("alert.file_changed.button_keep", role: .cancel) { document.hasExternalChange = false }
+			Button("alert.file_changed.button_reload") { document.reloadFromDisk() }
 		} message: {
-			Text("This file was modified by another application. Would you like to reload it?")
+			Text("alert.file_changed.message")
 		}
 	}
 
