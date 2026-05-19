@@ -4987,6 +4987,7 @@
       }
     },
     "option.reopen_previous" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
