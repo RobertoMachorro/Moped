@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */; };
 		A1B2C3D4E500000000000010 /* EditorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000110 /* EditorState.swift */; };
 		A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */; };
 		A1B2C3D4E500000000000012 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000112 /* EditorView.swift */; };
@@ -20,17 +19,18 @@
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
 		A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000222 /* MopedCommands.swift */; };
 		A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */; };
-		A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */; };
 		A1B2C3D4E500000000000125 /* SourcePrintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000225 /* SourcePrintView.swift */; };
 		A1B2C3D4E500000000000126 /* PrintOperationGuard.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */; };
 		A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000229 /* FileWatcher.swift */; };
 		B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000902 /* Localizable.xcstrings */; };
 		B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000911 /* LanguageComments.plist */; };
-		E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = E943144D25C0D9E500C4B0F8 /* Highlightr */; };
+		ABCDEF0000000000000000A5 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000A3 /* STTextView */; };
+		ABCDEF0000000000000000A6 /* STTextView-Plugin-Neon in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */; };
+		ABCDEF0000000000000000B1 /* MopedTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B0 /* MopedTheme.swift */; };
+		ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B2 /* LanguageCatalog.swift */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
-		E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		F0A1B2C3D4E5000000000031 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000001 /* main.swift */; };
@@ -64,7 +64,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineNumberRulerView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000110 /* EditorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorState.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorRepresentable.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000112 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
@@ -77,7 +76,6 @@
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000222 /* MopedCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedCommands.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FocusedValues+Moped.swift"; sourceTree = "<group>"; };
-		A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeCodeAttributedString.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000225 /* SourcePrintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcePrintView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000226 /* PrintOperationGuard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrintOperationGuard.h; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PrintOperationGuard.mm; sourceTree = "<group>"; };
@@ -88,7 +86,6 @@
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E990B6F0230A38930010CF5D /* TextFileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFileModel.swift; sourceTree = "<group>"; };
 		E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguagesUTI.plist; sourceTree = "<group>"; };
-		E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightrCatalog.swift; sourceTree = "<group>"; };
 		E9D042092300A9FE00382715 /* Moped.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moped.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D0420C2300A9FE00382715 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -98,6 +95,8 @@
 		F0A1B2C3D4E5000000000033 /* moped-wait */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "moped-wait"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MopedCLI.entitlements; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000050 /* Resources/moped */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Resources/moped; sourceTree = "<group>"; };
+		ABCDEF0000000000000000B0 /* MopedTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedTheme.swift; sourceTree = "<group>"; };
+		ABCDEF0000000000000000B2 /* LanguageCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E943144E25C0D9E500C4B0F8 /* Highlightr in Frameworks */,
+				ABCDEF0000000000000000A5 /* STTextView in Frameworks */,
+				ABCDEF0000000000000000A6 /* STTextView-Plugin-Neon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,18 +146,16 @@
 				A1B2C3D4E500000000000221 /* MopedDocument.swift */,
 				A1B2C3D4E500000000000222 /* MopedCommands.swift */,
 				A1B2C3D4E500000000000223 /* FocusedValues+Moped.swift */,
-				A1B2C3D4E500000000000224 /* SafeCodeAttributedString.swift */,
 				A1B2C3D4E500000000000225 /* SourcePrintView.swift */,
 				A1B2C3D4E500000000000226 /* PrintOperationGuard.h */,
 				A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */,
 				A1B2C3D4E500000000000228 /* Moped-Bridging-Header.h */,
 				A1B2C3D4E500000000000229 /* FileWatcher.swift */,
-				E9CA82F52F4BBAC000AC54D7 /* HighlightrCatalog.swift */,
-				A1B2C3D4E500000000000114 /* AboutView.swift */,
+				ABCDEF0000000000000000B0 /* MopedTheme.swift */,
+				ABCDEF0000000000000000B2 /* LanguageCatalog.swift */,				A1B2C3D4E500000000000114 /* AboutView.swift */,
 				A1B2C3D4E500000000000112 /* EditorView.swift */,
 				A1B2C3D4E500000000000110 /* EditorState.swift */,
 				A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */,
-				929BF73D46C04ACC85756375 /* LineNumberRulerView.swift */,
 				A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */,
 				A1B2C3D4E500000000000116 /* WaitManager.swift */,
 				E990B6F0230A38930010CF5D /* TextFileModel.swift */,
@@ -202,7 +200,8 @@
 			);
 			name = Moped;
 			packageProductDependencies = (
-				E943144D25C0D9E500C4B0F8 /* Highlightr */,
+				ABCDEF0000000000000000A3 /* STTextView */,
+				ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */,
 			);
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
@@ -272,7 +271,9 @@
 			);
 			mainGroup = E9D042002300A9FE00382715;
 			packageReferences = (
-				E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */,
+				ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */,
+				ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */,
+				ABCDEF0000000000000000A7 /* XCRemoteSwiftPackageReference "Neon" */,
 			);
 			productRefGroup = E9D0420A2300A9FE00382715 /* Products */;
 			projectDirPath = "";
@@ -311,17 +312,15 @@
 				A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */,
 				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
 				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
-				E9CA82F62F4BC04B00AC54D7 /* HighlightrCatalog.swift in Sources */,
-				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
+				ABCDEF0000000000000000B1 /* MopedTheme.swift in Sources */,
+				ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */,				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
 				A1B2C3D4E500000000000123 /* FocusedValues+Moped.swift in Sources */,
-				A1B2C3D4E500000000000124 /* SafeCodeAttributedString.swift in Sources */,
 				A1B2C3D4E500000000000125 /* SourcePrintView.swift in Sources */,
 				A1B2C3D4E500000000000126 /* PrintOperationGuard.mm in Sources */,
 				A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */,
 				E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */,
-				945CB17FD57F4E4FA048CB3B /* LineNumberRulerView.swift in Sources */,
 				E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */,
 				E94A91AA23106CC900BE978A /* Preferences.swift in Sources */,
 			);
@@ -615,21 +614,42 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+		ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RobertoMachorro/Highlightr";
+			repositoryURL = "https://github.com/krzyzanowskim/STTextView";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.10;
+			};
+		};
+		ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/STTextView-Plugin-Neon";
+			requirement = {
+				kind = revision;
+				revision = 5a30db4ce7908a5414e7b499e2379bdc49991cd1;
+			};
+		};
+		ABCDEF0000000000000000A7 /* XCRemoteSwiftPackageReference "Neon" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kylemacomber/Neon";
+			requirement = {
+				kind = revision;
+				revision = ce8d252;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E943144D25C0D9E500C4B0F8 /* Highlightr */ = {
+		ABCDEF0000000000000000A3 /* STTextView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E943144C25C0D9E500C4B0F8 /* XCRemoteSwiftPackageReference "Highlightr" */;
-			productName = Highlightr;
+			package = ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */;
+			productName = STTextView;
+		};
+		ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */;
+			productName = "STTextView-Plugin-Neon";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

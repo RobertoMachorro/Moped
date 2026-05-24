@@ -18,6 +18,8 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+import AppKit
+import STTextView
 import SwiftUI
 
 struct TextEditorRepresentable: NSViewRepresentable {
@@ -29,91 +31,49 @@ struct TextEditorRepresentable: NSViewRepresentable {
 	}
 
 	func makeNSView(context: Context) -> NSScrollView {
-		let textView = MopedTextView()
-		// NOTE: isRichText must be enabled so that attributed strings and the Highlightr-
-		// based syntax highlighting can apply font/color attributes to the text. When
-		// isRichText is false, NSTextView treats content as plain text and ignores typing
-		// attributes for display, which would break the highlighting system and related
-		// attribute-based features.
-		textView.isRichText = true
-		textView.isVerticallyResizable = true
-		textView.isHorizontallyResizable = true
-		textView.allowsUndo = true
-		textView.usesFindBar = true
-		textView.isAutomaticSpellingCorrectionEnabled = false
-		textView.isAutomaticQuoteSubstitutionEnabled = false
-		textView.isAutomaticDashSubstitutionEnabled = false
-		textView.delegate = context.coordinator
-
 		let scrollView = NSScrollView()
 		scrollView.borderType = .noBorder
 		scrollView.drawsBackground = true
+		scrollView.hasVerticalScroller = true
+		scrollView.hasHorizontalScroller = true
 		scrollView.wantsLayer = true
 		scrollView.layer?.masksToBounds = true
-		scrollView.hasVerticalScroller = true
-		scrollView.documentView = textView
 		scrollView.findBarPosition = .aboveContent
 
-		// Mark large-file mode before configuring so we don't attach Highlightr storage
 		if model.isLargeFile {
 			state.prepareForLargeFileMode()
 		}
 
-		state.configure(textView: textView, scrollView: scrollView)
+		state.installEditor(
+			into: scrollView,
+			model: model,
+			delegate: context.coordinator
+		)
 
-		// Only apply language when highlighting is enabled (non-large files)
-		if !model.isLargeFile {
-			state.applyLanguage(model.docTypeLanguage)
-		}
-
-		textView.layoutManager?.allowsNonContiguousLayout = true
-		textView.textStorage?.beginEditing()
-		textView.string = model.content
-		textView.textStorage?.endEditing()
-		textView.setSelectedRange(NSRange(location: 0, length: 0))
-		textView.scrollRangeToVisible(NSRange(location: 0, length: 0))
-
-		if model.isLargeFile {
-			state.forceLineNumberRulerVisible(false)
-		}
-
-		state.refreshLineNumberRuler()
-		context.coordinator.observeWindowFocusIfNeeded(for: textView)
-		context.coordinator.requestInitialFocusIfNeeded(for: textView)
+		context.coordinator.observeWindowFocusIfNeeded(for: state.textView)
+		context.coordinator.requestInitialFocusIfNeeded(for: state.textView)
 
 		return scrollView
 	}
 
 	func updateNSView(_ nsView: NSScrollView, context: Context) {
-		guard let textView = nsView.documentView as? NSTextView else {
-			return
-		}
-
 		// Track last programmatic change ID to avoid expensive string comparisons
 		struct ChangeTracker { static var lastID: Int = -1 }
 
-		// Only push programmatic changes, and never while the user is typing.
-		// Exception: isForceReload bypasses the first-responder guard for explicit user-initiated reloads.
 		let isForceReload = model.isForceReload
 		if ChangeTracker.lastID != model.programmaticChangeID,
-		   isForceReload || (textView.window?.firstResponder as AnyObject?) !== (textView as AnyObject) {
+		   isForceReload || !state.editorIsFirstResponderForUpdate {
 			ChangeTracker.lastID = model.programmaticChangeID
 			model.isForceReload = false
-			let existingSelection = textView.selectedRange()
-			textView.string = model.content
-			let textLength = textView.string.utf16.count
-			let clampedRange = NSRange(
-				location: min(existingSelection.location, textLength),
-				length: 0
-			)
-			textView.setSelectedRange(clampedRange)
+			state.replaceContent(with: model.content)
 		}
 
-		context.coordinator.observeWindowFocusIfNeeded(for: textView)
-		context.coordinator.requestInitialFocusIfNeeded(for: textView)
+		context.coordinator.observeWindowFocusIfNeeded(for: state.textView)
+		context.coordinator.requestInitialFocusIfNeeded(for: state.textView)
 	}
 
-	final class Coordinator: NSObject, NSTextViewDelegate {
+	@MainActor
+	final class Coordinator: NSObject, STTextViewDelegate {
 		private let model: TextFileModel
 		private let state: EditorState
 		private var didSetInitialFocus = false
@@ -130,11 +90,12 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			}
 		}
 
-		func requestInitialFocusIfNeeded(for textView: NSTextView) {
+		func requestInitialFocusIfNeeded(for textView: STTextView?) {
+			guard let textView else { return }
 			requestInitialFocusIfNeeded(for: textView, attempt: 0)
 		}
 
-		private func requestInitialFocusIfNeeded(for textView: NSTextView, attempt: Int) {
+		private func requestInitialFocusIfNeeded(for textView: STTextView, attempt: Int) {
 			guard !didSetInitialFocus else {
 				return
 			}
@@ -157,22 +118,21 @@ struct TextEditorRepresentable: NSViewRepresentable {
 				self.observeWindowFocus(for: textView, window: window)
 
 				if window.makeFirstResponder(textView) {
-					textView.setSelectedRange(NSRange(location: 0, length: 0))
-					textView.scrollRangeToVisible(NSRange(location: 0, length: 0))
+					textView.textSelection = NSRange(location: 0, length: 0)
 					self.didSetInitialFocus = true
 				}
 			}
 		}
 
-		func observeWindowFocusIfNeeded(for textView: NSTextView) {
-			guard let window = textView.window else {
+		func observeWindowFocusIfNeeded(for textView: STTextView?) {
+			guard let textView, let window = textView.window else {
 				return
 			}
 
 			observeWindowFocus(for: textView, window: window)
 		}
 
-		private func observeWindowFocus(for textView: NSTextView, window: NSWindow) {
+		private func observeWindowFocus(for textView: STTextView, window: NSWindow) {
 			guard appFocusObserver == nil else {
 				return
 			}
@@ -196,52 +156,20 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			}
 		}
 
-		func textViewDidChangeSelection(_ notification: Notification) {
-			guard let textView = notification.object as? NSTextView else { return }
-			state.updateCursorPosition(for: textView)
-		}
+		// MARK: STTextViewDelegate
 
-		func textDidChange(_ notification: Notification) {
-			guard let textView = notification.object as? NSTextView else {
+		func textViewDidChangeText(_ notification: Notification) {
+			guard let textView = notification.object as? STTextView else {
 				return
 			}
-
-			model.content = textView.string
-			state.refreshLineNumberRuler()
+			model.content = textView.text ?? ""
 		}
 
-		func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
-			if commandSelector == #selector(NSResponder.insertNewline(_:)) {
-				let selectedRange = textView.selectedRange()
-				let text = textView.string as NSString
-				let caretLocation = min(selectedRange.location, text.length)
-				let searchRange = NSRange(location: 0, length: caretLocation)
-				let previousNewline = text.range(
-					of: "\n",
-					options: .backwards,
-					range: searchRange
-				)
-				let lineStart = previousNewline.location == NSNotFound
-					? 0
-					: previousNewline.location + 1
-				var indentEnd = lineStart
-				while indentEnd < text.length {
-					let character = text.character(at: indentEnd)
-					if character != 9 && character != 32 {
-						break
-					}
-					indentEnd += 1
-				}
-				let indent = text.substring(
-					with: NSRange(location: lineStart, length: indentEnd - lineStart)
-				)
-				textView.insertText(
-					"\n" + indent,
-					replacementRange: selectedRange
-				)
-				return true
+		func textViewDidChangeSelection(_ notification: Notification) {
+			guard let textView = notification.object as? STTextView else {
+				return
 			}
-			return false
+			state.updateCursorPosition(for: textView)
 		}
 	}
 }

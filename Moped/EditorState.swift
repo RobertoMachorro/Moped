@@ -18,51 +18,54 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-import Cocoa
-import Highlightr
+import AppKit
+import STTextView
+import STPluginNeon
 
 // swiftlint:disable file_length
 
-// swiftlint:disable:next type_body_length
+private struct EditorSnapshot {
+	let text: String
+	let selection: NSRange
+	let scrollOrigin: CGPoint?
+}
+
+@MainActor
 final class EditorState: NSObject, ObservableObject {
 	let preferences: Preferences
-	let textStorage: CodeAttributedString
 	let supportedLanguages: [String]
 	let availableThemes: [String]
 
-	// Debounced layout coalescing
-	private var pendingLayoutWorkItem: DispatchWorkItem?
-	private var pendingEditedRange: NSRange?
-
-	private var preferencesObserver: NSObjectProtocol?
+	nonisolated(unsafe) private var preferencesObserver: NSObjectProtocol?
 	private var currentFontSize: CGFloat
 	private var highlightingEnabled = true
+	private var activeLanguage: String = "plaintext"
+	private var activeTheme: MopedTheme = .defaultLight
 
 	@Published var cursorPosition: String = "1:0"
 
+	weak var scrollView: NSScrollView?
 	weak var textView: MopedTextView?
-	weak var lineNumberRuler: LineNumberRulerView?
+	weak var delegate: (any STTextViewDelegate)?
+	private weak var model: TextFileModel?
 
 	init(preferences: Preferences = .userShared) {
 		self.preferences = preferences
-		textStorage = SafeCodeAttributedString()
-		supportedLanguages = HighlightrCatalog.shared.supportedLanguages
-		availableThemes = HighlightrCatalog.shared.availableThemes
+		supportedLanguages = LanguageCatalog.shared.supportedLanguages
+		availableThemes = MopedTheme.allNames
 		currentFontSize = preferences.fontSizeFloat
+		activeTheme = MopedTheme.named(preferences.theme)
 		super.init()
-		textStorage.delegate = self
 
 		preferencesObserver = NotificationCenter.default.addObserver(
 			forName: Notification.Name(rawValue: "PreferencesChanged"),
 			object: nil,
 			queue: .main
 		) { [weak self] _ in
-			self?.applyPreferences()
+			MainActor.assumeIsolated {
+				self?.applyPreferences()
+			}
 		}
-	}
-
-	func prepareForLargeFileMode() {
-		highlightingEnabled = false
 	}
 
 	deinit {
@@ -71,63 +74,75 @@ final class EditorState: NSObject, ObservableObject {
 		}
 	}
 
-	func configure(textView: MopedTextView, scrollView: NSScrollView) {
-		self.textView = textView
-		textView.editorState = self
+	nonisolated var editorIsFirstResponderForUpdate: Bool {
+		MainActor.assumeIsolated { editorIsFirstResponder }
+	}
 
-		if highlightingEnabled, let layoutManager = textView.layoutManager {
-			// Ensure the text view uses the Highlightr-backed storage from the start
-			layoutManager.replaceTextStorage(textStorage)
-		}
-		if highlightingEnabled {
-			textView.typingAttributes = [:]
-		}
+	var editorIsFirstResponder: Bool {
+		guard let textView, let window = textView.window else { return false }
+		return (window.firstResponder as AnyObject?) === (textView as AnyObject)
+	}
 
-		setupLineNumberRuler(in: scrollView, textView: textView)
-		applyPreferences()
-		if !highlightingEnabled {
-			applyPlainStyling(to: textView)
-		}
+	func prepareForLargeFileMode() {
+		highlightingEnabled = false
+	}
 
-		// If highlighting is enabled and there is already content, schedule a full-range refresh
-		if highlightingEnabled, let layoutManager = textView.layoutManager, let textStorage = layoutManager.textStorage, textStorage.length > 0, let textContainer = textView.textContainer {
-			let fullRange = NSRange(location: 0, length: textStorage.length)
-			pendingEditedRange = fullRange
-			pendingLayoutWorkItem?.cancel()
-			let work = DispatchWorkItem { [weak self, weak layoutManager] in
-				guard let self = self, let layoutManager = layoutManager else { return }
-				let range = self.pendingEditedRange ?? fullRange
-				self.pendingEditedRange = nil
-				layoutManager.ensureLayout(for: textContainer)
-				layoutManager.invalidateDisplay(forCharacterRange: range)
-			}
-			pendingLayoutWorkItem = work
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
-		}
+	func installEditor(
+		into scrollView: NSScrollView,
+		model: TextFileModel,
+		delegate: any STTextViewDelegate
+	) {
+		self.scrollView = scrollView
+		self.model = model
+		self.delegate = delegate
+		activeLanguage = model.docTypeLanguage
+		activeTheme = MopedTheme.named(preferences.theme)
+		currentFontSize = preferences.fontSizeFloat
+		buildTextView(initialContent: model.content)
+		setLineWrap(to: preferences.doLineWrap)
+		setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
+	}
 
+	func replaceContent(with content: String) {
+		guard let textView else { return }
+		let priorSelection = textView.textSelection
+		textView.text = content
+		let textLength = (content as NSString).length
+		let clamped = NSRange(
+			location: min(priorSelection.location, textLength),
+			length: 0
+		)
+		textView.textSelection = clamped
 	}
 
 	func applyLanguage(_ language: String) {
 		let requested = language.trimmingCharacters(in: .whitespacesAndNewlines)
-		let finalLanguage: String
-		if !requested.isEmpty, supportedLanguages.contains(requested) {
-			finalLanguage = requested
-		} else {
-			finalLanguage = "plaintext"
-		}
-		textStorage.language = finalLanguage
+		let finalLanguage = requested.isEmpty ? "plaintext" : requested
+		guard finalLanguage != activeLanguage else { return }
+		activeLanguage = finalLanguage
+		rebuildTextView()
+	}
+
+	func setHighlightingEnabled(_ enabled: Bool) {
+		guard enabled != highlightingEnabled else { return }
+		highlightingEnabled = enabled
+		rebuildTextView()
+	}
+
+	func forceLineNumberRulerVisible(_ visible: Bool) {
+		setLineNumberRulerVisible(visible)
 	}
 
 	func increaseFontSize() {
 		currentFontSize += 1.0
-		setTheme(to: preferences.theme, fontSize: currentFontSize)
+		applyFontSize()
 	}
 
 	func decreaseFontSize() {
 		let newSize = currentFontSize - 1.0
 		if newSize > 2 {
 			currentFontSize = newSize
-			setTheme(to: preferences.theme, fontSize: currentFontSize)
+			applyFontSize()
 		} else {
 			NSSound.beep()
 		}
@@ -135,226 +150,169 @@ final class EditorState: NSObject, ObservableObject {
 
 	func resetFontSize() {
 		currentFontSize = preferences.fontSizeFloat
-		setTheme(to: preferences.theme, fontSize: currentFontSize)
+		applyFontSize()
 	}
 
-	func updateCursorPosition(for textView: NSTextView) {
-		let nsText = textView.string as NSString
-		let location = min(textView.selectedRange().location, nsText.length)
+	func updateCursorPosition(for textView: STTextView) {
+		let nsText = (textView.text ?? "") as NSString
+		let location = min(textView.textSelection.location, nsText.length)
 		let preceding = nsText.substring(to: location)
 		let components = preceding.components(separatedBy: "\n")
 		cursorPosition = "\(components.count):\(components.last?.count ?? 0)"
 	}
 
-	func refreshLineNumberRuler() {
-		guard let textView = textView,
-			let layoutManager = textView.layoutManager,
-			let textContainer = textView.textContainer else {
-			return
-		}
-
-		layoutManager.ensureLayout(for: textContainer)
-		lineNumberRuler?.needsDisplay = true
-		textView.enclosingScrollView?.verticalRulerView?.needsDisplay = true
-	}
-
-	func setHighlightingEnabled(_ enabled: Bool) {
-		highlightingEnabled = enabled
-		guard let textView = textView else { return }
-
-		ensureTextStorageAttachment(for: textView)
-
-		if enabled {
-			applyLanguage(preferences.language)
-			setTheme(to: preferences.theme, fontSize: currentFontSize)
-
-			// After enabling highlighting, if there is content, schedule a full-range re-tokenization/refresh
-			if let textView = self.textView, let layoutManager = textView.layoutManager, let textStorage = layoutManager.textStorage, textStorage.length > 0, let textContainer = textView.textContainer {
-				let fullRange = NSRange(location: 0, length: textStorage.length)
-				// Use the same debounced mechanism to avoid layout during editing
-				pendingEditedRange = fullRange
-				pendingLayoutWorkItem?.cancel()
-				let work = DispatchWorkItem { [weak self, weak layoutManager] in
-					guard let self = self, let layoutManager = layoutManager else { return }
-					let range = self.pendingEditedRange ?? fullRange
-					self.pendingEditedRange = nil
-					layoutManager.ensureLayout(for: textContainer)
-					layoutManager.invalidateDisplay(forCharacterRange: range)
-				}
-				pendingLayoutWorkItem = work
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
-			}
-		} else {
-			applyPlainStyling(to: textView)
-		}
-	}
-
-	func forceLineNumberRulerVisible(_ visible: Bool) {
-		setLineNumberRulerVisible(visible)
-	}
-
 	private func applyPreferences() {
-		textView?.invalidateIndentStyleCache()
 		currentFontSize = preferences.fontSizeFloat
-		if !highlightingEnabled {
-			setLineWrap(to: preferences.doLineWrap)
-			setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
-			if let textView = textView {
-				applyPlainStyling(to: textView)
-			}
-			return
-		}
+		let newTheme = MopedTheme.named(preferences.theme)
 		setLineWrap(to: preferences.doLineWrap)
 		setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
-		setTheme(to: preferences.theme, fontSize: currentFontSize)
-	}
-
-	private func setupLineNumberRuler(in scrollView: NSScrollView, textView: NSTextView) {
-		let ruler = LineNumberRulerView(textView: textView)
-		lineNumberRuler = ruler
-		scrollView.hasVerticalRuler = true
-		scrollView.verticalRulerView = ruler
-		updateLineNumberFont()
-	}
-
-	private func ensureTextStorageAttachment(for textView: NSTextView) {
-		guard let layoutManager = textView.layoutManager else { return }
-		let currentStorage = layoutManager.textStorage
-
-		if highlightingEnabled {
-			// Attach Highlightr storage if not already attached
-			if currentStorage !== textStorage {
-				let existingString = currentStorage?.string ?? textView.string
-				currentStorage?.removeLayoutManager(layoutManager)
-				textStorage.beginEditing()
-				textStorage.setAttributedString(NSAttributedString(string: existingString))
-				textStorage.endEditing()
-				textStorage.addLayoutManager(layoutManager)
-			}
+		if newTheme.name != activeTheme.name {
+			activeTheme = newTheme
+			rebuildTextView()
 		} else {
-			// Ensure we're using a plain storage (not the Highlightr storage)
-			if currentStorage === textStorage {
-				let existingString = textStorage.string
-				textStorage.removeLayoutManager(layoutManager)
-				let plain = NSTextStorage()
-				plain.beginEditing()
-				plain.setAttributedString(NSAttributedString(string: existingString))
-				plain.endEditing()
-				plain.addLayoutManager(layoutManager)
-			}
+			applyFontSize()
 		}
+	}
+
+	private func currentSnapshot() -> EditorSnapshot {
+		EditorSnapshot(
+			text: textView?.text ?? model?.content ?? "",
+			selection: textView?.textSelection ?? NSRange(location: 0, length: 0),
+			scrollOrigin: scrollView?.contentView.bounds.origin
+		)
+	}
+
+	private func rebuildTextView() {
+		let snapshot = currentSnapshot()
+		buildTextView(initialContent: snapshot.text)
+		guard let textView else { return }
+		let textLength = (snapshot.text as NSString).length
+		let clampedLocation = min(snapshot.selection.location, textLength)
+		let clampedLength = min(snapshot.selection.length, textLength - clampedLocation)
+		textView.textSelection = NSRange(location: clampedLocation, length: clampedLength)
+		if let origin = snapshot.scrollOrigin {
+			textView.scroll(origin)
+		}
+	}
+
+	private func buildTextView(initialContent: String) {
+		guard let scrollView else { return }
+
+		let textView = MopedTextView()
+		textView.editorState = self
+		textView.allowsUndo = true
+		textView.isEditable = true
+		textView.isSelectable = true
+		textView.highlightSelectedLine = true
+		textView.showsInvisibleCharacters = false
+		textView.textDelegate = delegate
+
+		let font = preferredFont(at: currentFontSize)
+		textView.font = font
+		textView.textColor = activeTheme.foreground
+		textView.backgroundColor = activeTheme.background
+		textView.selectedLineHighlightColor = activeTheme.selection
+		textView.insertionPointColor = caretColor(using: activeTheme.background)
+		textView.typingAttributes = [
+			.font: font,
+			.foregroundColor: activeTheme.foreground
+		]
+
+		scrollView.documentView = textView
+		applyContainerSizing(for: preferences.doLineWrap, textView: textView)
+
+		textView.text = initialContent
+
+		// showsLineNumbers must come AFTER backgroundColor — STTextView captures the
+		// gutter's background from the host's backgroundColor at the moment the gutter
+		// is created, and STGutterView.backgroundColor isn't externally writable.
+		textView.showsLineNumbers = preferences.doShowLineNumberRuler
+		styleGutter(for: textView)
+
+		if highlightingEnabled,
+		   let plugin = LanguageCatalog.shared.makeNeonPlugin(
+			for: activeLanguage,
+			theme: activeTheme.neonTheme(baseFont: font)
+		   ) {
+			textView.addPlugin(plugin)
+		}
+
+		self.textView = textView
+		updateCursorPosition(for: textView)
+	}
+
+	private func applyFontSize() {
+		guard let textView else { return }
+		let font = preferredFont(at: currentFontSize)
+		textView.font = font
+		textView.typingAttributes[.font] = font
+		styleGutter(for: textView)
+	}
+
+	private func styleGutter(for textView: STTextView) {
+		guard let gutter = textView.gutterView else { return }
+		// STGutterView.backgroundColor isn't externally writable; the gutter inherits its
+		// background from textView.backgroundColor at construction time. Only foreground
+		// and separator can be tweaked here.
+		gutter.textColor = activeTheme.gutterForeground
+		gutter.selectedLineTextColor = activeTheme.foreground
+		gutter.drawSeparator = true
+		let baseSize = currentFontSize * 0.9
+		gutter.font = NSFont.userFixedPitchFont(ofSize: baseSize)
+			?? NSFont.systemFont(ofSize: baseSize)
+	}
+
+	private func preferredFont(at size: CGFloat) -> NSFont {
+		NSFont(name: preferences.font, size: size)
+			?? NSFont.userFixedPitchFont(ofSize: size)
+			?? NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
 	}
 
 	private func setLineNumberRulerVisible(_ visible: Bool) {
-		guard let scrollView = textView?.enclosingScrollView else {
-			return
-		}
-
-		scrollView.hasVerticalRuler = visible
-		scrollView.rulersVisible = visible
-	}
-
-	private func updateLineNumberFont() {
-		guard let ruler = lineNumberRuler else {
-			return
-		}
-
-		let fontSize = textStorage.highlightr.theme.codeFont.pointSize * 0.9
-		ruler.font = NSFont.userFixedPitchFont(ofSize: fontSize)
-			?? NSFont.systemFont(ofSize: fontSize)
+		textView?.showsLineNumbers = visible
 	}
 
 	private func setLineWrap(to wrapping: Bool) {
-		guard let textView = textView else {
-			return
-		}
+		guard let textView else { return }
+		applyContainerSizing(for: wrapping, textView: textView)
+	}
 
+	private func applyContainerSizing(for wrapping: Bool, textView: STTextView) {
+		guard let scrollView else { return }
 		if wrapping {
-			textView.enclosingScrollView?.hasHorizontalScroller = false
+			scrollView.hasHorizontalScroller = false
 			textView.isHorizontallyResizable = false
-			let giantValue = Double.greatestFiniteMagnitude
-			textView.textContainer?.containerSize = .init(width: 480, height: giantValue)
-			textView.textContainer?.widthTracksTextView = true
 		} else {
-			textView.enclosingScrollView?.hasHorizontalScroller = true
+			scrollView.hasHorizontalScroller = true
 			textView.isHorizontallyResizable = true
-			textView.autoresizingMask = [.width, .height]
-			let giantValue = Double.greatestFiniteMagnitude
-			textView.textContainer?.containerSize = .init(width: giantValue, height: giantValue)
-			textView.textContainer?.widthTracksTextView = false
 		}
-	}
-
-	private func setTheme(to theme: String, fontSize: CGFloat) {
-		guard let textView = textView else {
-			return
-		}
-
-		textStorage.highlightr.setTheme(to: theme)
-		textStorage.highlightr.theme.codeFont = NSFont(name: preferences.font, size: fontSize)
-			?? NSFont.userFixedPitchFont(ofSize: fontSize)
-			?? NSFont.systemFont(ofSize: fontSize)
-		textView.backgroundColor = textStorage.highlightr.theme.themeBackgroundColor
-		textView.insertionPointColor = caretColor(using: textView.backgroundColor)
-		updateLineNumberFont()
-		textView.typingAttributes = [:]
-	}
-
-	private func applyPlainStyling(to textView: NSTextView) {
-		let font = NSFont(name: preferences.font, size: currentFontSize)
-			?? NSFont.userFixedPitchFont(ofSize: currentFontSize)
-			?? NSFont.systemFont(ofSize: currentFontSize)
-		textView.font = font
-		textView.textColor = .textColor
-		textView.backgroundColor = .textBackgroundColor
-		textView.insertionPointColor = caretColor(using: textView.backgroundColor)
-		textView.typingAttributes = [
-			.font: font,
-			.foregroundColor: NSColor.textColor
-		]
 	}
 
 	private func caretColor(using color: NSColor) -> NSColor {
-		// Resolve dynamic system colors and convert to an RGB color space before extracting components
 		let resolved = color.usingColorSpace(.sRGB) ??
-					   color.usingColorSpace(.deviceRGB) ??
-					   color.usingColorSpace(.genericRGB)
-
-		var redComponent: CGFloat = 1
-		var greenComponent: CGFloat = 1
-		var blueComponent: CGFloat = 1
-		var alphaComponent: CGFloat = 1
+			color.usingColorSpace(.deviceRGB) ??
+			color.usingColorSpace(.genericRGB)
 
 		if let rgb = resolved {
-			var resolvedRed: CGFloat = 1
-			var resolvedGreen: CGFloat = 1
-			var resolvedBlue: CGFloat = 1
-			var resolvedAlpha: CGFloat = 1
-			rgb.getRed(&resolvedRed, green: &resolvedGreen, blue: &resolvedBlue, alpha: &resolvedAlpha)
-			redComponent = resolvedRed
-			greenComponent = resolvedGreen
-			blueComponent = resolvedBlue
-			alphaComponent = resolvedAlpha
-			return NSColor(red: 1 - redComponent, green: 1 - greenComponent, blue: 1 - blueComponent, alpha: alphaComponent)
-		} else {
-			// Fallback: compute a contrasting caret color using perceived luminance.
-			// If components are unavailable, return a safe default caret color.
-			let cgColor = color.cgColor
-			guard let comps = cgColor.components, comps.count >= 3 else {
-				// Safe default when we can't reliably read color components
-				return .black
-			}
-			redComponent = comps[0]
-			greenComponent = comps[1]
-			blueComponent = comps[2]
-			let luminance = 0.2126 * redComponent + 0.7152 * greenComponent + 0.0722 * blueComponent
-			return luminance > 0.5 ? .black : .white
+			var red: CGFloat = 1
+			var green: CGFloat = 1
+			var blue: CGFloat = 1
+			var alpha: CGFloat = 1
+			rgb.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+			return NSColor(red: 1 - red, green: 1 - green, blue: 1 - blue, alpha: alpha)
 		}
+
+		let cgColor = color.cgColor
+		guard let comps = cgColor.components, comps.count >= 3 else {
+			return .black
+		}
+		let luminance = 0.2126 * comps[0] + 0.7152 * comps[1] + 0.0722 * comps[2]
+		return luminance > 0.5 ? .black : .white
 	}
 }
 
 // swiftlint:disable:next type_body_length
-final class MopedTextView: NSTextView {
+final class MopedTextView: STTextView {
 	weak var editorState: EditorState?
 
 	private enum IndentStyle {
@@ -391,34 +349,56 @@ final class MopedTextView: NSTextView {
 		_ = toggleLineComment()
 	}
 
-	override func didChangeText() {
-		super.didChangeText()
-		cachedIndentStyle = nil
-	}
-
 	func invalidateIndentStyleCache() {
 		cachedIndentStyle = nil
 	}
 
+	override func insertText(_ insertString: Any, replacementRange: NSRange) {
+		super.insertText(insertString, replacementRange: replacementRange)
+		cachedIndentStyle = nil
+	}
+
+	override func insertNewline(_ sender: Any?) {
+		let source = text ?? ""
+		let nsText = source as NSString
+		let selection = textSelection
+		let caretLocation = min(selection.location, nsText.length)
+		let searchRange = NSRange(location: 0, length: caretLocation)
+		let previousNewline = nsText.range(of: "\n", options: .backwards, range: searchRange)
+		let lineStart = previousNewline.location == NSNotFound ? 0 : previousNewline.location + 1
+		var indentEnd = lineStart
+		while indentEnd < nsText.length {
+			let character = nsText.character(at: indentEnd)
+			if character != 9 && character != 32 {
+				break
+			}
+			indentEnd += 1
+		}
+		let indent = nsText.substring(
+			with: NSRange(location: lineStart, length: indentEnd - lineStart)
+		)
+		insertText("\n" + indent, replacementRange: selection)
+	}
+
 	override func insertTab(_ sender: Any?) {
-		let selectedRange = selectedRange()
-		if selectedRange.length > 0 {
+		let selection = textSelection
+		if selection.length > 0 {
 			_ = adjustIndentation(true)
 			return
 		}
 
-		let style = detectIndentStyle(in: string)
+		let style = detectIndentStyle(in: text ?? "")
 		switch style {
 		case .hardTab:
 			super.insertTab(sender)
 		case .softSpaces(let width):
-			let text = string as NSString
-			let searchRange = NSRange(location: 0, length: selectedRange.location)
-			let previousNewline = text.range(of: "\n", options: .backwards, range: searchRange)
+			let source = (text ?? "") as NSString
+			let searchRange = NSRange(location: 0, length: selection.location)
+			let previousNewline = source.range(of: "\n", options: .backwards, range: searchRange)
 			let lineStart = previousNewline.location == NSNotFound ? 0 : previousNewline.location + 1
-			let column = selectedRange.location - lineStart
+			let column = selection.location - lineStart
 			let spacesToInsert = width - (column % width)
-			insertText(String(repeating: " ", count: spacesToInsert), replacementRange: selectedRange)
+			insertText(String(repeating: " ", count: spacesToInsert), replacementRange: selection)
 		}
 	}
 
@@ -444,17 +424,17 @@ final class MopedTextView: NSTextView {
 			return false
 		}
 
-		let language = editorState?.textStorage.language ?? ""
+		let language = editorState?.currentLanguage ?? ""
 		guard language != "plaintext",
 			  let marker = TextFileModel.lineCommentMarker(forLanguage: language) else {
 			NSSound.beep()
 			return false
 		}
 
-		let text = string as NSString
-		let originalSelection = selectedRange()
-		let lineRange = normalizedLineRange(for: originalSelection, in: text)
-		let originalBlock = text.substring(with: lineRange)
+		let source = (text ?? "") as NSString
+		let originalSelection = textSelection
+		let lineRange = normalizedLineRange(for: originalSelection, in: source)
+		let originalBlock = source.substring(with: lineRange)
 		let lines = splitBlockIntoLines(originalBlock)
 		let nonEmptyIndices = Set(lines.indices.filter { !lines[$0].content.allSatisfy(\.isWhitespace) })
 
@@ -474,21 +454,22 @@ final class MopedTextView: NSTextView {
 		guard transformedBlock != originalBlock else {
 			return true
 		}
-		guard shouldChangeText(in: lineRange, replacementString: transformedBlock) else {
+		guard let textRange = NSTextRange(lineRange, in: textContentManager),
+			  shouldChangeText(in: textRange, replacementString: transformedBlock) else {
 			return true
 		}
 
-		textStorage?.replaceCharacters(in: lineRange, with: transformedBlock)
-		didChangeText()
+		replaceCharacters(in: textRange, with: transformedBlock)
+		cachedIndentStyle = nil
 
 		let replacementLength = (transformedBlock as NSString).length
 		let replacementRange = NSRange(location: lineRange.location, length: replacementLength)
 		if originalSelection.length == 0 {
 			let delta = replacementRange.length - lineRange.length
 			let newLocation = max(originalSelection.location + delta, lineRange.location)
-			setSelectedRange(NSRange(location: newLocation, length: 0))
+			textSelection = NSRange(location: newLocation, length: 0)
 		} else {
-			setSelectedRange(replacementRange)
+			textSelection = replacementRange
 		}
 		return true
 	}
@@ -582,12 +563,12 @@ final class MopedTextView: NSTextView {
 			return false
 		}
 
-		let text = string as NSString
-		let selectedRange = selectedRange()
-		let lineRange = normalizedLineRange(for: selectedRange, in: text)
-		let style = detectIndentStyle(in: string)
+		let source = (text ?? "") as NSString
+		let selection = textSelection
+		let lineRange = normalizedLineRange(for: selection, in: source)
+		let style = detectIndentStyle(in: text ?? "")
 		let indentUnit = style.indentUnit
-		let originalBlock = text.substring(with: lineRange)
+		let originalBlock = source.substring(with: lineRange)
 
 		let transformedBlock: String
 		if shouldIndent {
@@ -599,27 +580,28 @@ final class MopedTextView: NSTextView {
 		guard transformedBlock != originalBlock else {
 			return true
 		}
-		guard shouldChangeText(in: lineRange, replacementString: transformedBlock) else {
+		guard let textRange = NSTextRange(lineRange, in: textContentManager),
+			  shouldChangeText(in: textRange, replacementString: transformedBlock) else {
 			return true
 		}
 
-		textStorage?.replaceCharacters(in: lineRange, with: transformedBlock)
-		didChangeText()
+		replaceCharacters(in: textRange, with: transformedBlock)
+		cachedIndentStyle = nil
 
 		let replacementLength = (transformedBlock as NSString).length
 		let replacementRange = NSRange(location: lineRange.location, length: replacementLength)
-		if selectedRange.length == 0 {
+		if selection.length == 0 {
 			let delta = replacementRange.length - lineRange.length
-			let newLocation = max(selectedRange.location + delta, lineRange.location)
-			setSelectedRange(NSRange(location: newLocation, length: 0))
+			let newLocation = max(selection.location + delta, lineRange.location)
+			textSelection = NSRange(location: newLocation, length: 0)
 		} else {
-			setSelectedRange(replacementRange)
+			textSelection = replacementRange
 		}
 		return true
 	}
 
-	private func normalizedLineRange(for selectedRange: NSRange, in text: NSString) -> NSRange {
-		var normalized = selectedRange
+	private func normalizedLineRange(for selection: NSRange, in text: NSString) -> NSRange {
+		var normalized = selection
 		if normalized.length > 0 {
 			let end = NSMaxRange(normalized)
 			if let newline = "\n".utf16.first,
@@ -761,96 +743,6 @@ final class MopedTextView: NSTextView {
 	}
 }
 
-extension EditorState: NSTextStorageDelegate {
-	func textStorage(_ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
-		guard let textView = textView else { return }
-
-		let normalizedRange = normalizedEditedRange(
-			for: textStorage,
-			editedMask: editedMask,
-			editedRange: editedRange,
-			changeInLength: delta
-		)
-		guard normalizedRange.length > 0 else { return }
-
-		// Debounce layout work to coalesce rapid edits and avoid glyph generation during editing.
-		if let layoutManager = textView.layoutManager, let textContainer = textView.textContainer {
-			// Merge the edited range with any pending range
-			if let existing = pendingEditedRange {
-				let newLocation = min(existing.location, normalizedRange.location)
-				let newMax = max(NSMaxRange(existing), NSMaxRange(normalizedRange))
-				pendingEditedRange = NSRange(location: newLocation, length: newMax - newLocation)
-			} else {
-				pendingEditedRange = normalizedRange
-			}
-
-			// Cancel any pending work
-			pendingLayoutWorkItem?.cancel()
-
-			// Schedule a new debounced work item
-			let work = DispatchWorkItem { [weak self, weak layoutManager] in
-				guard let self = self, let layoutManager = layoutManager else { return }
-				let targetRange = self.pendingEditedRange ?? normalizedRange
-				self.pendingEditedRange = nil
-				let range = self.clampedRange(targetRange, toTextStorage: textStorage)
-				guard range.length > 0 else { return }
-				layoutManager.ensureLayout(for: textContainer)
-				layoutManager.invalidateDisplay(forCharacterRange: range)
-			}
-			pendingLayoutWorkItem = work
-
-			// Adapt delay based on size of pending range to avoid an unbounded backlog
-			let pendingLength = pendingEditedRange?.length ?? normalizedRange.length
-			if pendingLength > 2000 {
-				// For very large edits, perform layout as soon as possible
-				DispatchQueue.main.async(execute: work)
-			} else {
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.03, execute: work)
-			}
-		}
-	}
-
-	private func normalizedEditedRange(
-		for textStorage: NSTextStorage,
-		editedMask: NSTextStorageEditActions,
-		editedRange: NSRange,
-		changeInLength delta: Int
-	) -> NSRange {
-		let length = textStorage.length
-		guard length > 0 else {
-			return NSRange(location: 0, length: 0)
-		}
-
-		let safeLocation = min(max(editedRange.location, 0), length - 1)
-
-		if editedRange.length > 0 {
-			let maxLength = length - safeLocation
-			return NSRange(location: safeLocation, length: min(editedRange.length, maxLength))
-		}
-
-		// Deletions arrive as zero-length character edits; invalidate at least the containing
-		// line so shifted text repaints with updated token attributes.
-		if editedMask.contains(.editedCharacters), delta < 0 {
-			let string = textStorage.string as NSString
-			let lineRange = string.lineRange(for: NSRange(location: safeLocation, length: 0))
-			let lineLocation = min(max(lineRange.location, 0), length - 1)
-			let maxLength = length - lineLocation
-			let lineLength = min(max(lineRange.length, 1), maxLength)
-			return NSRange(location: lineLocation, length: lineLength)
-		}
-
-		return NSRange(location: safeLocation, length: 1)
-	}
-
-	private func clampedRange(_ range: NSRange, toTextStorage textStorage: NSTextStorage) -> NSRange {
-		let length = textStorage.length
-		guard length > 0 else {
-			return NSRange(location: 0, length: 0)
-		}
-
-		let safeLocation = min(max(range.location, 0), length - 1)
-		let maxLength = length - safeLocation
-		let safeLength = min(max(range.length, 0), maxLength)
-		return NSRange(location: safeLocation, length: safeLength)
-	}
+extension EditorState {
+	var currentLanguage: String { activeLanguage }
 }
