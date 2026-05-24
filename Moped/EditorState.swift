@@ -21,6 +21,7 @@
 import AppKit
 import STTextView
 import STPluginNeon
+import UniformTypeIdentifiers
 
 // swiftlint:disable file_length
 
@@ -198,6 +199,12 @@ final class EditorState: NSObject, ObservableObject {
 	private func buildTextView(initialContent: String) {
 		guard let scrollView else { return }
 
+		// Paint the scroll view with the theme color so the area not covered by the
+		// text view (empty document, or below short content) doesn't show the default
+		// white background.
+		scrollView.drawsBackground = true
+		scrollView.backgroundColor = activeTheme.background
+
 		let textView = MopedTextView()
 		textView.editorState = self
 		textView.allowsUndo = true
@@ -351,6 +358,28 @@ final class MopedTextView: STTextView {
 
 	func invalidateIndentStyleCache() {
 		cachedIndentStyle = nil
+	}
+
+	/// Always paste as plain text so attributes from the source app (Xcode colors, RTF
+	/// fonts, etc.) don't override the editor's theme/font and so Plugin-Neon can
+	/// re-tokenize the inserted content cleanly.
+	override func paste(_ sender: Any?) {
+		pasteAsPlainText(sender)
+	}
+
+	/// Drag-in counterpart to `paste`. Internal drags (moving selected text within the
+	/// same editor) still use STTextView's default path, which preserves our existing
+	/// attributes. External drags from other apps bypass the RTF branch so styled text
+	/// from Xcode/etc. lands as plain text and is re-tokenized by Plugin-Neon.
+	override func performDragOperation(_ sender: any NSDraggingInfo) -> Bool {
+		if sender.draggingSource as AnyObject? === self {
+			return super.performDragOperation(sender)
+		}
+		let pasteboard = sender.draggingPasteboard
+		if pasteboard.canReadItem(withDataConformingToTypes: [UTType.plainText.identifier]) {
+			return readSelection(from: pasteboard, type: .string)
+		}
+		return false
 	}
 
 	override func insertText(_ insertString: Any, replacementRange: NSRange) {
