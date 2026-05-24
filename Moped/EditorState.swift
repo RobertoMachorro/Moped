@@ -45,6 +45,9 @@ final class EditorState: NSObject, ObservableObject {
 
 	@Published var cursorPosition: String = "1:0"
 
+	let findPanelController = FindPanelController()
+	var findBarContainer: EditorFindBarContainer { findPanelController.container }
+
 	weak var scrollView: NSScrollView?
 	weak var textView: MopedTextView?
 	weak var delegate: (any STTextViewDelegate)?
@@ -67,6 +70,10 @@ final class EditorState: NSObject, ObservableObject {
 				self?.applyPreferences()
 			}
 		}
+	}
+
+	func attachFindPanel(to window: NSWindow?) {
+		findPanelController.attach(to: window)
 	}
 
 	deinit {
@@ -244,6 +251,11 @@ final class EditorState: NSObject, ObservableObject {
 			textView.addPlugin(plugin)
 		}
 
+		// Redirect the find bar away from the scroll view's accessory slot (which
+		// overlays the editor in TextKit 2) into our SwiftUI-hosted container.
+		findBarContainer.contentViewReference = textView
+		textView.textFinder.findBarContainer = findBarContainer
+
 		self.textView = textView
 		updateCursorPosition(for: textView)
 	}
@@ -365,6 +377,36 @@ final class MopedTextView: STTextView {
 	/// re-tokenize the inserted content cleanly.
 	override func paste(_ sender: Any?) {
 		pasteAsPlainText(sender)
+	}
+
+	/// `showReplaceInterface` is a no-op when the find bar isn't already visible — it
+	/// only toggles the replace row. Ensure the bar is up first so Cmd-Option-F from a
+	/// cold start reveals the full find+replace UI.
+	///
+	/// Also re-asserts our SwiftUI-hosted find bar container before each action.
+	/// `NSTextFinder.findBarContainer` is a `weak` reference, so if the container ever
+	/// gets nilled out (which is what causes the bar to render as a window title bar
+	/// accessory), this puts it back.
+	override func performTextFinderAction(_ sender: Any?) {
+		if let container = editorState?.findBarContainer {
+			textFinder.findBarContainer = container
+		}
+
+		let menuItem = sender as? NSMenuItem
+		let action = menuItem.flatMap { NSTextFinder.Action(rawValue: $0.tag) }
+
+		if action == .showReplaceInterface,
+		   textFinder.findBarContainer?.isFindBarVisible == false {
+			textFinder.performAction(.showFindInterface)
+		}
+		super.performTextFinderAction(sender)
+
+		// NSTextFinder only calls our `isFindBarVisible = true` on the very first show.
+		// Subsequent Cmd-F / Cmd-Option-F invocations after an Esc skip us entirely, so
+		// the panel stays hidden. Force-present after super for show actions.
+		if action == .showFindInterface || action == .showReplaceInterface {
+			editorState?.findPanelController.present()
+		}
 	}
 
 	/// Drag-in counterpart to `paste`. Internal drags (moving selected text within the
