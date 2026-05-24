@@ -2,20 +2,20 @@
 
 Refer to the following files for mandatory instructions:
 
-* @12-RULES.md
+* @10-RULES.md
 
-If there are conflicting rules in this or the documents above, prompt for clarification.
+If there are conflicting rules in this or the documents below, prompt for clarification.
 
 ## Project Context
 
 * macOS document-based app written in Swift
 * UI is SwiftUI-based
 * Formatting uses tabs (no space indentation)
-* SwiftLint is enforced; `line_length` is currently disabled but will be enabled soon
+* SwiftLint is enforced; `line_length` is currently disabled
 
 ## MUST DO
 
-* Run SwiftLint for verification and fix any issues
+* Run SwiftLint for verification; SwiftLint must be clean for the changed lines/files only, not the whole project
 
 ## Coding Guidelines
 
