@@ -173,8 +173,11 @@ final class EditorState: NSObject, ObservableObject {
 		currentFontSize = preferences.fontSizeFloat
 		let newTheme = MopedTheme.named(preferences.theme)
 		setLineWrap(to: preferences.doLineWrap)
-		setLineNumberRulerVisible(preferences.doShowLineNumberRuler)
-		if newTheme.name != activeTheme.name {
+		// Toggling `showsLineNumbers` on STTextView removes the gutter view but doesn't
+		// reclaim the space it occupied — the contentView stays offset. Rebuild the
+		// text view so the gutter slot collapses cleanly.
+		let lineNumbersChanged = (textView?.showsLineNumbers ?? false) != preferences.doShowLineNumberRuler
+		if newTheme.name != activeTheme.name || lineNumbersChanged {
 			activeTheme = newTheme
 			rebuildTextView()
 		} else {
@@ -192,6 +195,11 @@ final class EditorState: NSObject, ObservableObject {
 
 	private func rebuildTextView() {
 		let snapshot = currentSnapshot()
+		// STTextView installs the gutter as a *floating subview of the scroll view*,
+		// not as a subview of the text view itself. Replacing `documentView` leaves
+		// the old gutter orphaned and still drawn on top of the new content. Remove
+		// it explicitly before building the replacement.
+		textView?.gutterView?.removeFromSuperview()
 		buildTextView(initialContent: snapshot.text)
 		guard let textView else { return }
 		let textLength = (snapshot.text as NSString).length
