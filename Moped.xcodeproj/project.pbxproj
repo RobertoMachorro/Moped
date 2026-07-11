@@ -635,7 +635,7 @@
 			repositoryURL = "https://github.com/kylemacomber/Neon";
 			requirement = {
 				kind = revision;
-				revision = ce8d252c8fd53ea0b6960e02c423315eef11f141;
+				revision = ce8d252;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
