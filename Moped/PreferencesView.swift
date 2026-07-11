@@ -18,7 +18,6 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-import Highlightr
 import SwiftUI
 
 private struct PreferenceOption: Hashable {
@@ -42,9 +41,8 @@ struct PreferencesView: View {
 	init(preferences: Preferences) {
 		self.preferences = preferences
 
-		let catalog = HighlightrCatalog.shared
-		languages = catalog.supportedLanguages
-		themes = catalog.availableThemes
+		languages = LanguageCatalog.shared.supportedLanguages
+		themes = MopedTheme.allNames
 		fonts = NSFontManager.shared.availableFonts.sorted()
 		fontSizes = (9...24).map { String($0) }
 		wrapOptions = [

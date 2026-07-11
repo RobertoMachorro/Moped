@@ -1,14 +1,77 @@
 {
+  "originHash" : "67326b118656f591bbbc9fc644e702b51f0158e792b901c59c139216154162db",
   "pins" : [
     {
-      "identity" : "highlightr",
+      "identity" : "coretextswift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/RobertoMachorro/Highlightr",
+      "location" : "https://github.com/krzyzanowskim/CoreTextSwift",
       "state" : {
-        "branch" : "master",
-        "revision" : "d54d953a4c0428da8a7f13ce3cc5cfdfcb58f1f6"
+        "revision" : "833177201d6421e6322296f39fce6ff6ae52618a",
+        "version" : "0.2.0"
+      }
+    },
+    {
+      "identity" : "neon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylemacomber/Neon",
+      "state" : {
+        "branch" : "ce8d252",
+        "revision" : "ce8d252c8fd53ea0b6960e02c423315eef11f141"
+      }
+    },
+    {
+      "identity" : "rearrange",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChimeHQ/Rearrange",
+      "state" : {
+        "revision" : "5ff7f3363f7a08f77e0d761e38e6add31c2136e1",
+        "version" : "1.8.1"
+      }
+    },
+    {
+      "identity" : "sttextkitplus",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/STTextKitPlus",
+      "state" : {
+        "revision" : "2ee74906f4d753458eeaa9a2f6d4538aacb86a1d",
+        "version" : "0.3.0"
+      }
+    },
+    {
+      "identity" : "sttextview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/STTextView",
+      "state" : {
+        "revision" : "8569251785daf1f0310eaa9235d1254264f0d249",
+        "version" : "2.3.10"
+      }
+    },
+    {
+      "identity" : "sttextview-plugin-neon",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/STTextView-Plugin-Neon",
+      "state" : {
+        "revision" : "5a30db4ce7908a5414e7b499e2379bdc49991cd1"
+      }
+    },
+    {
+      "identity" : "swifttreesitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChimeHQ/SwiftTreeSitter",
+      "state" : {
+        "revision" : "08ef81eb8620617b55b08868126707ad72bf754f",
+        "version" : "0.25.0"
+      }
+    },
+    {
+      "identity" : "tree-sitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tree-sitter/tree-sitter",
+      "state" : {
+        "revision" : "da6fe9beb4f7f67beb75914ca8e0d48ae48d6406",
+        "version" : "0.25.10"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

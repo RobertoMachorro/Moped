@@ -1,0 +1,24 @@
+# Manual Checklist
+
+- [ ] Open a Swift file — text renders, syntax colors appear, gutter shows line numbers.
+- [ ] Type characters — colors update, cursor position in status bar updates, line count in gutter grows.
+- [ ] Paste a large block (>2KB, multi‑line) — entire block re‑highlights correctly (no half‑colored insert). This was the bug SafeCodeAttributedString worked around; verify Neon doesn't have its own version.
+- [ ] Switch language in the bottom picker (Swift → JSON → plaintext → Swift) — re‑colors instantly, no crash.
+- [ ] Open a JSON, Python, Bash, Markdown file — each shows highlighting.
+- [ ] Open a "second wave" file (e.g. Dart) — either highlights (if bundled) or shows plain (if not) without crashing.
+- [ ] Open an unsupported language file (e.g. AutoHotkey) — shows plain, no crash.
+- [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document.
+- [ ] Change font and font size in Preferences — propagates to the editor and to the gutter.
+- [ ] Cmd‑+, Cmd‑−, Cmd‑0 — increase/decrease/reset font size.
+- [ ] Tab key with no selection: hard‑tab file inserts \t; 2‑space file inserts 2 spaces aligned to column.
+- [ ] Tab/Shift‑Tab with multi‑line selection — indents/outdents block.
+- [ ] Cmd‑[ / Cmd‑] — same indent/outdent behavior.
+- [ ] Toggle Line Comment menu item — comments/uncomments using the correct marker for the document language.
+- [ ] Auto‑indent on Return — new line preserves leading whitespace from previous line.
+- [ ] Word wrap on/off — reflows correctly.
+- [ ] Show/hide line number gutter — gutter appears/disappears.
+- [ ] Large file (>256 KB) — opens without locking up; verify whatever Neon does (or doesn't do) for big files. Equivalent to the current prepareForLargeFileMode() path.
+- [ ] Save, close, reopen — content round‑trips through TextFileModel.
+- [ ] External file change → reload alert → reload — still works.
+- [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
+- [ ] MopedCLI moped --wait — unaffected.

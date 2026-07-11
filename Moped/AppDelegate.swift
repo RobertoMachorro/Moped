@@ -133,7 +133,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				display: true
 			) { [weak self] document, _, _ in
 				url.stopAccessingSecurityScopedResource()
-				if let document, let frame = savedFrame, !NSEqualRects(frame, .zero) {
+				if let document, let frame = savedFrame, frame != .zero {
 					self?.applyFrame(frame, to: document, retriesLeft: 5)
 				}
 			}
