@@ -121,6 +121,9 @@ final class EditorState: NSObject, ObservableObject {
 			length: 0
 		)
 		textView.textSelection = clamped
+		// The new content may use a different indentation style than the file it
+		// replaced (reload / force-reload), so drop the cached analysis.
+		textView.invalidateIndentStyleCache()
 	}
 
 	func applyLanguage(_ language: String) {

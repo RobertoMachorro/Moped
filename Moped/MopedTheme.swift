@@ -31,8 +31,8 @@ struct MopedTheme {
 	let selection: NSColor
 	let tokenColors: [String: NSColor]
 
-	/// Build the Plugin-Neon Theme using this Moped theme's colors. Fonts are intentionally
-	/// left at monospaced defaults; the editor controls the document font directly.
+	/// Build the Plugin-Neon Theme using this Moped theme's colors. Every token kind is
+	/// mapped to `baseFont` so highlighted tokens track the editor's current font and size.
 	func neonTheme(baseFont: NSFont) -> STPluginNeon.Theme {
 		var colors = tokenColors
 		colors["plain"] = foreground

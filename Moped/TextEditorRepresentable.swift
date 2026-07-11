@@ -254,13 +254,12 @@ struct TextEditorRepresentable: NSViewRepresentable {
 	}
 
 	func updateNSView(_ nsView: NSScrollView, context: Context) {
-		// Track last programmatic change ID to avoid expensive string comparisons
-		struct ChangeTracker { static var lastID: Int = -1 }
-
+		// Track last programmatic change ID (per-coordinator, so each open document
+		// tracks its own model) to avoid expensive string comparisons.
 		let isForceReload = model.isForceReload
-		if ChangeTracker.lastID != model.programmaticChangeID,
+		if context.coordinator.lastProgrammaticChangeID != model.programmaticChangeID,
 		   isForceReload || !state.editorIsFirstResponderForUpdate {
-			ChangeTracker.lastID = model.programmaticChangeID
+			context.coordinator.lastProgrammaticChangeID = model.programmaticChangeID
 			model.isForceReload = false
 			state.replaceContent(with: model.content)
 		}
@@ -275,6 +274,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		private let state: EditorState
 		private var didSetInitialFocus = false
 		private var appFocusObserver: NSObjectProtocol?
+		var lastProgrammaticChangeID = -1
 
 		init(model: TextFileModel, state: EditorState) {
 			self.model = model
