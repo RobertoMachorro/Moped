@@ -43,6 +43,11 @@ final class EditorState: NSObject, ObservableObject {
 	private var activeLanguage: String = "plaintext"
 	private var activeTheme: MopedTheme = .defaultLight
 
+	/// True while the editor's text is being set programmatically (initial build or
+	/// `replaceContent`). The text-change delegate checks this to skip echoing the model's
+	/// own content back into the model during a SwiftUI view update.
+	private(set) var isApplyingProgrammaticText = false
+
 	@Published var cursorPosition: String = "1:0"
 
 	let findPanelController = FindPanelController()
@@ -114,7 +119,9 @@ final class EditorState: NSObject, ObservableObject {
 	func replaceContent(with content: String) {
 		guard let textView else { return }
 		let priorSelection = textView.textSelection
+		isApplyingProgrammaticText = true
 		textView.text = content
+		isApplyingProgrammaticText = false
 		let textLength = (content as NSString).length
 		let clamped = NSRange(
 			location: min(priorSelection.location, textLength),
@@ -246,7 +253,9 @@ final class EditorState: NSObject, ObservableObject {
 		scrollView.documentView = textView
 		applyContainerSizing(for: preferences.doLineWrap, textView: textView)
 
+		isApplyingProgrammaticText = true
 		textView.text = initialContent
+		isApplyingProgrammaticText = false
 
 		// showsLineNumbers must come AFTER backgroundColor — STTextView captures the
 		// gutter's background from the host's backgroundColor at the moment the gutter
