@@ -624,10 +624,10 @@
 		};
 		ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/STTextView-Plugin-Neon";
+			repositoryURL = "https://github.com/RobertoMachorro/STTextView-Plugin-Neon";
 			requirement = {
 				kind = revision;
-				revision = 5a30db4ce7908a5414e7b499e2379bdc49991cd1;
+				revision = 5a3a072370ca7f522fe8c5025b675e90ad5a7476;
 			};
 		};
 		ABCDEF0000000000000000A7 /* XCRemoteSwiftPackageReference "Neon" */ = {
