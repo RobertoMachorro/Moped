@@ -361,7 +361,16 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			guard let textView = notification.object as? STTextView else {
 				return
 			}
-			model.content = textView.text ?? ""
+			let newText = textView.text ?? ""
+			// Skip the write-back when content is unchanged. `replaceContent` sets
+			// `textView.text` from the model during `updateNSView`, which fires this
+			// delegate synchronously; re-publishing the identical value would mutate the
+			// model inside a SwiftUI view update ("Publishing changes from within view
+			// updates is not allowed").
+			guard model.content != newText else {
+				return
+			}
+			model.content = newText
 		}
 
 		func textViewDidChangeSelection(_ notification: Notification) {
