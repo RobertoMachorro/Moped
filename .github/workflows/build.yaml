@@ -20,11 +20,12 @@ jobs:
         run: brew install ripgrep
       - name: Check localized string usage
         run: ./scripts/check_localized_strings.sh
+      - name: Lint
+        run: swiftlint --strict
       - name: Test editor package
         run: swift test --package-path MopedEditor
       - name: Build
         run: |
-          rm -f Moped.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
           xcodebuild -scheme Moped -derivedDataPath ./xcbuild build
           mv xcbuild/Build/Products/Debug/Moped.app .
           zip -r -9 Moped.zip Moped.app

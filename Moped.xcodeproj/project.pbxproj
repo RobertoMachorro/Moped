@@ -498,7 +498,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -531,7 +531,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
@@ -542,7 +542,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -550,7 +550,7 @@
 				PRODUCT_NAME = "moped-wait";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -563,7 +563,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -572,7 +572,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_ALL_SOURCES = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
