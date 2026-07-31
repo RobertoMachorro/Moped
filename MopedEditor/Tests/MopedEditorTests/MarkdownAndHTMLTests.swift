@@ -79,4 +79,71 @@ final class MarkdownAndHTMLTests: XCTestCase {
 		assertKind("\"wide\"", is: .string, in: text, as: "html")
 		assertPlain("content", in: text, as: "html")
 	}
+
+	private let plistFixture = """
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+		<dict>
+			<key>public.swift-source</key>
+			<string>swift</string>
+		</dict>
+	</plist>
+	"""
+
+	func testXMLProlog() {
+		assertKind("<?xml", is: .keyword, in: plistFixture, as: "xml")
+		assertKind("version", is: .variableBuiltin, in: plistFixture, as: "xml")
+		assertKind("\"1.0\"", is: .string, in: plistFixture, as: "xml")
+		assertKind("encoding", is: .variableBuiltin, in: plistFixture, as: "xml")
+		assertKind("\"UTF-8\"", is: .string, in: plistFixture, as: "xml")
+	}
+
+	func testXMLTags() {
+		assertKind("<!DOCTYPE plist", is: .include, in: plistFixture, as: "xml")
+		assertKind("dict", is: .keyword, in: plistFixture, as: "xml")
+		assertKind("key", is: .keyword, in: plistFixture, as: "xml")
+		assertPlain("public.swift-source", in: plistFixture, as: "xml")
+	}
+
+	/// The doctype must end at its own `>` so the root element still highlights.
+	func testXMLDoctypeDoesNotSwallowFollowingTag() {
+		let text = "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\">\n<root version=\"1.0\">\n"
+		assertKind("<!DOCTYPE", is: .include, in: text, as: "xml")
+		assertKind("root", is: .keyword, in: text, as: "xml")
+		assertKind("version", is: .variableBuiltin, in: text, as: "xml")
+		assertKind("\"1.0\"", is: .string, in: text, as: "xml")
+	}
+
+	func testXMLEntitiesAndComments() {
+		let text = "<!-- note -->\n<msg>a &amp; b</msg>\n"
+		assertKind("<!-- note -->", is: .comment, in: text, as: "xml")
+		assertKind("&amp;", is: .punctuationSpecial, in: text, as: "xml")
+		assertKind("msg", is: .keyword, in: text, as: "xml")
+	}
+
+	/// CDATA payloads are verbatim: a bare `>` inside must not end the section.
+	func testXMLCDATAWithBareGreaterThan() {
+		let text = "<script><![CDATA[ if (a > b) { c(); } ]]></script>\n"
+		assertKind("<![CDATA[ if (a > b) { c(); } ]]>", is: .textLiteral, in: text, as: "xml")
+	}
+
+	func testXMLMultilineCDATA() {
+		let text = "<doc>\n<![CDATA[\nline one > still data\nline two\n]]>\n<tail/>\n</doc>\n"
+		let tokens = tokenize(text, as: "xml")
+		let nsText = text as NSString
+		let payload = nsText.range(of: "line one > still data")
+		XCTAssertTrue(
+			tokens.contains { $0.kind == .textLiteral && NSIntersectionRange($0.range, payload).length == payload.length },
+			"CDATA body must carry across lines as literal text"
+		)
+		// The section closes, so markup after it highlights normally again.
+		assertKind("tail", is: .keyword, in: text, as: "xml")
+	}
+
+	func testXMLIsRegisteredSeparatelyFromHTML() {
+		XCTAssertEqual(LanguageRegistry.canonicalID(for: "xml"), "xml")
+		XCTAssertEqual(LanguageRegistry.canonicalID(for: "html"), "html")
+		XCTAssertNotNil(LanguageRegistry.tokenizer(for: "xml"))
+	}
 }

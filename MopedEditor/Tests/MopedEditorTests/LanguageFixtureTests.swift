@@ -22,11 +22,11 @@ import XCTest
 @testable import MopedEditor
 
 final class LanguageFixtureTests: XCTestCase {
-	func testAllTwentyLanguagesRegistered() {
+	func testAllLanguagesRegistered() {
 		let expected = [
 			"bash", "c", "cpp", "cs", "css", "go", "html", "java", "javascript",
 			"json", "markdown", "php", "python", "ruby", "rust", "sql", "swift",
-			"toml", "typescript", "yaml"
+			"toml", "typescript", "xml", "yaml"
 		]
 		for name in expected {
 			XCTAssertNotNil(LanguageRegistry.tokenizer(for: name), "Missing tokenizer for \(name)")

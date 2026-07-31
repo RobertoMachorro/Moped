@@ -76,6 +76,21 @@ final class EditorIntegrationTests: XCTestCase {
 		XCTAssertEqual(color(at: text.range(of: "// note").location, in: textView), theme.color(for: .comment))
 	}
 
+	/// `.xml`, `.plist` and `.svg` files all resolve to the language name "xml" via
+	/// LanguagesUTI.plist; this is the path that used to render them plain.
+	func testHighlightsXMLDocument() {
+		let (_, textView) = makeEditor()
+		textView.language = "xml"
+		textView.setPlainText("<?xml version=\"1.0\"?>\n<plist version=\"1.0\">\n<key>a</key>\n</plist>\n")
+		drainHighlightPasses()
+
+		let text = textView.string as NSString
+		let theme = MopedTheme.defaultLight
+		XCTAssertEqual(color(at: text.range(of: "<?xml").location, in: textView), theme.color(for: .keyword))
+		XCTAssertEqual(color(at: text.range(of: "\"1.0\"").location, in: textView), theme.color(for: .string))
+		XCTAssertEqual(color(at: text.range(of: "key").location, in: textView), theme.color(for: .keyword))
+	}
+
 	func testPlainTextLanguageAppliesNoColors() {
 		let (_, textView) = makeEditor()
 		textView.language = "plaintext"

@@ -36,6 +36,8 @@ public enum LineState: Equatable, Sendable {
 	case htmlComment
 	/// HTML: inside a tag whose `>` hasn't been reached yet.
 	case htmlTag
+	/// XML: inside a `<![CDATA[ … ]]>` section.
+	case cdata
 	/// Outside the language's code region (PHP before `<?php` / after `?>`).
 	case rawOutside
 }

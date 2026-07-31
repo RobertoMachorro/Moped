@@ -35,7 +35,7 @@ public enum LanguageRegistry {
 
 	/// Canonical id for a language name, or nil when the name isn't highlighted.
 	private static let canonicalIDs: [String: String] = {
-		var map: [String: String] = ["markdown": "markdown", "html": "html"]
+		var map: [String: String] = ["markdown": "markdown", "html": "html", "xml": "xml"]
 		for alias in markdownAliases {
 			map[alias] = "markdown"
 		}
@@ -52,9 +52,12 @@ public enum LanguageRegistry {
 	}()
 
 	private static let tokenizers: [String: any LineTokenizer] = {
+		// XML shares the markup tokenizer with HTML but keeps its own id: the UTI
+		// table resolves .xml/.plist/.svg to "xml", and it is not HTML.
 		var map: [String: any LineTokenizer] = [
 			"markdown": MarkdownTokenizer(),
-			"html": HTMLTokenizer()
+			"html": HTMLTokenizer(),
+			"xml": HTMLTokenizer()
 		]
 		for definition in genericDefinitions {
 			map[definition.id] = GenericTokenizer(language: definition)

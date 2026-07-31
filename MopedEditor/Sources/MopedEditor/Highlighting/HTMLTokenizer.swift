@@ -20,13 +20,16 @@
 
 import Foundation
 
-/// HTML/XML-ish highlighter: tag names → `keyword`, attribute names →
-/// `variable.builtin`, attribute values → `string`, comments, doctype → `include`,
-/// entities → `punctuation.special`. `<script>`/`<style>` bodies render as plain
-/// text (no embedded-language highlighting).
+/// Markup highlighter, used for both HTML and XML: tag names → `keyword`,
+/// attribute names → `variable.builtin`, attribute values → `string`, comments,
+/// doctype → `include`, processing instructions → `keyword`, CDATA payloads →
+/// `text.literal`, entities → `punctuation.special`. `<script>`/`<style>` bodies
+/// render as plain text (no embedded-language highlighting).
 struct HTMLTokenizer: LineTokenizer {
 	private static let commentOpen: [UInt16] = Array("<!--".utf16)
 	private static let commentClose: [UInt16] = Array("-->".utf16)
+	private static let cdataOpen: [UInt16] = Array("<![CDATA[".utf16)
+	private static let cdataClose: [UInt16] = Array("]]>".utf16)
 	// swiftlint:disable:next force_try
 	private static let entityRegex = try! NSRegularExpression(pattern: "&#?[a-zA-Z0-9]{1,32};")
 
@@ -46,6 +49,11 @@ struct HTMLTokenizer: LineTokenizer {
 				return (tokens, carry)
 			}
 		}
+		if case .cdata = carryIn {
+			if let carry = continueCDATA(scanner: &scanner, tokens: &tokens, tokenStart: 0) {
+				return (tokens, carry)
+			}
+		}
 		if case .htmlTag = carryIn {
 			if let carry = scanTagAttributes(scanner: &scanner, tokens: &tokens) {
 				return (tokens, carry)
@@ -60,19 +68,7 @@ private extension HTMLTokenizer {
 		while !scanner.isAtEnd {
 			let unit = scanner.current
 			if unit == UnicodeScalars.lessThan {
-				if scanner.matches(Self.commentOpen) {
-					let start = scanner.pos
-					scanner.pos += Self.commentOpen.count
-					if let carry = continueComment(scanner: &scanner, tokens: &tokens, tokenStart: start) {
-						return (tokens, carry)
-					}
-					continue
-				}
-				if scanner.unit(at: scanner.pos + 1) == Self.bang {
-					scanDoctype(scanner: &scanner, tokens: &tokens)
-					continue
-				}
-				if let carry = scanTagOpen(scanner: &scanner, tokens: &tokens) {
+				if let carry = scanMarkupOpen(scanner: &scanner, tokens: &tokens) {
 					return (tokens, carry)
 				}
 				continue
@@ -88,6 +84,29 @@ private extension HTMLTokenizer {
 		return (tokens, .none)
 	}
 
+	/// Dispatches everything that can follow a `<`. Returns a carry state when the
+	/// construct runs past the end of the line, nil when scanning should continue.
+	func scanMarkupOpen(scanner: inout LineScanner, tokens: inout [Token]) -> LineState? {
+		if scanner.matches(Self.commentOpen) {
+			let start = scanner.pos
+			scanner.pos += Self.commentOpen.count
+			return continueComment(scanner: &scanner, tokens: &tokens, tokenStart: start)
+		}
+		if scanner.matches(Self.cdataOpen) {
+			let start = scanner.pos
+			scanner.pos += Self.cdataOpen.count
+			return continueCDATA(scanner: &scanner, tokens: &tokens, tokenStart: start)
+		}
+		if scanner.unit(at: scanner.pos + 1) == UnicodeScalars.questionMark {
+			return scanProcessingInstruction(scanner: &scanner, tokens: &tokens)
+		}
+		if scanner.unit(at: scanner.pos + 1) == Self.bang {
+			scanDoctype(scanner: &scanner, tokens: &tokens)
+			return nil
+		}
+		return scanTagOpen(scanner: &scanner, tokens: &tokens)
+	}
+
 	/// Returns the carry state when the comment is still open at EOL, nil when closed.
 	func continueComment(scanner: inout LineScanner, tokens: inout [Token], tokenStart: Int) -> LineState? {
 		while !scanner.isAtEnd {
@@ -100,6 +119,34 @@ private extension HTMLTokenizer {
 		}
 		appendToken(.comment, from: tokenStart, to: scanner.count, into: &tokens)
 		return .htmlComment
+	}
+
+	/// Returns the carry state when the section is still open at EOL, nil when closed.
+	func continueCDATA(scanner: inout LineScanner, tokens: inout [Token], tokenStart: Int) -> LineState? {
+		while !scanner.isAtEnd {
+			if scanner.matches(Self.cdataClose) {
+				scanner.pos += Self.cdataClose.count
+				appendToken(.textLiteral, from: tokenStart, to: scanner.pos, into: &tokens)
+				return nil
+			}
+			scanner.pos += 1
+		}
+		appendToken(.textLiteral, from: tokenStart, to: scanner.count, into: &tokens)
+		return .cdata
+	}
+
+	/// `<?xml … ?>` and friends. The target name is a keyword and the rest is scanned
+	/// as tag attributes, so quoted values light up; the closing `?` is skipped by
+	/// the attribute scanner, which stops on `>`.
+	func scanProcessingInstruction(scanner: inout LineScanner, tokens: inout [Token]) -> LineState? {
+		let start = scanner.pos
+		var nameEnd = start + 2
+		while nameEnd < scanner.count, isIdentifierContinueUnit(scanner.units[nameEnd]) || scanner.units[nameEnd] == 0x2D {
+			nameEnd += 1
+		}
+		appendToken(.keyword, from: start, to: nameEnd, into: &tokens)
+		scanner.pos = nameEnd
+		return scanTagAttributes(scanner: &scanner, tokens: &tokens)
 	}
 
 	func scanDoctype(scanner: inout LineScanner, tokens: inout [Token]) {

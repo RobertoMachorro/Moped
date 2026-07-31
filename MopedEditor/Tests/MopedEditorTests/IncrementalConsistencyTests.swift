@@ -55,7 +55,8 @@ final class IncrementalConsistencyTests: XCTestCase {
 
 	private let fragments = [
 		"\"", "\"\"\"", "/*", "*/", "//", "\n", "let x = 1\n", "`", "```\n", "#", "{", "}",
-		" ", "func f() {}", "\\(", ")", "end", "@attr", "<<~EOF\n", "?>", "<?php "
+		" ", "func f() {}", "\\(", ")", "end", "@attr", "<<~EOF\n", "?>", "<?php ",
+		"<?xml ", "<![CDATA[", "]]>", "<!--", "-->", "<tag ", "/>"
 	]
 
 	func testSwiftRandomEdits() {
@@ -74,6 +75,23 @@ final class IncrementalConsistencyTests: XCTestCase {
 	func testHTMLRandomEdits() {
 		let seedText = "<html>\n<!-- c -->\n<div class=\"a\"\n id=\"b\">text &amp; tail</div>\n</html>\n"
 		runRandomEdits(language: "html", seedText: seedText, seed: 3)
+	}
+
+	func testXMLRandomEdits() {
+		let seedText = """
+		<?xml version="1.0" encoding="UTF-8"?>
+		<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN">
+		<plist version="1.0">
+			<dict>
+				<key>a</key>
+				<string>b &amp; c</string>
+				<data><![CDATA[ raw > payload
+				second line ]]></data>
+			</dict>
+		</plist>
+
+		"""
+		runRandomEdits(language: "xml", seedText: seedText, seed: 17)
 	}
 
 	private func runRandomEdits(language: String, seedText: String, seed: UInt64, iterations: Int = 120) {

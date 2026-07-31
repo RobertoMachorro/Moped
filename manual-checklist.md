@@ -7,6 +7,7 @@
 - [ ] Type ``` in a Markdown file — no crash, fence contents render as literal text.
 - [ ] Switch language in the bottom picker (Swift → JSON → plaintext → Swift) — re‑colors instantly, no crash.
 - [ ] Open a JSON, Python, Bash, Markdown file — each shows highlighting.
+- [ ] Open an XML file, an `Info.plist`, and an `.svg` — the `<?xml … ?>` prolog, tag names, and quoted attribute values are all colored; a multiline `<![CDATA[ … ]]>` stays literal and markup after it highlights again.
 - [ ] Open a language with no definition yet (e.g. Dart, AutoHotkey) — shows plain, no crash.
 - [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document, in place, without the scroll position jumping.
 - [ ] Change font and font size in Preferences — propagates to the editor and to the gutter.
