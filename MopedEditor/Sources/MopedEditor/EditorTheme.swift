@@ -22,6 +22,13 @@ import AppKit
 
 /// Editor theme: window-chrome colors plus a token→color map keyed by `TokenKind`
 /// raw values.
+///
+/// `Sendable` holds here: AppKit declares `NSColor` as `Sendable`, and every colour
+/// a built-in theme carries is a plain sRGB component colour. None of them are
+/// catalog or dynamic system colours, which are the ones that would resolve lazily
+/// against the current appearance. Keep it that way if new themes are added — a
+/// theme built from `NSColor.controlAccentColor` and friends would reintroduce
+/// exactly that deferred resolution.
 public struct MopedTheme: Sendable {
 	public let name: String
 	public let background: NSColor
