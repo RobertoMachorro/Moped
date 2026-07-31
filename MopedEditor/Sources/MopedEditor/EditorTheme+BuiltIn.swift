@@ -1,7 +1,7 @@
 //
-//  MopedTheme.swift
+//  EditorTheme+BuiltIn.swift
 //
-//  Moped - A general purpose text editor, small and light.
+//  MopedEditor - The homegrown text editor core and syntax highlighter used by Moped.
 //  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
 //
 //	This program is free software: you can redistribute it and/or modify
@@ -19,87 +19,19 @@
 //
 
 import AppKit
-import STPluginNeon
-
-/// Editor theme: window-chrome colors plus a token→color map consumed by Plugin-Neon.
-struct MopedTheme {
-	let name: String
-	let background: NSColor
-	let foreground: NSColor
-	let gutterBackground: NSColor
-	let gutterForeground: NSColor
-	let selection: NSColor
-	let tokenColors: [String: NSColor]
-
-	/// Build the Plugin-Neon Theme using this Moped theme's colors. Every token kind is
-	/// mapped to `baseFont` so highlighted tokens track the editor's current font and size.
-	func neonTheme(baseFont: NSFont) -> STPluginNeon.Theme {
-		var colors = tokenColors
-		colors["plain"] = foreground
-		let fonts: [String: NSFont] = MopedTheme.tokenKinds.reduce(into: [:]) { partial, kind in
-			partial[kind] = baseFont
-		}
-		return STPluginNeon.Theme(
-			colors: STPluginNeon.Theme.Colors(colors: colors),
-			fonts: STPluginNeon.Theme.Fonts(fonts: fonts)
-		)
-	}
-
-	/// Token kinds Plugin-Neon's default initializer reads from the bundled asset catalog.
-	/// Listing them keeps our hand-built themes in sync with what Neon will look up.
-	static let tokenKinds: [String] = [
-		"plain", "boolean", "comment", "constructor", "function.call",
-		"include", "keyword", "keyword.function", "keyword.return", "method",
-		"number", "operator", "parameter", "punctuation.special", "string",
-		"text.literal", "text.title", "type", "variable.builtin", "variable"
-	]
-}
 
 extension MopedTheme {
-	static let allBuiltIn: [MopedTheme] = [
+	public static let allBuiltIn: [MopedTheme] = [
 		.defaultLight, .defaultDark, .xcodeLike, .solarizedLight, .solarizedDark
 	]
 
-	static let allNames: [String] = allBuiltIn.map(\.name)
+	public static let allNames: [String] = allBuiltIn.map(\.name)
 
-	static let defaultName: String = defaultLight.name
-
-	/// Look up a theme by name, resolving legacy Highlightr theme strings to the closest
-	/// built-in. Returns the default theme when nothing matches so existing preferences
-	/// don't reset users on first launch.
-	static func named(_ name: String) -> MopedTheme {
-		let key = name.lowercased()
-		if let direct = allBuiltIn.first(where: { $0.name.lowercased() == key }) {
-			return direct
-		}
-		if let aliasName = legacyAliases[key],
-		   let aliased = allBuiltIn.first(where: { $0.name == aliasName }) {
-			return aliased
-		}
-		return defaultLight
-	}
-
-	private static let legacyAliases: [String: String] = [
-		"xcode": xcodeLike.name,
-		"default": defaultLight.name,
-		"github": defaultLight.name,
-		"github-gist": defaultLight.name,
-		"vs": defaultLight.name,
-		"atom-one-light": defaultLight.name,
-		"solarized-light": solarizedLight.name,
-		"solarized": solarizedLight.name,
-		"solarized-dark": solarizedDark.name,
-		"monokai": defaultDark.name,
-		"monokai-sublime": defaultDark.name,
-		"dracula": defaultDark.name,
-		"tomorrow-night": defaultDark.name,
-		"atom-one-dark": defaultDark.name,
-		"agate": defaultDark.name
-	]
+	public static let defaultName: String = defaultLight.name
 }
 
 extension MopedTheme {
-	static let defaultLight = MopedTheme(
+	public static let defaultLight = MopedTheme(
 		name: "Default Light",
 		background: NSColor(srgbRed: 1.00, green: 1.00, blue: 1.00, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.12, green: 0.12, blue: 0.12, alpha: 1.0),
@@ -129,7 +61,7 @@ extension MopedTheme {
 		]
 	)
 
-	static let defaultDark = MopedTheme(
+	public static let defaultDark = MopedTheme(
 		name: "Default Dark",
 		background: NSColor(srgbRed: 0.12, green: 0.13, blue: 0.16, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.92, green: 0.92, blue: 0.93, alpha: 1.0),
@@ -159,7 +91,7 @@ extension MopedTheme {
 		]
 	)
 
-	static let xcodeLike = MopedTheme(
+	public static let xcodeLike = MopedTheme(
 		name: "Xcode-like",
 		background: NSColor(srgbRed: 1.00, green: 1.00, blue: 1.00, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.00, green: 0.00, blue: 0.00, alpha: 1.0),
@@ -189,7 +121,7 @@ extension MopedTheme {
 		]
 	)
 
-	static let solarizedLight = MopedTheme(
+	public static let solarizedLight = MopedTheme(
 		name: "Solarized Light",
 		background: NSColor(srgbRed: 0.99, green: 0.96, blue: 0.89, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.40, green: 0.48, blue: 0.51, alpha: 1.0),
@@ -219,7 +151,7 @@ extension MopedTheme {
 		]
 	)
 
-	static let solarizedDark = MopedTheme(
+	public static let solarizedDark = MopedTheme(
 		name: "Solarized Dark",
 		background: NSColor(srgbRed: 0.00, green: 0.17, blue: 0.21, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.51, green: 0.58, blue: 0.59, alpha: 1.0),

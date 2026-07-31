@@ -24,9 +24,8 @@
 		A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000229 /* FileWatcher.swift */; };
 		B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000902 /* Localizable.xcstrings */; };
 		B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000911 /* LanguageComments.plist */; };
-		ABCDEF0000000000000000A5 /* STTextView in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000A3 /* STTextView */; };
-		ABCDEF0000000000000000A6 /* STTextView-Plugin-Neon in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */; };
-		ABCDEF0000000000000000B1 /* MopedTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B0 /* MopedTheme.swift */; };
+		ABCDEF0000000000000000C3 /* MopedEditor in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000C2 /* MopedEditor */; };
+		ABCDEF0000000000000000B1 /* ThemeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B0 /* ThemeCatalog.swift */; };
 		ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B2 /* LanguageCatalog.swift */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
 		E990B6F1230A38930010CF5D /* TextFileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E990B6F0230A38930010CF5D /* TextFileModel.swift */; };
@@ -95,7 +94,7 @@
 		F0A1B2C3D4E5000000000033 /* moped-wait */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "moped-wait"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MopedCLI.entitlements; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000050 /* Resources/moped */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Resources/moped; sourceTree = "<group>"; };
-		ABCDEF0000000000000000B0 /* MopedTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedTheme.swift; sourceTree = "<group>"; };
+		ABCDEF0000000000000000B0 /* ThemeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCatalog.swift; sourceTree = "<group>"; };
 		ABCDEF0000000000000000B2 /* LanguageCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,8 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABCDEF0000000000000000A5 /* STTextView in Frameworks */,
-				ABCDEF0000000000000000A6 /* STTextView-Plugin-Neon in Frameworks */,
+				ABCDEF0000000000000000C3 /* MopedEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +149,7 @@
 				A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */,
 				A1B2C3D4E500000000000228 /* Moped-Bridging-Header.h */,
 				A1B2C3D4E500000000000229 /* FileWatcher.swift */,
-				ABCDEF0000000000000000B0 /* MopedTheme.swift */,
+				ABCDEF0000000000000000B0 /* ThemeCatalog.swift */,
 				ABCDEF0000000000000000B2 /* LanguageCatalog.swift */,				A1B2C3D4E500000000000114 /* AboutView.swift */,
 				A1B2C3D4E500000000000112 /* EditorView.swift */,
 				A1B2C3D4E500000000000110 /* EditorState.swift */,
@@ -200,8 +198,7 @@
 			);
 			name = Moped;
 			packageProductDependencies = (
-				ABCDEF0000000000000000A3 /* STTextView */,
-				ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */,
+				ABCDEF0000000000000000C2 /* MopedEditor */,
 			);
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
@@ -271,9 +268,7 @@
 			);
 			mainGroup = E9D042002300A9FE00382715;
 			packageReferences = (
-				ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */,
-				ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */,
-				ABCDEF0000000000000000A7 /* XCRemoteSwiftPackageReference "Neon" */,
+				ABCDEF0000000000000000C1 /* XCLocalSwiftPackageReference "MopedEditor" */,
 			);
 			productRefGroup = E9D0420A2300A9FE00382715 /* Products */;
 			projectDirPath = "";
@@ -312,7 +307,7 @@
 				A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */,
 				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
 				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
-				ABCDEF0000000000000000B1 /* MopedTheme.swift in Sources */,
+				ABCDEF0000000000000000B1 /* ThemeCatalog.swift in Sources */,
 				ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */,				A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */,
 				A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */,
 				A1B2C3D4E500000000000122 /* MopedCommands.swift in Sources */,
@@ -613,43 +608,17 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/STTextView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.10;
-			};
+/* Begin XCLocalSwiftPackageReference section */
+		ABCDEF0000000000000000C1 /* XCLocalSwiftPackageReference "MopedEditor" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MopedEditor;
 		};
-		ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RobertoMachorro/STTextView-Plugin-Neon";
-			requirement = {
-				kind = revision;
-				revision = 5a3a072370ca7f522fe8c5025b675e90ad5a7476;
-			};
-		};
-		ABCDEF0000000000000000A7 /* XCRemoteSwiftPackageReference "Neon" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kylemacomber/Neon";
-			requirement = {
-				kind = revision;
-				revision = ce8d252;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		ABCDEF0000000000000000A3 /* STTextView */ = {
+		ABCDEF0000000000000000C2 /* MopedEditor */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ABCDEF0000000000000000A1 /* XCRemoteSwiftPackageReference "STTextView" */;
-			productName = STTextView;
-		};
-		ABCDEF0000000000000000A4 /* STTextView-Plugin-Neon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ABCDEF0000000000000000A2 /* XCRemoteSwiftPackageReference "STTextView-Plugin-Neon" */;
-			productName = "STTextView-Plugin-Neon";
+			productName = MopedEditor;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
