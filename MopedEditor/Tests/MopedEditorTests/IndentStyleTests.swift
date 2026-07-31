@@ -27,12 +27,59 @@ final class IndentStyleTests: XCTestCase {
 		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .fourSpaces), .hardTab)
 	}
 
-	/// Ported behavior: candidate widths are scored by how many indent depths they
-	/// divide, and the smallest winner takes ties. Every 4-space depth is also a
-	/// multiple of 2, so a 4-space document is reported as 2-space.
-	func testFourSpaceDocumentIsReportedAsTwo() {
+	func testDetectsFourSpaces() {
 		let text = "def a():\n    x = 1\n    if x:\n        return x\n"
+		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .tab), .softSpaces(4))
+	}
+
+	func testDetectsEightSpaces() {
+		let text = "int main(void)\n{\n        int x = 1;\n        if (x) {\n                return x;\n        }\n}\n"
+		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .tab), .softSpaces(8))
+	}
+
+	/// A wrapped argument aligned to a paren adds an off-grid depth. One stray line
+	/// must not drag a 4-space document back down to 2.
+	func testStrayAlignmentLineDoesNotDefeatFourSpaces() {
+		let text = """
+		def a():
+		    x = 1
+		    y = 2
+		    z = 3
+		    if x:
+		        return call(x,
+		      y)
+		        pass
+		    done = 1
+		    more = 2
+
+		"""
+		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .tab), .softSpaces(4))
+	}
+
+	/// Depths that are mostly multiples of 4 still mean 2-space when genuine
+	/// depth-2 lines are present in numbers.
+	func testTwoSpaceDocumentWithDeepNestingStaysTwo() {
+		let text = """
+		function a() {
+		  if (x) {
+		    go();
+		    go();
+		  }
+		  if (y) {
+		    stop();
+		    stop();
+		  }
+		}
+
+		"""
 		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .tab), .softSpaces(2))
+	}
+
+	/// When no candidate width divides any depth, fall back to the shallowest
+	/// indent so odd widths still work.
+	func testAllOddDepthsUseShallowestIndent() {
+		let text = "def a():\n   x = 1\n   if x:\n         deep = 1\n"
+		XCTAssertEqual(MopedTextView.indentStyle(of: text, whenUndetectable: .tab), .softSpaces(3))
 	}
 
 	func testDetectsTwoSpaces() {

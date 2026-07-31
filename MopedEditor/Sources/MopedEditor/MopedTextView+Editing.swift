@@ -323,27 +323,30 @@ extension MopedTextView {
 		return count
 	}
 
+	private static let candidateSoftTabWidths = [2, 4, 8]
+
+	/// Infers the indent width from how many indented lines each candidate width
+	/// divides evenly.
 	private static func inferredSoftTabWidth(from counts: [Int: Int]) -> Int? {
 		guard !counts.isEmpty else {
 			return nil
 		}
-		var bestWidth: Int?
-		var bestScore = -1
 
-		for width in [2, 4, 8] {
-			var score = 0
-			for (leadingSpaces, count) in counts where leadingSpaces % width == 0 {
-				score += count
-			}
-			if score > bestScore {
-				bestScore = score
-				bestWidth = width
-			}
+		let scores = candidateSoftTabWidths.map { width in
+			(width: width, score: counts.reduce(0) { $1.key % width == 0 ? $0 + $1.value : $0 })
 		}
-
-		if bestScore <= 0 {
+		let bestScore = scores.map(\.score).max() ?? 0
+		guard bestScore > 0 else {
+			// Nothing divides cleanly (a 3-space document, say) — trust the shallowest indent.
 			return counts.keys.min()
 		}
-		return bestWidth
+
+		// Every depth divisible by 4 is also divisible by 2, so a narrower width can
+		// never score lower and would win every tie — which is why 4 and 8 used to be
+		// unreachable. Prefer the widest width that still accounts for most of the
+		// indented lines. The slack absorbs continuation lines aligned to a bracket;
+		// a genuine 2-space document has far more than a fifth of its lines at an
+		// odd multiple of 2, so it stays on 2.
+		return scores.filter { $0.score * 5 >= bestScore * 4 }.map(\.width).max()
 	}
 }

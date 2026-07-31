@@ -227,6 +227,50 @@ final class EditorIntegrationTests: XCTestCase {
 		XCTAssertEqual(textView.string, "plain line\n")
 	}
 
+	/// The reported symptom: Tab inserted 2 spaces in a 4-space-indented document
+	/// because the width could never be inferred as 4.
+	func testTabInsertsFourSpacesInFourSpaceDocument() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("def a():\n    x = 1\n    if x:\n        return x\n")
+		// Caret at the start of the (empty) last line.
+		textView.setSelectedRange(NSRange(location: (textView.string as NSString).length, length: 0))
+
+		textView.insertTab(nil)
+
+		XCTAssertTrue(
+			textView.string.hasSuffix("\n    "),
+			"Expected a 4-space indent, got \(textView.string.suffix(8).debugDescription)"
+		)
+	}
+
+	func testTabInsertsTwoSpacesInTwoSpaceDocument() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("function a() {\n  if (x) {\n    go();\n  }\n}\n")
+		textView.setSelectedRange(NSRange(location: (textView.string as NSString).length, length: 0))
+
+		textView.insertTab(nil)
+
+		XCTAssertTrue(
+			textView.string.hasSuffix("\n  "),
+			"Expected a 2-space indent, got \(textView.string.suffix(8).debugDescription)"
+		)
+	}
+
+	func testOutdentRemovesFourSpacesInFourSpaceDocument() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("def a():\n    x = 1\n        y = 2\n")
+		let nsText = textView.string as NSString
+		let lastLine = nsText.range(of: "        y = 2")
+		textView.setSelectedRange(lastLine)
+
+		textView.adjustIndentation(false)
+
+		XCTAssertTrue(
+			textView.string.hasSuffix("\n    y = 2\n"),
+			"Expected one 4-space level removed, got \(textView.string.debugDescription)"
+		)
+	}
+
 	func testIndentAndOutdentSelection() {
 		let (_, textView) = makeEditor()
 		textView.setPlainText("\ta = 1\n\tb = 2\n")
