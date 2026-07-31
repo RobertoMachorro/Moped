@@ -31,7 +31,7 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 ## Features
 
-* **Syntax highlighting** — powered by [Highlightr](https://github.com/raspu/Highlightr), supporting dozens of languages with switchable themes
+* **Syntax highlighting** — homegrown, with about twenty languages and switchable themes
 * **Line numbers** — toggleable gutter ruler
 * **Word wrap** — configurable per preference
 * **Auto-indentation** — configurable default: tab, 2 spaces, or 4 spaces
@@ -39,7 +39,7 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 * **Find & Replace** — system find bar with full regex support (⌘F / ⌘⌥F)
 * **Jump to Line** — ⌘L dialog that pre-fills the current line
 * **Font & size** — any system font, sizes 9–24, with in-window zoom (⌘+ / ⌘− / ⌘0)
-* **Print** — syntax-aware print view with standard page margins
+* **Print** — monospace print view with standard page margins
 * **External change detection** — watches the file on disk and prompts to reload when another app modifies it
 * **Large file mode** — gracefully disables syntax highlighting for very large files to keep the editor responsive
 * **Launch behavior** — open with a file dialog or start with a blank editor
@@ -63,7 +63,7 @@ While you can install the best text editors on your macOS system ([BBEdit](https
 
 ## Manifesto - Developers
 
-*Moped* intends to be a showcase application and reference for a Document-Based Application built with Swift, SwiftUI, and AppKit. The project deliberately avoids third-party UI frameworks and keeps its dependency footprint small — [Highlightr](https://github.com/raspu/Highlightr) for syntax highlighting is the main external dependency.
+*Moped* intends to be a showcase application and reference for a Document-Based Application built with Swift, SwiftUI, and AppKit. The project deliberately avoids third-party UI frameworks and has no external dependencies at all: the editor core and syntax highlighter live in `MopedEditor`, a local Swift package in this repository that is deliberately kept free of any app-specific types so it could be split out on its own.
 
 If you scroll through the commit history you can see how the pieces fit together. Please check the *Resources* section for references and links.
 
