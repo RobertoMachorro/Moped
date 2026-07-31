@@ -125,6 +125,11 @@ final class EditorState: NSObject, ObservableObject {
 
 	func replaceContent(with content: String) {
 		duringViewUpdate {
+			// An external reload can cross the large-file threshold in either direction,
+			// and `makeEditor` only ever set this once.
+			if let model {
+				textView?.isHighlightingEnabled = !model.isLargeFile
+			}
 			textView?.setPlainText(content)
 		}
 	}

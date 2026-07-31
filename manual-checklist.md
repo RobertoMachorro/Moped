@@ -22,6 +22,10 @@
 - [ ] Word wrap on/off — reflows correctly, with and without the gutter visible.
 - [ ] Show/hide line number gutter — gutter appears/disappears and reclaims its space.
 - [ ] Large file (>256 KB) — opens without locking up and stays responsive while typing; highlighting is off.
+- [ ] 2 MB file — opens (was refused before the 4 MB limit) and stays responsive while typing.
+- [ ] File over 4 MB — refused with Moped's own alert naming the limit and the file's size, not the system default.
+- [ ] File grows past 4 MB on disk, then Reload — refused with the same message; the open buffer is left untouched.
+- [ ] File grows past 256 KB on disk, then Reload — reloads and highlighting switches off.
 - [ ] Save, close, reopen — content round‑trips through TextFileModel.
 - [ ] External file change → reload alert → reload — still works.
 - [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).

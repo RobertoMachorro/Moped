@@ -70,6 +70,17 @@ struct EditorView: View {
 		} message: {
 			Text("alert.file_changed.message")
 		}
+		.alert(
+			"error.file_too_large.description",
+			isPresented: Binding(
+				get: { document.reloadFailure != nil },
+				set: { if !$0 { document.reloadFailure = nil } }
+			)
+		) {
+			Button("alert.reload_refused.button_ok", role: .cancel) { document.reloadFailure = nil }
+		} message: {
+			Text(document.reloadFailure ?? "")
+		}
 	}
 
 	private var languageBinding: Binding<String> {

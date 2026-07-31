@@ -23,12 +23,38 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
-	/// Maximum file size in bytes (1 MB) to prevent performance issues or crashes
-	private static let maxFileLength = 1_048_576
-	/// Threshold at which we start treating a file as "large" (256 KB = 1/4 of `maxFileLength`).
-	/// Used to disable or simplify expensive features (e.g. syntax highlighting) for better responsiveness,
-	/// based on empirical performance testing with typical project files.
+	/// Largest file Moped will open. Benchmarked against the real editor: at this size
+	/// a keystroke plus the frame that follows costs ~45 ms with the line-number gutter
+	/// visible, still inside the ~100 ms "feels instant" budget. Cost grows linearly with
+	/// document size beyond this (~112 ms at 16 MB), because the gutter rebuilds its
+	/// line-start array on every redraw that follows an edit.
+	private static let maxFileLength = 4_194_304 // 4 MB
+	/// Threshold at which we start treating a file as "large" and turn off expensive
+	/// features (currently syntax highlighting). Measured independently of `maxFileLength`:
+	/// highlighting a whole document costs ~51 ms here, ~203 ms at 1 MB and ~821 ms at 4 MB,
+	/// so this is the point where it stops being free.
 	private static let largeFileThreshold = 262_144 // 256 KB
+
+	/// Rejection for a file past `maxFileLength`. Keeps the `.fileReadTooLarge` domain and
+	/// code so existing error handling still matches, but carries Moped's own wording.
+	/// Sizes are formatted rather than hardcoded so the strings survive a limit change.
+	private static func fileTooLargeError(actualBytes: Int) -> Error {
+		CocoaError(.fileReadTooLarge, userInfo: [
+			NSLocalizedDescriptionKey: String(localized: "error.file_too_large.description"),
+			NSLocalizedRecoverySuggestionErrorKey: fileTooLargeRecoverySuggestion(actualBytes: actualBytes)
+		])
+	}
+
+	/// The limit is a power of two, so it needs `.memory` to read as a round "4 MB";
+	/// `.file` is decimal and would render it "4.2 MB". The file's own size stays on
+	/// `.file` so the number matches what the Finder shows for the same file.
+	private static func fileTooLargeRecoverySuggestion(actualBytes: Int) -> String {
+		String(
+			format: String(localized: "error.file_too_large.recovery_format"),
+			Int64(maxFileLength).formatted(.byteCount(style: .memory)),
+			Int64(actualBytes).formatted(.byteCount(style: .file))
+		)
+	}
 
 	static var readableContentTypes: [UTType] = {
 		var types: [UTType] = [
@@ -69,6 +95,9 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 
 	@Published var hasExternalChange = false
 
+	/// Set when a reload was refused; drives the alert in `EditorView`.
+	@Published var reloadFailure: String?
+
 	var fileURL: URL? {
 		didSet {
 			guard oldValue != fileURL else { return }
@@ -89,6 +118,17 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	func reloadFromDisk() {
 		guard let url = fileURL,
 			  let data = try? Data(contentsOf: url) else { return }
+
+		// The file can have grown past the limit since it was opened. Keep what is in
+		// memory and say why, rather than reloading unbounded or failing silently.
+		guard data.count <= MopedDocument.maxFileLength else {
+			reloadFailure = MopedDocument.fileTooLargeRecoverySuggestion(actualBytes: data.count)
+			hasExternalChange = false
+			suppressWatchUntil = Date().addingTimeInterval(2.0)
+			return
+		}
+
+		model.isLargeFile = data.count > MopedDocument.largeFileThreshold
 		model.isForceReload = true
 		model.read(from: data, ofType: model.docTypeName)
 		hasExternalChange = false
@@ -122,7 +162,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 
 		if data.count > MopedDocument.maxFileLength {
-			throw CocoaError(.fileReadTooLarge)
+			throw MopedDocument.fileTooLargeError(actualBytes: data.count)
 		}
 
 		model.read(from: data, ofType: configuration.contentType.identifier)
