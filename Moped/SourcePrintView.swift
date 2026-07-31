@@ -60,6 +60,7 @@ final class SourcePrintView: NSView {
 		super.init(frame: NSRect(x: 0, y: 0, width: printableWidth, height: totalHeight))
 	}
 
+	@available(*, unavailable)
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}

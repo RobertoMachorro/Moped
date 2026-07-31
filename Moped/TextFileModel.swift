@@ -39,30 +39,40 @@ class TextFileModel: NSObject, ObservableObject {
 }
 
 extension TextFileModel {
-	func read(from data: Data, ofType typeName: String) {
-		docTypeName = typeName
-		docTypeLanguage = getLanguageForType(typeName: docTypeName)
+	/// Rejection for data no encoding could decode. Throwing rather than substituting
+	/// placeholder text is deliberate: a placeholder leaves an editable document whose
+	/// next save would write the placeholder over the user's file.
+	static func unknownEncodingError() -> Error {
+		CocoaError(.fileReadUnknownStringEncoding, userInfo: [
+			NSLocalizedDescriptionKey: String(localized: "error.file_unknown_encoding.description")
+		])
+	}
 
+	func read(from data: Data, ofType typeName: String) throws {
 		var convertedString: NSString?
 		let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
 
+		let decoded: (text: String, encoding: String.Encoding)
 		if let convertedString = convertedString as String? {
 			// Auto Detected Encoding
-			self.content = convertedString
-			self.encoding = .init(rawValue: encodingRaw)
+			decoded = (convertedString, .init(rawValue: encodingRaw))
 			// Otherwise start guessing...
 		} else if let text = String(data: data, encoding: .utf8) {
-			content = text
-			encoding = .utf8
+			decoded = (text, .utf8)
 		} else if let text = String(data: data, encoding: .macOSRoman) {
-			content = text
-			encoding = .macOSRoman
+			decoded = (text, .macOSRoman)
 		} else if let text = String(data: data, encoding: .ascii) {
-			content = text
-			encoding = .ascii
+			decoded = (text, .ascii)
 		} else {
-			content = "** UNRECOGNIZED FILE **"
+			// Nothing is mutated on this path, so a failed reload leaves the open
+			// buffer exactly as it was.
+			throw Self.unknownEncodingError()
 		}
+
+		docTypeName = typeName
+		docTypeLanguage = getLanguageForType(typeName: docTypeName)
+		content = decoded.text
+		encoding = decoded.encoding
 		programmaticChangeID &+= 1
 	}
 

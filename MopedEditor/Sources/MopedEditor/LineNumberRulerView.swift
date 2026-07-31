@@ -104,8 +104,8 @@ final class LineNumberRulerView: NSRulerView {
 		let visibleChars = layoutManager.characterRange(forGlyphRange: visibleGlyphs, actualGlyphRange: nil)
 
 		let starts = currentLineStarts(for: content)
-		let caretLine = lineIndex(containing: textView.selectedRange().location, in: starts)
-		var index = lineIndex(containing: visibleChars.location, in: starts)
+		let caretLine = LineIndex.index(containing: textView.selectedRange().location, in: starts)
+		var index = LineIndex.index(containing: visibleChars.location, in: starts)
 		let inset = textView.textContainerInset.height
 
 		while index < starts.count, starts[index] <= NSMaxRange(visibleChars) {
@@ -142,9 +142,12 @@ final class LineNumberRulerView: NSRulerView {
 
 	// MARK: Line bookkeeping
 
+	/// Rebuilds the whole offset array whenever the text changed. Splicing it the way
+	/// `LineStore.noteEdit` does would make this proportional to the edit rather than
+	/// the document; that rewrite is why editing cost still grows with file size.
 	private func currentLineStarts(for content: NSString) -> [Int] {
 		if lineStartsAreStale {
-			lineStarts = Self.computeLineStarts(of: content)
+			lineStarts = LineIndex.lineStarts(of: content)
 			lineStartsAreStale = false
 			updateThickness(forLineCount: lineStarts.count)
 		}
@@ -157,38 +160,5 @@ final class LineNumberRulerView: NSRulerView {
 		if abs(thickness - ruleThickness) > 0.5 {
 			ruleThickness = thickness
 		}
-	}
-
-	private static func computeLineStarts(of text: NSString) -> [Int] {
-		var starts: [Int] = [0]
-		var location = 0
-		while location < text.length {
-			var lineStart = 0
-			var lineEnd = 0
-			var contentsEnd = 0
-			text.getLineStart(
-				&lineStart, end: &lineEnd, contentsEnd: &contentsEnd,
-				for: NSRange(location: location, length: 0)
-			)
-			if lineEnd < text.length {
-				starts.append(lineEnd)
-			}
-			location = lineEnd
-		}
-		return starts
-	}
-
-	private func lineIndex(containing location: Int, in starts: [Int]) -> Int {
-		var low = 0
-		var high = starts.count - 1
-		while low < high {
-			let mid = (low + high + 1) / 2
-			if starts[mid] <= location {
-				low = mid
-			} else {
-				high = mid - 1
-			}
-		}
-		return low
 	}
 }

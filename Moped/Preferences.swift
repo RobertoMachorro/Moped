@@ -26,6 +26,12 @@ struct RestoredDocument: Codable {
 	let frame: String?
 }
 
+extension Notification.Name {
+	/// Posted by `Preferences` on every write. `EditorState` re-reads the editor
+	/// settings; `AppDelegate` re-applies the app icon.
+	static let preferencesChanged = Notification.Name("PreferencesChanged")
+}
+
 class Preferences: NSObject, ObservableObject {
 	enum DefaultIndentation: String, CaseIterable {
 		case tab
@@ -40,6 +46,25 @@ class Preferences: NSObject, ObservableObject {
 		case red = "Red"
 		case rainbow = "Rainbow"
 		case beige = "Beige"
+
+		/// Display name for the preferences picker. `rawValue` stays the stored
+		/// preference value, so translating these never invalidates a saved setting.
+		var localizedLabel: String {
+			switch self {
+			case .defaultIcon:
+				return String(localized: "option.icon.default")
+			case .pink:
+				return String(localized: "option.icon.pink")
+			case .black:
+				return String(localized: "option.icon.black")
+			case .red:
+				return String(localized: "option.icon.red")
+			case .rainbow:
+				return String(localized: "option.icon.rainbow")
+			case .beige:
+				return String(localized: "option.icon.beige")
+			}
+		}
 
 		var appIconSetName: String {
 			switch self {
@@ -167,11 +192,14 @@ class Preferences: NSObject, ObservableObject {
 
 	// MARK: - UserDefaults Helpers
 
+	/// The stored value is always one of the plain integer strings the preferences
+	/// picker offers, so a locale-aware `NumberFormatter` buys nothing here. The
+	/// fallback matches the `fontSize` default rather than the low end of the range.
 	var fontSizeFloat: CGFloat {
-		guard let number = NumberFormatter().number(from: fontSize) else {
-			return CGFloat(9)
+		guard let size = Double(fontSize) else {
+			return 13
 		}
-		return CGFloat(truncating: number)
+		return CGFloat(size)
 	}
 
 	var openEmptyOnLaunch: Bool {
@@ -215,6 +243,6 @@ class Preferences: NSObject, ObservableObject {
 	func setStringValue(forKey key: String, to value: String) {
 		objectWillChange.send()
 		UserDefaults.standard.set(value, forKey: key)
-		NotificationCenter.default.post(name: Notification.Name(rawValue: "PreferencesChanged"), object: nil)
+		NotificationCenter.default.post(name: .preferencesChanged, object: nil)
 	}
 }

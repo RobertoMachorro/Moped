@@ -106,7 +106,10 @@ extension MopedTextView {
 		return result
 	}
 
-	private func splitBlockIntoLines(_ block: String) -> [(content: String, ending: String)] {
+	/// Splits a block into lines paired with their exact terminators, so a rewrite can
+	/// reassemble it without normalizing `\r\n` or losing a missing final newline.
+	/// Shared with `transformLines` in `MopedTextView+Editing`.
+	func splitBlockIntoLines(_ block: String) -> [(content: String, ending: String)] {
 		let blockText = block as NSString
 		let blockRange = NSRange(location: 0, length: blockText.length)
 		var result: [(content: String, ending: String)] = []

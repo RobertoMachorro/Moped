@@ -228,10 +228,3 @@ private extension GenericTokenizer {
 		return false
 	}
 }
-
-func appendToken(_ kind: TokenKind, from location: Int, length: Int, into tokens: inout [Token]) {
-	guard length > 0 else {
-		return
-	}
-	tokens.append(Token(kind: kind, range: NSRange(location: location, length: length)))
-}

@@ -34,6 +34,9 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	/// highlighting a whole document costs ~51 ms here, ~203 ms at 1 MB and ~821 ms at 4 MB,
 	/// so this is the point where it stops being free.
 	private static let largeFileThreshold = 262_144 // 256 KB
+	/// How long the file watcher stays muted after Moped itself touches the file, so
+	/// our own write doesn't come back as an "external change".
+	private static let watchSuppressionInterval: TimeInterval = 2.0
 
 	/// Rejection for a file past `maxFileLength`. Keeps the `.fileReadTooLarge` domain and
 	/// code so existing error handling still matches, but carries Moped's own wording.
@@ -56,7 +59,12 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		)
 	}
 
-	static var readableContentTypes: [UTType] = {
+	/// `ReferenceFileDocument` declares this as a `var`, but the list never changes —
+	/// it is derived once from `LanguagesUTI.plist`. Keeping the storage immutable
+	/// avoids a mutable ~110-entry global.
+	static var readableContentTypes: [UTType] { allReadableContentTypes }
+
+	private static let allReadableContentTypes: [UTType] = {
 		var types: [UTType] = [
 			.plainText,
 			.text,
@@ -122,17 +130,33 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		// The file can have grown past the limit since it was opened. Keep what is in
 		// memory and say why, rather than reloading unbounded or failing silently.
 		guard data.count <= MopedDocument.maxFileLength else {
-			reloadFailure = MopedDocument.fileTooLargeRecoverySuggestion(actualBytes: data.count)
-			hasExternalChange = false
-			suppressWatchUntil = Date().addingTimeInterval(2.0)
+			refuseReload(because: MopedDocument.fileTooLargeRecoverySuggestion(actualBytes: data.count))
 			return
 		}
 
+		let previousIsLargeFile = model.isLargeFile
 		model.isLargeFile = data.count > MopedDocument.largeFileThreshold
 		model.isForceReload = true
-		model.read(from: data, ofType: model.docTypeName)
+		do {
+			try model.read(from: data, ofType: model.docTypeName)
+		} catch {
+			// The file was replaced on disk by something Moped can't decode. Put the
+			// large-file flag back and keep the open buffer.
+			model.isLargeFile = previousIsLargeFile
+			model.isForceReload = false
+			refuseReload(because: error.localizedDescription)
+			return
+		}
 		hasExternalChange = false
-		suppressWatchUntil = Date().addingTimeInterval(2.0)
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
+	}
+
+	/// Leaves the in-memory document untouched, tells the user why, and mutes the
+	/// watcher briefly so the same event doesn't re-prompt immediately.
+	private func refuseReload(because reason: String) {
+		reloadFailure = reason
+		hasExternalChange = false
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
 	}
 
 	init(content: String = "") {
@@ -153,10 +177,6 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			typeLanguage: "plaintext"
 		)
 
-		if let data = configuration.file.regularFileContents {
-			model.isLargeFile = data.count > MopedDocument.largeFileThreshold
-		}
-
 		guard let data = configuration.file.regularFileContents else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
@@ -165,7 +185,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			throw MopedDocument.fileTooLargeError(actualBytes: data.count)
 		}
 
-		model.read(from: data, ofType: configuration.contentType.identifier)
+		model.isLargeFile = data.count > MopedDocument.largeFileThreshold
+		try model.read(from: data, ofType: configuration.contentType.identifier)
 		setupModelObservation()
 	}
 
@@ -197,7 +218,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			throw CocoaError(.fileWriteUnknown)
 		}
 
-		suppressWatchUntil = Date().addingTimeInterval(2.0)
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
 		return .init(regularFileWithContents: data)
 	}
 

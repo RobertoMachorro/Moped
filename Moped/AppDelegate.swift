@@ -67,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func startObservingPreferenceChanges() {
 		preferencesObserver = NotificationCenter.default.addObserver(
-			forName: Notification.Name(rawValue: "PreferencesChanged"),
+			forName: .preferencesChanged,
 			object: nil,
 			queue: .main
 		) { [weak self] _ in

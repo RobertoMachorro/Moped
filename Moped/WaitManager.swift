@@ -67,12 +67,6 @@ final class WaitManager: NSObject {
 		)
 	}
 
-	func handleDocumentClosePath(_ path: String) {
-		stateQueue.async { [weak self] in
-			self?.removePendingPathLocked(path)
-		}
-	}
-
 	@objc private func waitRequestReceived(_ notification: Notification) {
 		guard let userInfo = notification.userInfo,
 			let sessionID = userInfo[CLIConstants.sessionIDKey] as? String,
@@ -255,15 +249,14 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func appWillTerminate(_ notification: Notification) {
-		stateQueue.async { [weak self] in
-			guard let self = self else {
-				return
+		// Synchronous on purpose: an `async` hop here loses the race with process exit,
+		// so waiting `moped --wait` clients never see their completion notification and
+		// have to fall back to polling.
+		stateQueue.sync {
+			for sessionID in sessions.keys {
+				completeSessionLocked(sessionID)
 			}
-
-			for sessionID in self.sessions.keys {
-				self.completeSessionLocked(sessionID)
-			}
-			self.sessions.removeAll()
+			sessions.removeAll()
 		}
 	}
 
