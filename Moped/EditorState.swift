@@ -33,6 +33,15 @@ final class EditorState: NSObject, ObservableObject {
 	nonisolated(unsafe) private var preferencesObserver: NSObjectProtocol?
 	private var activeLanguage: String = "plaintext"
 
+	/// True while SwiftUI is building or updating the NSView tree. `NSTextView`
+	/// posts selection changes synchronously, so a programmatic `setPlainText`
+	/// during a view pass would otherwise publish from inside that pass.
+	private var isPerformingViewUpdate = false
+
+	/// Set while a deferred `cursorPosition` refresh is queued, so a burst of
+	/// selection changes during one view pass collapses into a single update.
+	private var hasPendingCursorUpdate = false
+
 	@Published var cursorPosition: String = "1:0"
 
 	weak var scrollView: NSScrollView?
@@ -85,31 +94,48 @@ final class EditorState: NSObject, ObservableObject {
 	/// Builds the editor and configures it from preferences and the document model.
 	/// Returns the scroll view for the representable to hand to SwiftUI.
 	func makeEditor(model: TextFileModel, delegate: any NSTextViewDelegate) -> NSScrollView {
-		self.model = model
-		activeLanguage = model.docTypeLanguage
+		duringViewUpdate {
+			self.model = model
+			activeLanguage = model.docTypeLanguage
 
-		let (scrollView, textView) = MopedTextView.scrollableEditor(
-			theme: ThemeCatalog.theme(named: preferences.theme),
-			font: preferredFont(at: preferences.fontSizeFloat)
-		)
+			let (scrollView, textView) = MopedTextView.scrollableEditor(
+				theme: ThemeCatalog.theme(named: preferences.theme),
+				font: preferredFont(at: preferences.fontSizeFloat)
+			)
 
-		textView.delegate = delegate
-		textView.defaultFontSize = preferences.fontSizeFloat
-		textView.defaultIndentation = preferences.selectedDefaultIndentation.editorIndentation
-		textView.isHighlightingEnabled = !model.isLargeFile
-		textView.wrapsLines = preferences.doLineWrap
-		textView.showsLineNumberGutter = preferences.doShowLineNumberRuler
-		textView.setPlainText(model.content)
-		applyLanguageToEditor(activeLanguage, on: textView)
+			// Adopt the views before loading content: `isApplyingProgrammaticText`
+			// reads through `textView`, so the guard has to be live during
+			// `setPlainText`.
+			self.scrollView = scrollView
+			self.textView = textView
 
-		self.scrollView = scrollView
-		self.textView = textView
-		updateCursorPosition(for: textView)
-		return scrollView
+			textView.delegate = delegate
+			textView.defaultFontSize = preferences.fontSizeFloat
+			textView.defaultIndentation = preferences.selectedDefaultIndentation.editorIndentation
+			textView.isHighlightingEnabled = !model.isLargeFile
+			textView.wrapsLines = preferences.doLineWrap
+			textView.showsLineNumberGutter = preferences.doShowLineNumberRuler
+			textView.setPlainText(model.content)
+			applyLanguageToEditor(activeLanguage, on: textView)
+
+			updateCursorPosition(for: textView)
+			return scrollView
+		}
 	}
 
 	func replaceContent(with content: String) {
-		textView?.setPlainText(content)
+		duringViewUpdate {
+			textView?.setPlainText(content)
+		}
+	}
+
+	/// Marks the span in which SwiftUI owns the call stack (`makeNSView` /
+	/// `updateNSView`). Publishing there triggers "Publishing changes from within
+	/// view updates", so `updateCursorPosition(for:)` defers instead.
+	private func duringViewUpdate<T>(_ body: () -> T) -> T {
+		isPerformingViewUpdate = true
+		defer { isPerformingViewUpdate = false }
+		return body()
 	}
 
 	// MARK: Language and preferences
@@ -159,7 +185,37 @@ final class EditorState: NSObject, ObservableObject {
 		let location = min(textView.selectedRange().location, nsText.length)
 		let preceding = nsText.substring(to: location)
 		let components = preceding.components(separatedBy: "\n")
-		cursorPosition = "\(components.count):\(components.last?.count ?? 0)"
+		let position = "\(components.count):\(components.last?.count ?? 0)"
+
+		guard position != cursorPosition else {
+			return
+		}
+		guard !isPerformingViewUpdate else {
+			// Re-read after the view pass rather than replaying `position`: replacing
+			// the storage moves the selection to the end before `setPlainText`
+			// restores it, and publishing that intermediate value would flash the
+			// wrong line:column in the status bar.
+			scheduleCursorPositionUpdate(for: textView)
+			return
+		}
+		cursorPosition = position
+	}
+
+	private func scheduleCursorPositionUpdate(for textView: NSTextView) {
+		guard !hasPendingCursorUpdate else {
+			return
+		}
+		hasPendingCursorUpdate = true
+		DispatchQueue.main.async { [weak self, weak textView] in
+			guard let self else {
+				return
+			}
+			hasPendingCursorUpdate = false
+			guard let textView else {
+				return
+			}
+			updateCursorPosition(for: textView)
+		}
 	}
 }
 
