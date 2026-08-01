@@ -20,6 +20,14 @@
 
 import Cocoa
 
+/// Tracks `moped --wait` sessions and reports completion when the files close.
+///
+/// Main-actor isolated because every entry point already was: the distributed
+/// notification observer and the terminate observer are registered from
+/// `applicationWillFinishLaunching`, so they deliver on the main run loop, and the poll
+/// timer is scheduled there too. This previously funnelled the same state through a
+/// serial queue, which bought nothing and cost a hop on the termination path.
+@MainActor
 final class WaitManager: NSObject {
 	static let shared = WaitManager()
 	static func canonicalPath(for url: URL) -> String {
@@ -43,7 +51,6 @@ final class WaitManager: NSObject {
 	private var sessionFiles: [String: String] = [:]
 	private var isObserving = false
 	private var pollTimer: Timer?
-	private let stateQueue = DispatchQueue(label: "net.machorro.roberto.Moped.WaitManager.state")
 
 	func startObserving() {
 		guard !isObserving else {
@@ -74,32 +81,24 @@ final class WaitManager: NSObject {
 			return
 		}
 
-		stateQueue.async { [weak self] in
-			guard let self = self else {
-				return
-			}
-
-			if let sessionFilePath = userInfo[CLIConstants.sessionFileKey] as? String {
-				self.sessionFiles[sessionID] = sessionFilePath
-			}
-
-			let standardizedPaths = Set(filePaths.map {
-				WaitManager.canonicalPath(for: URL(fileURLWithPath: $0))
-			})
-			self.sessions[sessionID] = standardizedPaths
-
-			if standardizedPaths.isEmpty {
-				self.completeSessionLocked(sessionID)
-				return
-			}
-
-			DispatchQueue.main.async { [weak self] in
-				self?.startPollingIfNeeded()
-			}
+		if let sessionFilePath = userInfo[CLIConstants.sessionFileKey] as? String {
+			sessionFiles[sessionID] = sessionFilePath
 		}
+
+		let standardizedPaths = Set(filePaths.map {
+			WaitManager.canonicalPath(for: URL(fileURLWithPath: $0))
+		})
+		sessions[sessionID] = standardizedPaths
+
+		if standardizedPaths.isEmpty {
+			completeSession(sessionID)
+			return
+		}
+
+		startPollingIfNeeded()
 	}
 
-	private func removePendingPathLocked(_ path: String) {
+	private func removePendingPath(_ path: String) {
 		let incomingURL = URL(fileURLWithPath: path)
 		let incomingCanonical = WaitManager.canonicalPath(for: incomingURL)
 		let incomingIdentifier = fileIdentifier(for: incomingURL)
@@ -126,13 +125,11 @@ final class WaitManager: NSObject {
 
 		for sessionID in finishedSessions {
 			sessions.removeValue(forKey: sessionID)
-			completeSessionLocked(sessionID)
+			completeSession(sessionID)
 		}
 
 		if sessions.isEmpty {
-			DispatchQueue.main.async { [weak self] in
-				self?.stopPollingIfNeeded()
-			}
+			stopPollingIfNeeded()
 		}
 	}
 
@@ -198,41 +195,23 @@ final class WaitManager: NSObject {
 				return WaitManager.canonicalPath(for: url)
 			}
 		)
-		var shouldStopPolling = false
-		let closedPaths: [String] = stateQueue.sync {
-			guard !sessions.isEmpty else {
-				shouldStopPolling = true
-				return []
-			}
-
-			var collectedPaths: [String] = []
-			for paths in sessions.values {
-				for path in paths {
-					let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
-					if !openPaths.contains(canonical) {
-						collectedPaths.append(path)
-					}
-				}
-			}
-
-			return collectedPaths
-		}
-
-		if shouldStopPolling {
+		guard !sessions.isEmpty else {
 			stopPollingIfNeeded()
 			return
 		}
 
-		if !closedPaths.isEmpty {
-			stateQueue.async { [weak self] in
-				guard let self = self else {
-					return
-				}
-
-				for path in Set(closedPaths) {
-					self.removePendingPathLocked(path)
+		var closedPaths: Set<String> = []
+		for paths in sessions.values {
+			for path in paths {
+				let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
+				if !openPaths.contains(canonical) {
+					closedPaths.insert(path)
 				}
 			}
+		}
+
+		for path in closedPaths {
+			removePendingPath(path)
 		}
 	}
 
@@ -249,18 +228,16 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func appWillTerminate(_ notification: Notification) {
-		// Synchronous on purpose: an `async` hop here loses the race with process exit,
-		// so waiting `moped --wait` clients never see their completion notification and
-		// have to fall back to polling.
-		stateQueue.sync {
-			for sessionID in sessions.keys {
-				completeSessionLocked(sessionID)
-			}
-			sessions.removeAll()
+		// Runs inline on purpose. Deferring this to another queue — as it once did —
+		// loses the race with process exit, so waiting `moped --wait` clients never see
+		// their completion notification and fall back to polling.
+		for sessionID in sessions.keys {
+			completeSession(sessionID)
 		}
+		sessions.removeAll()
 	}
 
-	private func completeSessionLocked(_ sessionID: String) {
+	private func completeSession(_ sessionID: String) {
 		if let sessionFilePath = sessionFiles.removeValue(forKey: sessionID) {
 			try? FileManager.default.removeItem(
 				at: URL(fileURLWithPath: sessionFilePath)

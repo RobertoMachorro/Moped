@@ -21,6 +21,9 @@
 import Cocoa
 import SwiftUI
 
+/// Everything here drives AppKit windows and alerts, so it is main-actor work already;
+/// the annotation just says so.
+@MainActor
 final class AppActions: NSObject {
 	static let shared = AppActions()
 

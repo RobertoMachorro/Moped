@@ -28,7 +28,9 @@ import MopedEditor
 /// names when only 21 tokenizers exist — most of the picker did nothing. File types
 /// with no tokenizer now resolve to `plaintext` instead, in
 /// `TextFileModel.getLanguageForType`.
-final class LanguageCatalog {
+/// `Sendable` holds trivially: the one stored property is an immutable `[String]`,
+/// fixed at init from the registry.
+final class LanguageCatalog: Sendable {
 	static let shared = LanguageCatalog()
 
 	let supportedLanguages: [String]

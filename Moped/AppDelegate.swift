@@ -20,8 +20,11 @@
 
 import Cocoa
 
-class AppDelegate: NSObject, NSApplicationDelegate {
-	private var preferencesObserver: NSObjectProtocol?
+@MainActor
+final class AppDelegate: NSObject, NSApplicationDelegate {
+	/// `nonisolated(unsafe)` so the nonisolated `deinit` can unregister it. The token is
+	/// only ever assigned once, on the main actor, and only ever read here.
+	nonisolated(unsafe) private var preferencesObserver: NSObjectProtocol?
 
 	// MARK: - Application Delegate
 
@@ -71,7 +74,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			object: nil,
 			queue: .main
 		) { [weak self] _ in
-			self?.applySelectedAppIcon()
+			// Delivered on `.main` per the queue above, so the isolation is real.
+			MainActor.assumeIsolated {
+				self?.applySelectedAppIcon()
+			}
 		}
 	}
 

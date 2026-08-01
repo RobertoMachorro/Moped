@@ -22,7 +22,20 @@ import Combine
 import SwiftUI
 import UniformTypeIdentifiers
 
-final class MopedDocument: ReferenceFileDocument, ObservableObject {
+/// `@unchecked Sendable` is deliberate and is the one suppression in this target.
+///
+/// `ReferenceFileDocument` refines `Sendable` while declaring `init(configuration:)`
+/// and `fileWrapper(snapshot:configuration:)` nonisolated, so SwiftUI can read and
+/// write off the main thread — worth keeping for a 4 MB file. A reference document
+/// therefore cannot satisfy the checker: it exists to hold a mutable model. Apple marks
+/// the protocol `@preconcurrency` for exactly this reason.
+///
+/// What actually happens is a handoff, not sharing: `init(configuration:)` builds the
+/// model and populates it before any view sees the document, and from then on every
+/// mutation arrives through SwiftUI bindings on the main actor. The one field written
+/// off-main afterwards is `suppressWatchUntil`, from `fileWrapper` during a save, and it
+/// is a `Date` guarding a debounce — a stale read re-prompts a reload at worst.
+final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked Sendable {
 	/// Largest file Moped will open. Benchmarked against the real editor: at this size
 	/// a keystroke plus the frame that follows cost ~45 ms with the line-number gutter
 	/// visible, inside the ~100 ms "feels instant" budget.
@@ -91,7 +104,11 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		return unique.sorted { ($0.localizedDescription ?? $0.identifier) < ($1.localizedDescription ?? $1.identifier) }
 	}()
 
-	@Published var model: TextFileModel
+	/// Immutable reference, assigned once per document. Edits arrive as changes *inside*
+	/// the model, which `setupModelObservation` forwards to this object's
+	/// `objectWillChange` — nothing ever swaps the model out, so `@Published var` only
+	/// ever added mutable state to a `Sendable`-conforming type.
+	let model: TextFileModel
 
 	struct Snapshot {
 		let content: String
@@ -116,7 +133,20 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 	}
 
+	/// `fileURL` is only ever assigned from the `onChange` in `MopedApp`, which is
+	/// SwiftUI view code and therefore main-actor. The document itself cannot be
+	/// isolated — `ReferenceFileDocument` declares `init(configuration:)` and
+	/// `fileWrapper(snapshot:configuration:)` nonisolated so reads and writes can run
+	/// off the main thread, which for a 4 MB file is the point — so the isolation is
+	/// asserted here instead.
 	private func updateWatcher() {
+		MainActor.assumeIsolated {
+			installWatcher()
+		}
+	}
+
+	@MainActor
+	private func installWatcher() {
 		fileWatcher?.stop()
 		guard let url = fileURL else { return }
 		fileWatcher = FileWatcher()

@@ -32,7 +32,12 @@ extension Notification.Name {
 	static let preferencesChanged = Notification.Name("PreferencesChanged")
 }
 
-class Preferences: NSObject, ObservableObject {
+/// `@unchecked Sendable` rather than `@MainActor`: this type holds no mutable stored
+/// state at all — every property reads and writes `UserDefaults`, which is thread-safe —
+/// and it is read from `MopedDocument.init`, which `ReferenceFileDocument` declares
+/// nonisolated. Isolating it to the main actor would force that init onto the main actor
+/// too. Keep it that way: a stored property added here would invalidate the annotation.
+final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 	enum DefaultIndentation: String, CaseIterable {
 		case tab
 		case twoSpaces
