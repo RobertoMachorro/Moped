@@ -30,7 +30,7 @@ struct PreferencesView: View {
 	@ObservedObject var preferences: Preferences
 
 	private let languages: [String]
-	private let themes: [String]
+	private let themes: [PreferenceOption]
 	private let fonts: [String]
 	private let fontSizes: [String]
 	private let yesNoOptions: [PreferenceOption]
@@ -44,7 +44,9 @@ struct PreferencesView: View {
 		self.preferences = preferences
 
 		languages = LanguageCatalog.shared.supportedLanguages
-		themes = MopedTheme.allNames
+		themes = MopedTheme.allNames.map {
+			PreferenceOption(value: $0, label: ThemeCatalog.localizedName(for: $0))
+		}
 		fonts = NSFontManager.shared.availableFonts.sorted()
 		fontSizes = (9...24).map { String($0) }
 		yesNoOptions = [
@@ -80,7 +82,7 @@ struct PreferencesView: View {
 					get: { preferences.theme },
 					set: { preferences.theme = $0 }
 				),
-				options: themes.map { PreferenceOption(value: $0, label: $0) }
+				options: themes
 			)
 
 			PreferenceRow(

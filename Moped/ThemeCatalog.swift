@@ -39,6 +39,26 @@ enum ThemeCatalog {
 		return .defaultLight
 	}
 
+	/// Display name for the preferences picker.
+	///
+	/// `MopedTheme.name` is both the stored preference value and package data, and the
+	/// package stays free of app types — so the mapping to a translated label belongs
+	/// here, the same way `Preferences.AppIcon.localizedLabel` handles icon names.
+	/// "Xcode" and "Solarized" are proper nouns and stay; only the qualifiers translate.
+	///
+	/// A theme added to the package without a key here falls back to its raw name,
+	/// which is untranslated but never blank.
+	static func localizedName(for name: String) -> String {
+		switch name {
+		case MopedTheme.defaultLight.name:   return String(localized: "option.theme.default_light")
+		case MopedTheme.defaultDark.name:    return String(localized: "option.theme.default_dark")
+		case MopedTheme.xcodeLike.name:      return String(localized: "option.theme.xcode_like")
+		case MopedTheme.solarizedLight.name: return String(localized: "option.theme.solarized_light")
+		case MopedTheme.solarizedDark.name:  return String(localized: "option.theme.solarized_dark")
+		default:                             return name
+		}
+	}
+
 	private static let legacyAliases: [String: String] = [
 		"xcode": MopedTheme.xcodeLike.name,
 		"default": MopedTheme.defaultLight.name,
