@@ -112,9 +112,13 @@ class Preferences: NSObject, ObservableObject {
 		DefaultIndentation(rawValue: defaultIndentation) ?? .tab
 	}
 
+	/// Validated on read, like `defaultIndentation` and `appIcon`. The picker now offers
+	/// only languages that highlight, so a value saved when it listed every UTI name
+	/// (`lua`, `haskell`, …) would otherwise select nothing and render blank.
 	@objc dynamic var language: String {
 		get {
-			getStringValue(forKey: "language", otherwiseUse: "plaintext")
+			let stored = getStringValue(forKey: "language", otherwiseUse: "plaintext")
+			return LanguageCatalog.shared.supportedLanguages.contains(stored) ? stored : "plaintext"
 		}
 		set {
 			setStringValue(forKey: "language", to: newValue)

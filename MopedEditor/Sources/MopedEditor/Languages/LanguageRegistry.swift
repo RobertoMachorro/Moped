@@ -65,8 +65,19 @@ public enum LanguageRegistry {
 		return map
 	}()
 
-	/// Every name (id or alias) the highlighter understands.
-	public static let supportedNames: [String] = canonicalIDs.keys.sorted()
+	/// Aliases that still resolve but are never offered for selection. `htmlbars` is an
+	/// Ember template dialect that the UTI table used to hand to every plain `.html`
+	/// file; it stays here only so a preference saved by an older version still loads.
+	private static let deprecatedAliases: Set<String> = ["htmlbars"]
+
+	/// Every name worth offering in a language picker — each one highlights.
+	///
+	/// Aliases are included deliberately. `kotlin`, `scss`, `shell` and `objectivec`
+	/// are backed by another language's tokenizer, but they are the names users know:
+	/// collapsing them onto their canonical ids would label a Kotlin file `java`.
+	public static let selectableNames: [String] = canonicalIDs.keys
+		.filter { !deprecatedAliases.contains($0) }
+		.sorted()
 
 	public static func canonicalID(for name: String) -> String? {
 		canonicalIDs[name.lowercased()]

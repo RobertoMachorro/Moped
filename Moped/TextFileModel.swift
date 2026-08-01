@@ -114,8 +114,18 @@ extension TextFileModel {
 		return dict
 	}()
 
+	/// The plist maps far more types than the highlighter supports. Anything without a
+	/// tokenizer resolves to `plaintext` so the status-bar picker never shows a name it
+	/// cannot offer — a `Picker` whose selection is absent from its options renders
+	/// blank. Deprecated names (`htmlbars`) fall back to their canonical id.
 	func getLanguageForType(typeName: String) -> String {
-		return Self.languagesFromUTI[typeName] ?? "plaintext"
+		guard let name = Self.languagesFromUTI[typeName] else {
+			return "plaintext"
+		}
+		if LanguageRegistry.selectableNames.contains(name) {
+			return name
+		}
+		return LanguageRegistry.canonicalID(for: name) ?? "plaintext"
 	}
 
 	private static let utiFromLanguages: [String: String] = {

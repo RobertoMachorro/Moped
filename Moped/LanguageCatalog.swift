@@ -21,23 +21,19 @@
 import Foundation
 import MopedEditor
 
-/// Editor language registry. Names listed here populate the language picker; names
-/// `MopedEditor.LanguageRegistry` recognizes get syntax highlighting, the rest render
-/// plain.
+/// Names offered in the language pickers: only languages that actually highlight, plus
+/// `plaintext` for "no highlighting".
+///
+/// This used to fold in every value from `LanguagesUTI.plist` as well, listing ~107
+/// names when only 21 tokenizers exist — most of the picker did nothing. File types
+/// with no tokenizer now resolve to `plaintext` instead, in
+/// `TextFileModel.getLanguageForType`.
 final class LanguageCatalog {
 	static let shared = LanguageCatalog()
 
 	let supportedLanguages: [String]
 
 	private init() {
-		var names = Set<String>(LanguageRegistry.supportedNames)
-		if let path = Bundle.main.path(forResource: "LanguagesUTI", ofType: "plist"),
-		   let dict = NSDictionary(contentsOfFile: path) as? [String: String] {
-			for value in dict.values {
-				names.insert(value)
-			}
-		}
-		names.insert("plaintext")
-		supportedLanguages = names.sorted()
+		supportedLanguages = (["plaintext"] + LanguageRegistry.selectableNames).sorted()
 	}
 }
