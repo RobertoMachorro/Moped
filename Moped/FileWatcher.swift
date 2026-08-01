@@ -20,8 +20,34 @@
 
 import Foundation
 
+/// Main-actor isolated: the dispatch source already delivers on `.main`, and both
+/// callers (`MopedDocument.updateWatcher` and the retry below) are main-thread.
+@MainActor
 final class FileWatcher {
-	private var source: DispatchSourceFileSystemObject?
+	/// The dispatch source lives in a lock-guarded box rather than as isolated state so
+	/// the nonisolated `deinit` can still cancel it and close the descriptor. Cancelling
+	/// a `DispatchSource` is documented as safe from any thread.
+	private final class SourceBox: @unchecked Sendable {
+		private let lock = NSLock()
+		private var source: DispatchSourceFileSystemObject?
+
+		var current: DispatchSourceFileSystemObject? {
+			lock.lock()
+			defer { lock.unlock() }
+			return source
+		}
+
+		/// Installs a new source, cancelling whatever it replaces.
+		func replace(with new: DispatchSourceFileSystemObject?) {
+			lock.lock()
+			let previous = source
+			source = new
+			lock.unlock()
+			previous?.cancel()
+		}
+	}
+
+	private let box = SourceBox()
 	private var watchedURL: URL?
 	private var changeHandler: (() -> Void)?
 
@@ -33,13 +59,12 @@ final class FileWatcher {
 	}
 
 	func stop() {
-		source?.cancel()
-		source = nil
+		box.replace(with: nil)
 		watchedURL = nil
 		changeHandler = nil
 	}
 
-	deinit { stop() }
+	deinit { box.replace(with: nil) }
 
 	// Many editors save by writing a temp file then renaming it over the original,
 	// which replaces the inode our fd points at. `.write` never fires in that case,
@@ -55,29 +80,33 @@ final class FileWatcher {
 			fileDescriptor: openedFd,
 			eventMask: [.write, .extend, .delete, .rename],
 			queue: .main)
-		src.setEventHandler { [weak self] in
-			guard let self, let current = self.source else { return }
-			let events = current.data
-			self.changeHandler?()
-			if events.contains(.delete) || events.contains(.rename) {
-				self.rewatch()
+		src.setEventHandler { [weak self, box] in
+			// Delivered on `.main` per the queue above, so the isolation is real.
+			MainActor.assumeIsolated {
+				guard let self, let current = box.current else { return }
+				let events = current.data
+				self.changeHandler?()
+				if events.contains(.delete) || events.contains(.rename) {
+					self.rewatch()
+				}
 			}
 		}
 		src.setCancelHandler {
 			close(openedFd)
 		}
-		source = src
+		box.replace(with: src)
 		src.resume()
 	}
 
 	private func rewatch() {
 		guard watchedURL != nil else { return }
-		source?.cancel()
-		source = nil
+		box.replace(with: nil)
 		// Brief delay lets the rename complete and the new file settle before we re-open.
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-			guard let self, let url = self.watchedURL else { return }
-			self.startSource(for: url)
+			MainActor.assumeIsolated {
+				guard let self, let url = self.watchedURL else { return }
+				self.startSource(for: url)
+			}
 		}
 	}
 }

@@ -22,12 +22,20 @@ import Cocoa
 import SwiftUI
 import UniformTypeIdentifiers
 
+/// File scope rather than a member of `DefaultEditorSelectorModel`: the model is
+/// `@MainActor`, which would make a static property of it main-actor isolated and
+/// therefore unreadable from the detached task in `loadItems`.
+private let textEditBundleID = "com.apple.TextEdit"
+
 struct DefaultEditorItem: Identifiable {
 	let id: String
 	let utType: UTType
 	let extensions: [String]
 	let description: String
 	let currentAppURL: URL?
+	/// Resolved once off the main thread in `loadItems`; reading it back from disk per
+	/// row would be main-thread file I/O inside a button handler.
+	let currentBundleID: String
 	let currentAppName: String
 	let currentAppIcon: NSImage?
 	let isMopedAlready: Bool
@@ -81,7 +89,7 @@ final class DefaultEditorSelectorModel: ObservableObject {
 				} ?? ""
 				let isMopedAlready = currentBundleID == mopedID || currentAppURL == mopedURL
 
-				let currentIsTextEdit = currentBundleID == "com.apple.TextEdit"
+				let currentIsTextEdit = currentBundleID == textEditBundleID
 				let isUnassigned = currentAppURL == nil
 
 				let item = DefaultEditorItem(
@@ -90,6 +98,7 @@ final class DefaultEditorSelectorModel: ObservableObject {
 					extensions: extensions.sorted(),
 					description: description,
 					currentAppURL: currentAppURL,
+					currentBundleID: currentBundleID,
 					currentAppName: currentAppName,
 					currentAppIcon: currentAppIcon,
 					isMopedAlready: isMopedAlready,
@@ -130,10 +139,7 @@ final class DefaultEditorSelectorModel: ObservableObject {
 	func selectTextEdit() {
 		for idx in items.indices {
 			guard !items[idx].isMopedAlready else { continue }
-			let bundleID = items[idx].currentAppURL.flatMap {
-				Bundle(url: $0)?.bundleIdentifier
-			} ?? ""
-			items[idx].isSelected = bundleID == "com.apple.TextEdit"
+			items[idx].isSelected = items[idx].currentBundleID == textEditBundleID
 		}
 	}
 
@@ -217,10 +223,10 @@ struct DefaultEditorSelectorView: View {
 				HStack(spacing: 4) {
 					Button(String(localized: "default_editor.select_all")) { model.selectAll() }
 						.buttonStyle(.borderless)
-					Text("·").foregroundStyle(.secondary)
+					Text(verbatim: "·").foregroundStyle(.secondary)
 					Button(String(localized: "default_editor.select_textedit")) { model.selectTextEdit() }
 						.buttonStyle(.borderless)
-					Text("·").foregroundStyle(.secondary)
+					Text(verbatim: "·").foregroundStyle(.secondary)
 					Button(String(localized: "default_editor.select_none")) { model.selectNone() }
 						.buttonStyle(.borderless)
 				}

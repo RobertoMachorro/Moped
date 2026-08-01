@@ -5,6 +5,9 @@
 ## User settings
 xcuserdata/
 xcshareddata/
+# ...but the shared scheme is what CI builds (`xcodebuild -scheme Moped`), so it
+# has to stay tracked. The workspace's own xcshareddata (swiftpm state) stays ignored.
+!Moped.xcodeproj/xcshareddata/
 .claude/settings.local.json
 .claude/worktrees
 

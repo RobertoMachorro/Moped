@@ -26,7 +26,18 @@ struct RestoredDocument: Codable {
 	let frame: String?
 }
 
-class Preferences: NSObject, ObservableObject {
+extension Notification.Name {
+	/// Posted by `Preferences` on every write. `EditorState` re-reads the editor
+	/// settings; `AppDelegate` re-applies the app icon.
+	static let preferencesChanged = Notification.Name("PreferencesChanged")
+}
+
+/// `@unchecked Sendable` rather than `@MainActor`: this type holds no mutable stored
+/// state at all — every property reads and writes `UserDefaults`, which is thread-safe —
+/// and it is read from `MopedDocument.init`, which `ReferenceFileDocument` declares
+/// nonisolated. Isolating it to the main actor would force that init onto the main actor
+/// too. Keep it that way: a stored property added here would invalidate the annotation.
+final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 	enum DefaultIndentation: String, CaseIterable {
 		case tab
 		case twoSpaces
@@ -40,6 +51,25 @@ class Preferences: NSObject, ObservableObject {
 		case red = "Red"
 		case rainbow = "Rainbow"
 		case beige = "Beige"
+
+		/// Display name for the preferences picker. `rawValue` stays the stored
+		/// preference value, so translating these never invalidates a saved setting.
+		var localizedLabel: String {
+			switch self {
+			case .defaultIcon:
+				return String(localized: "option.icon.default")
+			case .pink:
+				return String(localized: "option.icon.pink")
+			case .black:
+				return String(localized: "option.icon.black")
+			case .red:
+				return String(localized: "option.icon.red")
+			case .rainbow:
+				return String(localized: "option.icon.rainbow")
+			case .beige:
+				return String(localized: "option.icon.beige")
+			}
+		}
 
 		var appIconSetName: String {
 			switch self {
@@ -87,9 +117,13 @@ class Preferences: NSObject, ObservableObject {
 		DefaultIndentation(rawValue: defaultIndentation) ?? .tab
 	}
 
+	/// Validated on read, like `defaultIndentation` and `appIcon`. The picker now offers
+	/// only languages that highlight, so a value saved when it listed every UTI name
+	/// (`lua`, `haskell`, …) would otherwise select nothing and render blank.
 	@objc dynamic var language: String {
 		get {
-			getStringValue(forKey: "language", otherwiseUse: "plaintext")
+			let stored = getStringValue(forKey: "language", otherwiseUse: "plaintext")
+			return LanguageCatalog.shared.supportedLanguages.contains(stored) ? stored : "plaintext"
 		}
 		set {
 			setStringValue(forKey: "language", to: newValue)
@@ -167,11 +201,14 @@ class Preferences: NSObject, ObservableObject {
 
 	// MARK: - UserDefaults Helpers
 
+	/// The stored value is always one of the plain integer strings the preferences
+	/// picker offers, so a locale-aware `NumberFormatter` buys nothing here. The
+	/// fallback matches the `fontSize` default rather than the low end of the range.
 	var fontSizeFloat: CGFloat {
-		guard let number = NumberFormatter().number(from: fontSize) else {
-			return CGFloat(9)
+		guard let size = Double(fontSize) else {
+			return 13
 		}
-		return CGFloat(truncating: number)
+		return CGFloat(size)
 	}
 
 	var openEmptyOnLaunch: Bool {
@@ -215,6 +252,6 @@ class Preferences: NSObject, ObservableObject {
 	func setStringValue(forKey key: String, to value: String) {
 		objectWillChange.send()
 		UserDefaults.standard.set(value, forKey: key)
-		NotificationCenter.default.post(name: Notification.Name(rawValue: "PreferencesChanged"), object: nil)
+		NotificationCenter.default.post(name: .preferencesChanged, object: nil)
 	}
 }

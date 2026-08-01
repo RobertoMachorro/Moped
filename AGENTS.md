@@ -15,7 +15,16 @@ If there are conflicting rules in this or the documents below, prompt for clarif
 
 ## MUST DO
 
+These are the same three gates CI runs on every pull request. A change is not done
+until all three pass.
+
 * Run SwiftLint for verification; SwiftLint must be clean for the changed lines/files only, not the whole project
+* Run the editor package tests: `swift test --package-path MopedEditor`
+* Run the localization check: `./scripts/check_localized_strings.sh` (needs `ripgrep`)
+
+Any user-facing string must have a key in `Moped/Localizable.xcstrings`. The check
+script only catches string literals in common call sites, so strings reaching the UI
+through a variable have to be verified by hand.
 
 ## Coding Guidelines
 

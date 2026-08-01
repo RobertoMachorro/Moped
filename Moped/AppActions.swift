@@ -21,6 +21,9 @@
 import Cocoa
 import SwiftUI
 
+/// Everything here drives AppKit windows and alerts, so it is main-actor work already;
+/// the annotation just says so.
+@MainActor
 final class AppActions: NSObject {
 	static let shared = AppActions()
 
@@ -125,21 +128,6 @@ final class AppActions: NSObject {
 		window.isReleasedWhenClosed = false
 		window.center()
 		return NSWindowController(window: window)
-	}
-
-	func setAsDefaultTextEditor(completion: @escaping () -> Void) {
-		let appURL = Bundle.main.bundleURL
-		let types = MopedDocument.readableContentTypes
-		let group = DispatchGroup()
-		for utType in types {
-			group.enter()
-			NSWorkspace.shared.setDefaultApplication(
-				at: appURL,
-				toOpen: utType,
-				completion: { _ in group.leave() }
-			)
-		}
-		group.notify(queue: .main) { completion() }
 	}
 
 	private func showWebsite(using address: String) {

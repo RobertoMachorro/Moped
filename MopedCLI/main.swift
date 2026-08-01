@@ -90,7 +90,11 @@ if filePaths.isEmpty {
 
 let sessionID = UUID().uuidString
 let completionCenter = DistributedNotificationCenter.default()
-var didComplete = false
+/// Set by the observer below and read by the run loop underneath it. Both run on this
+/// process's only thread — the observer is registered with `queue: nil`, so it fires on
+/// the run loop that `run(mode:before:)` is driving — so there is no cross-thread access
+/// for the checker to protect.
+nonisolated(unsafe) var didComplete = false
 let completionObserver = completionCenter.addObserver(
 	forName: WaitConstants.completionNotification,
 	object: nil,

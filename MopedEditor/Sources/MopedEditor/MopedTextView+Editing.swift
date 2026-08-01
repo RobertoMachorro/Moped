@@ -240,23 +240,10 @@ extension MopedTextView {
 		}
 	}
 
-	private func transformLines(in block: String, transform: @escaping (String) -> String) -> String {
-		let blockText = block as NSString
-		let blockRange = NSRange(location: 0, length: blockText.length)
-		var transformed = ""
-		blockText.enumerateSubstrings(
-			in: blockRange,
-			options: [.byLines, .substringNotRequired]
-		) { _, lineRange, enclosingRange, _ in
-			let line = blockText.substring(with: lineRange)
-			let suffixRange = NSRange(
-				location: NSMaxRange(lineRange),
-				length: enclosingRange.length - lineRange.length
-			)
-			let lineEnding = blockText.substring(with: suffixRange)
-			transformed += transform(line) + lineEnding
+	private func transformLines(in block: String, transform: (String) -> String) -> String {
+		splitBlockIntoLines(block).reduce(into: "") { result, line in
+			result += transform(line.content) + line.ending
 		}
-		return transformed
 	}
 
 	// MARK: Indent style detection

@@ -21,7 +21,7 @@
 	<key>public.comma-separated-values-text</key>
 	<string>plaintext</string>
 	<key>public.html</key>
-	<string>htmlbars</string>
+	<string>html</string>
 	<key>com.textadept.nim-source</key>
 	<string>nimrod</string>
 	<key>public.nim-source</key>

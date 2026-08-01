@@ -57,7 +57,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		private let model: TextFileModel
 		private let state: EditorState
 		private var didSetInitialFocus = false
-		private var appFocusObserver: NSObjectProtocol?
+		private var isObservingAppFocus = false
 		var lastProgrammaticChangeID = -1
 
 		init(model: TextFileModel, state: EditorState) {
@@ -66,9 +66,7 @@ struct TextEditorRepresentable: NSViewRepresentable {
 		}
 
 		deinit {
-			if let appFocusObserver {
-				NotificationCenter.default.removeObserver(appFocusObserver)
-			}
+			NotificationCenter.default.removeObserver(self)
 		}
 
 		func requestInitialFocusIfNeeded(for textView: MopedTextView?) {
@@ -114,28 +112,42 @@ struct TextEditorRepresentable: NSViewRepresentable {
 			observeWindowFocus(for: textView, window: window)
 		}
 
+		/// Selector-based rather than block-based: a block observer would have to capture
+		/// the text view, and sending a non-`Sendable` `NSView` into a `@Sendable` closure
+		/// is exactly the kind of thing strict concurrency rejects. The selector form
+		/// takes `self` as a plain object and re-reads the view from `state` when it
+		/// fires.
 		private func observeWindowFocus(for textView: MopedTextView, window: NSWindow) {
-			guard appFocusObserver == nil else {
+			guard !isObservingAppFocus else {
+				return
+			}
+			isObservingAppFocus = true
+
+			NotificationCenter.default.addObserver(
+				self,
+				selector: #selector(applicationDidBecomeActive(_:)),
+				name: NSApplication.didBecomeActiveNotification,
+				object: NSApp
+			)
+		}
+
+		/// Restores first responder to the editor when the app comes forward, unless the
+		/// user is in a field editor (the find bar) or already focused there.
+		@objc private func applicationDidBecomeActive(_ notification: Notification) {
+			guard let textView = state.textView,
+				  let window = textView.window,
+				  window.isKeyWindow
+			else {
+				return
+			}
+			if let responder = window.firstResponder as? NSTextView, responder.isFieldEditor {
+				return
+			}
+			guard window.firstResponder !== textView else {
 				return
 			}
 
-			appFocusObserver = NotificationCenter.default.addObserver(
-				forName: NSApplication.didBecomeActiveNotification,
-				object: NSApp,
-				queue: .main
-			) { [weak textView] _ in
-				guard let textView, let window = textView.window, window.isKeyWindow else {
-					return
-				}
-				if let responder = window.firstResponder as? NSTextView, responder.isFieldEditor {
-					return
-				}
-				guard window.firstResponder !== textView else {
-					return
-				}
-
-				window.makeFirstResponder(textView)
-			}
+			window.makeFirstResponder(textView)
 		}
 
 		// MARK: NSTextViewDelegate

@@ -32,3 +32,13 @@ public struct Token: Equatable, Sendable {
 		self.range = range
 	}
 }
+
+/// Appends a token, dropping empty runs so tokenizers can emit spans unconditionally.
+/// Shared by every tokenizer in the module — it lives here, next to `Token`, rather
+/// than at the bottom of whichever tokenizer happened to need it first.
+func appendToken(_ kind: TokenKind, from location: Int, length: Int, into tokens: inout [Token]) {
+	guard length > 0 else {
+		return
+	}
+	tokens.append(Token(kind: kind, range: NSRange(location: location, length: length)))
+}

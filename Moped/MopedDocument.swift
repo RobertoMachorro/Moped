@@ -22,25 +22,60 @@ import Combine
 import SwiftUI
 import UniformTypeIdentifiers
 
-final class MopedDocument: ReferenceFileDocument, ObservableObject {
-	/// Largest file Moped will open. Benchmarked against the real editor: at this size
-	/// a keystroke plus the frame that follows costs ~45 ms with the line-number gutter
-	/// visible, still inside the ~100 ms "feels instant" budget. Cost grows linearly with
-	/// document size beyond this (~112 ms at 16 MB), because the gutter rebuilds its
-	/// line-start array on every redraw that follows an edit.
+/// `@unchecked Sendable` is deliberate and is the one suppression in this target.
+///
+/// `ReferenceFileDocument` refines `Sendable` while declaring `init(configuration:)`
+/// and `fileWrapper(snapshot:configuration:)` nonisolated, so SwiftUI can read and
+/// write off the main thread — worth keeping for a 4 MB file. A reference document
+/// therefore cannot satisfy the checker: it exists to hold a mutable model. Apple marks
+/// the protocol `@preconcurrency` for exactly this reason.
+///
+/// What actually happens is a handoff, not sharing: `init(configuration:)` builds the
+/// model and populates it before any view sees the document, and from then on every
+/// mutation arrives through SwiftUI bindings on the main actor. The one field written
+/// off-main afterwards is `suppressWatchUntil`, from `fileWrapper` during a save, and it
+/// is a `Date` guarding a debounce — a stale read re-prompts a reload at worst.
+final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked Sendable {
+	/// Largest file Moped will open.
+	///
+	/// Re-measured after `LineIndex.splice`, driving the real editor with the gutter
+	/// visible (median of 25 keystrokes; open = encoding detection, decode, layout and
+	/// first frame):
+	///
+	///     size     keystroke   open
+	///     256 KB     5.9 ms    14 ms
+	///     4 MB       5.5 ms    87 ms
+	///     16 MB      6.0 ms   321 ms
+	///
+	/// Keystroke cost is now flat in document size — it used to grow, which is what this
+	/// limit was originally protecting against, and that reason no longer holds. Open cost
+	/// is linear at roughly 20 ms/MB and is what actually bounds the limit now.
+	///
+	/// 4 MB is therefore conservative rather than necessary; the numbers support raising
+	/// it. Left as-is deliberately: memory is the untested axis — a 16 MB document also
+	/// carries its text storage, attributes and undo stack — and the measurements come
+	/// from one Apple Silicon machine.
 	private static let maxFileLength = 4_194_304 // 4 MB
 	/// Threshold at which we start treating a file as "large" and turn off expensive
 	/// features (currently syntax highlighting). Measured independently of `maxFileLength`:
 	/// highlighting a whole document costs ~51 ms here, ~203 ms at 1 MB and ~821 ms at 4 MB,
 	/// so this is the point where it stops being free.
 	private static let largeFileThreshold = 262_144 // 256 KB
+	/// How long the file watcher stays muted after Moped itself touches the file, so
+	/// our own write doesn't come back as an "external change".
+	private static let watchSuppressionInterval: TimeInterval = 2.0
 
 	/// Rejection for a file past `maxFileLength`. Keeps the `.fileReadTooLarge` domain and
-	/// code so existing error handling still matches, but carries Moped's own wording.
-	/// Sizes are formatted rather than hardcoded so the strings survive a limit change.
+	/// code so existing error handling still matches, and carries Moped's own wording as
+	/// the recovery suggestion.
+	///
+	/// Only the recovery suggestion, deliberately: this error is thrown from
+	/// `init(configuration:)`, and `NSDocumentController` replaces any
+	/// `NSLocalizedDescriptionKey` with its own "The document … could not be opened"
+	/// wrapper. A description here would be translated into 13 languages and shown to
+	/// nobody. The reload path never sees this error — it refuses on size before reading.
 	private static func fileTooLargeError(actualBytes: Int) -> Error {
 		CocoaError(.fileReadTooLarge, userInfo: [
-			NSLocalizedDescriptionKey: String(localized: "error.file_too_large.description"),
 			NSLocalizedRecoverySuggestionErrorKey: fileTooLargeRecoverySuggestion(actualBytes: actualBytes)
 		])
 	}
@@ -56,7 +91,12 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		)
 	}
 
-	static var readableContentTypes: [UTType] = {
+	/// `ReferenceFileDocument` declares this as a `var`, but the list never changes —
+	/// it is derived once from `LanguagesUTI.plist`. Keeping the storage immutable
+	/// avoids a mutable ~110-entry global.
+	static var readableContentTypes: [UTType] { allReadableContentTypes }
+
+	private static let allReadableContentTypes: [UTType] = {
 		var types: [UTType] = [
 			.plainText,
 			.text,
@@ -80,7 +120,11 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		return unique.sorted { ($0.localizedDescription ?? $0.identifier) < ($1.localizedDescription ?? $1.identifier) }
 	}()
 
-	@Published var model: TextFileModel
+	/// Immutable reference, assigned once per document. Edits arrive as changes *inside*
+	/// the model, which `setupModelObservation` forwards to this object's
+	/// `objectWillChange` — nothing ever swaps the model out, so `@Published var` only
+	/// ever added mutable state to a `Sendable`-conforming type.
+	let model: TextFileModel
 
 	struct Snapshot {
 		let content: String
@@ -105,7 +149,20 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		}
 	}
 
+	/// `fileURL` is only ever assigned from the `onChange` in `MopedApp`, which is
+	/// SwiftUI view code and therefore main-actor. The document itself cannot be
+	/// isolated — `ReferenceFileDocument` declares `init(configuration:)` and
+	/// `fileWrapper(snapshot:configuration:)` nonisolated so reads and writes can run
+	/// off the main thread, which for a 4 MB file is the point — so the isolation is
+	/// asserted here instead.
 	private func updateWatcher() {
+		MainActor.assumeIsolated {
+			installWatcher()
+		}
+	}
+
+	@MainActor
+	private func installWatcher() {
 		fileWatcher?.stop()
 		guard let url = fileURL else { return }
 		fileWatcher = FileWatcher()
@@ -122,17 +179,33 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 		// The file can have grown past the limit since it was opened. Keep what is in
 		// memory and say why, rather than reloading unbounded or failing silently.
 		guard data.count <= MopedDocument.maxFileLength else {
-			reloadFailure = MopedDocument.fileTooLargeRecoverySuggestion(actualBytes: data.count)
-			hasExternalChange = false
-			suppressWatchUntil = Date().addingTimeInterval(2.0)
+			refuseReload(because: MopedDocument.fileTooLargeRecoverySuggestion(actualBytes: data.count))
 			return
 		}
 
+		let previousIsLargeFile = model.isLargeFile
 		model.isLargeFile = data.count > MopedDocument.largeFileThreshold
 		model.isForceReload = true
-		model.read(from: data, ofType: model.docTypeName)
+		do {
+			try model.read(from: data, ofType: model.docTypeName)
+		} catch {
+			// The file was replaced on disk by something Moped can't decode. Put the
+			// large-file flag back and keep the open buffer.
+			model.isLargeFile = previousIsLargeFile
+			model.isForceReload = false
+			refuseReload(because: error.localizedDescription)
+			return
+		}
 		hasExternalChange = false
-		suppressWatchUntil = Date().addingTimeInterval(2.0)
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
+	}
+
+	/// Leaves the in-memory document untouched, tells the user why, and mutes the
+	/// watcher briefly so the same event doesn't re-prompt immediately.
+	private func refuseReload(because reason: String) {
+		reloadFailure = reason
+		hasExternalChange = false
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
 	}
 
 	init(content: String = "") {
@@ -153,10 +226,6 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			typeLanguage: "plaintext"
 		)
 
-		if let data = configuration.file.regularFileContents {
-			model.isLargeFile = data.count > MopedDocument.largeFileThreshold
-		}
-
 		guard let data = configuration.file.regularFileContents else {
 			throw CocoaError(.fileReadCorruptFile)
 		}
@@ -165,7 +234,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			throw MopedDocument.fileTooLargeError(actualBytes: data.count)
 		}
 
-		model.read(from: data, ofType: configuration.contentType.identifier)
+		model.isLargeFile = data.count > MopedDocument.largeFileThreshold
+		try model.read(from: data, ofType: configuration.contentType.identifier)
 		setupModelObservation()
 	}
 
@@ -197,7 +267,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject {
 			throw CocoaError(.fileWriteUnknown)
 		}
 
-		suppressWatchUntil = Date().addingTimeInterval(2.0)
+		suppressWatchUntil = Date().addingTimeInterval(MopedDocument.watchSuppressionInterval)
 		return .init(regularFileWithContents: data)
 	}
 

@@ -28,7 +28,6 @@ import MopedEditor
 final class EditorState: NSObject, ObservableObject {
 	let preferences: Preferences
 	let supportedLanguages: [String]
-	let availableThemes: [String]
 
 	nonisolated(unsafe) private var preferencesObserver: NSObjectProtocol?
 	private var activeLanguage: String = "plaintext"
@@ -44,7 +43,6 @@ final class EditorState: NSObject, ObservableObject {
 
 	@Published var cursorPosition: String = "1:0"
 
-	weak var scrollView: NSScrollView?
 	weak var textView: MopedTextView?
 	private weak var model: TextFileModel?
 
@@ -58,11 +56,10 @@ final class EditorState: NSObject, ObservableObject {
 	init(preferences: Preferences = .userShared) {
 		self.preferences = preferences
 		supportedLanguages = LanguageCatalog.shared.supportedLanguages
-		availableThemes = MopedTheme.allNames
 		super.init()
 
 		preferencesObserver = NotificationCenter.default.addObserver(
-			forName: Notification.Name(rawValue: "PreferencesChanged"),
+			forName: .preferencesChanged,
 			object: nil,
 			queue: .main
 		) { [weak self] _ in
@@ -103,10 +100,9 @@ final class EditorState: NSObject, ObservableObject {
 				font: preferredFont(at: preferences.fontSizeFloat)
 			)
 
-			// Adopt the views before loading content: `isApplyingProgrammaticText`
+			// Adopt the text view before loading content: `isApplyingProgrammaticText`
 			// reads through `textView`, so the guard has to be live during
 			// `setPlainText`.
-			self.scrollView = scrollView
 			self.textView = textView
 
 			textView.delegate = delegate
@@ -222,10 +218,6 @@ final class EditorState: NSObject, ObservableObject {
 			updateCursorPosition(for: textView)
 		}
 	}
-}
-
-extension EditorState {
-	var currentLanguage: String { activeLanguage }
 }
 
 private extension Preferences.DefaultIndentation {

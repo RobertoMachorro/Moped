@@ -148,6 +148,8 @@
 	<string>%</string>
 	<key>thrift</key>
 	<string>//</string>
+	<key>toml</key>
+	<string>#</string>
 	<key>typescript</key>
 	<string>//</string>
 	<key>vala</key>

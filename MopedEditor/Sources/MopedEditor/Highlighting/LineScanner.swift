@@ -99,6 +99,9 @@ struct LineScanner {
 	}
 }
 
+/// UTF-16 code units the tokenizers test against, and the classification predicates
+/// that go with them. Namespaced rather than left at file scope so the package does
+/// not carry half a dozen bare `is…` functions in its module namespace.
 enum UnicodeScalars {
 	static let space: UInt16 = 0x20
 	static let tab: UInt16 = 0x09
@@ -107,26 +110,26 @@ enum UnicodeScalars {
 	static let questionMark: UInt16 = 0x3F
 	static let greaterThan: UInt16 = 0x3E
 	static let lessThan: UInt16 = 0x3C
-}
 
-func isDigitUnit(_ unit: UInt16) -> Bool {
-	unit >= 0x30 && unit <= 0x39
-}
+	static func isDigit(_ unit: UInt16) -> Bool {
+		unit >= 0x30 && unit <= 0x39
+	}
 
-func isUppercaseLetterUnit(_ unit: UInt16) -> Bool {
-	unit >= 0x41 && unit <= 0x5A
-}
+	static func isUppercaseLetter(_ unit: UInt16) -> Bool {
+		unit >= 0x41 && unit <= 0x5A
+	}
 
-func isLetterUnit(_ unit: UInt16) -> Bool {
-	(unit >= 0x41 && unit <= 0x5A) || (unit >= 0x61 && unit <= 0x7A)
-}
+	static func isLetter(_ unit: UInt16) -> Bool {
+		(unit >= 0x41 && unit <= 0x5A) || (unit >= 0x61 && unit <= 0x7A)
+	}
 
-/// Identifier start: ASCII letter, underscore, or any non-ASCII unit (keeps Unicode
-/// identifiers whole without full Unicode classification).
-func isIdentifierStartUnit(_ unit: UInt16) -> Bool {
-	isLetterUnit(unit) || unit == 0x5F || unit > 0x7F
-}
+	/// Identifier start: ASCII letter, underscore, or any non-ASCII unit (keeps Unicode
+	/// identifiers whole without full Unicode classification).
+	static func isIdentifierStart(_ unit: UInt16) -> Bool {
+		isLetter(unit) || unit == 0x5F || unit > 0x7F
+	}
 
-func isIdentifierContinueUnit(_ unit: UInt16) -> Bool {
-	isIdentifierStartUnit(unit) || isDigitUnit(unit)
+	static func isIdentifierContinue(_ unit: UInt16) -> Bool {
+		isIdentifierStart(unit) || isDigit(unit)
+	}
 }

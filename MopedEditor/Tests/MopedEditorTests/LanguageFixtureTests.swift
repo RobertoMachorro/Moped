@@ -41,6 +41,40 @@ final class LanguageFixtureTests: XCTestCase {
 		XCTAssertNil(LanguageRegistry.tokenizer(for: "plaintext"))
 	}
 
+	/// Everything offered for selection must actually highlight — that is the whole
+	/// point of the list.
+	func testEverySelectableNameHighlights() {
+		XCTAssertFalse(LanguageRegistry.selectableNames.isEmpty)
+		for name in LanguageRegistry.selectableNames {
+			XCTAssertNotNil(
+				LanguageRegistry.tokenizer(for: name),
+				"\(name) is selectable but has no tokenizer"
+			)
+		}
+		XCTAssertFalse(
+			LanguageRegistry.selectableNames.contains("plaintext"),
+			"plaintext is the app's 'no highlighting' entry, not a registry name"
+		)
+	}
+
+	/// Aliases users would recognise as their own language stay selectable; collapsing
+	/// them onto the backing tokenizer's id would label a Kotlin file `java`.
+	func testRecognisableAliasesRemainSelectable() {
+		for alias in ["kotlin", "groovy", "objectivec", "scss", "less", "shell"] {
+			XCTAssertTrue(
+				LanguageRegistry.selectableNames.contains(alias),
+				"\(alias) should still be offered"
+			)
+		}
+	}
+
+	/// `htmlbars` resolves — an old preference may still hold it — but is never offered.
+	func testDeprecatedAliasResolvesButIsNotSelectable() {
+		XCTAssertEqual(LanguageRegistry.canonicalID(for: "htmlbars"), "html")
+		XCTAssertNotNil(LanguageRegistry.tokenizer(for: "htmlbars"))
+		XCTAssertFalse(LanguageRegistry.selectableNames.contains("htmlbars"))
+	}
+
 	func testC() {
 		let text = "#include <stdio.h>\nint main(void) {\n\treturn 0; /* done */\n}"
 		assertKind("#include", is: .include, in: text, as: "c")

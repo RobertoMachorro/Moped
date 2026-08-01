@@ -91,7 +91,9 @@ final class SyntaxHighlighter: NSObject, @preconcurrency NSTextStorageDelegate {
 		guard isEnabled, editedMask.contains(.editedCharacters) else {
 			return
 		}
-		store?.noteEdit(in: textStorage.string as NSString, editedRange: editedRange)
+		store?.noteEdit(
+			in: textStorage.string as NSString, editedRange: editedRange, changeInLength: delta
+		)
 		schedulePass()
 	}
 

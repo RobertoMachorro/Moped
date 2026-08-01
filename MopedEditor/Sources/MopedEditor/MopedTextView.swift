@@ -36,6 +36,10 @@ public final class MopedTextView: NSTextView {
 	private var lineNumberRuler: LineNumberRulerView?
 	var cachedIndentStyle: IndentStyle?
 
+	/// Band painted behind the caret's line on the last draw, so a caret move can
+	/// invalidate just the line it left. See `MopedTextView+CurrentLine`.
+	var highlightedCaretLineRect: NSRect?
+
 	/// Set while `setPlainText(_:)` is replacing the content, so hosts can tell
 	/// programmatic edits from user typing.
 	public private(set) var isApplyingProgrammaticText = false
@@ -183,6 +187,9 @@ public final class MopedTextView: NSTextView {
 		// replaced (reload / force-reload), so drop the cached analysis.
 		cachedIndentStyle = nil
 		lineNumberRuler?.invalidateLineNumbers()
+		// Whole-document replacement: the per-line caret invalidation in
+		// `setSelectedRanges` is not enough here.
+		needsDisplay = true
 	}
 
 	// MARK: Menu actions
@@ -309,38 +316,4 @@ public final class MopedTextView: NSTextView {
 		return NSColor(red: 1 - red, green: 1 - green, blue: 1 - blue, alpha: alpha)
 	}
 
-	// MARK: Current line highlight
-
-	public override func drawBackground(in rect: NSRect) {
-		super.drawBackground(in: rect)
-		guard selectedRange().length == 0,
-			  let layoutManager,
-			  let textContainer,
-			  let content = textStorage?.string as NSString?
-		else {
-			return
-		}
-		let caret = min(selectedRange().location, content.length)
-		let lineRange = content.lineRange(for: NSRange(location: caret, length: 0))
-		let glyphRange = layoutManager.glyphRange(forCharacterRange: lineRange, actualCharacterRange: nil)
-		var lineRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-		lineRect.origin.x = 0
-		lineRect.size.width = bounds.width
-		lineRect.origin.y += textContainerInset.height
-		guard lineRect.intersects(rect) else {
-			return
-		}
-		theme.selection.withAlphaComponent(0.35).setFill()
-		lineRect.fill()
-	}
-
-	public override func setSelectedRanges(
-		_ ranges: [NSValue],
-		affinity: NSSelectionAffinity,
-		stillSelecting: Bool
-	) {
-		super.setSelectedRanges(ranges, affinity: affinity, stillSelecting: stillSelecting)
-		// The caret-line highlight moved, so the old and new lines both need redrawing.
-		needsDisplay = true
-	}
 }

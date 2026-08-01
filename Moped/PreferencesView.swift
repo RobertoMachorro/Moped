@@ -30,27 +30,26 @@ struct PreferencesView: View {
 	@ObservedObject var preferences: Preferences
 
 	private let languages: [String]
-	private let themes: [String]
+	private let themes: [PreferenceOption]
 	private let fonts: [String]
 	private let fontSizes: [String]
-	private let wrapOptions: [PreferenceOption]
-	private let lineNumberRulerOptions: [PreferenceOption]
+	private let yesNoOptions: [PreferenceOption]
 	private let launchBehaviorOptions: [PreferenceOption]
 	private let defaultIndentationOptions: [PreferenceOption]
-	private let appIconOptions = Preferences.AppIcon.allCases.map { $0.rawValue }
+	private let appIconOptions = Preferences.AppIcon.allCases.map {
+		PreferenceOption(value: $0.rawValue, label: $0.localizedLabel)
+	}
 
 	init(preferences: Preferences) {
 		self.preferences = preferences
 
 		languages = LanguageCatalog.shared.supportedLanguages
-		themes = MopedTheme.allNames
+		themes = MopedTheme.allNames.map {
+			PreferenceOption(value: $0, label: ThemeCatalog.localizedName(for: $0))
+		}
 		fonts = NSFontManager.shared.availableFonts.sorted()
 		fontSizes = (9...24).map { String($0) }
-		wrapOptions = [
-			PreferenceOption(value: "Yes", label: String(localized: "option.yes")),
-			PreferenceOption(value: "No", label: String(localized: "option.no"))
-		]
-		lineNumberRulerOptions = [
+		yesNoOptions = [
 			PreferenceOption(value: "Yes", label: String(localized: "option.yes")),
 			PreferenceOption(value: "No", label: String(localized: "option.no"))
 		]
@@ -83,7 +82,7 @@ struct PreferencesView: View {
 					get: { preferences.theme },
 					set: { preferences.theme = $0 }
 				),
-				options: themes.map { PreferenceOption(value: $0, label: $0) }
+				options: themes
 			)
 
 			PreferenceRow(
@@ -110,7 +109,7 @@ struct PreferencesView: View {
 					get: { preferences.lineWrap },
 					set: { preferences.lineWrap = $0 }
 				),
-				options: wrapOptions
+				options: yesNoOptions
 			)
 
 			PreferenceRow(
@@ -119,7 +118,7 @@ struct PreferencesView: View {
 					get: { preferences.showLineNumberRuler },
 					set: { preferences.showLineNumberRuler = $0 }
 				),
-				options: lineNumberRulerOptions
+				options: yesNoOptions
 			)
 
 			PreferenceRow(
@@ -146,7 +145,7 @@ struct PreferencesView: View {
 					get: { preferences.appIcon },
 					set: { preferences.appIcon = $0 }
 				),
-				options: appIconOptions.map { PreferenceOption(value: $0, label: $0) }
+				options: appIconOptions
 			)
 
 			Divider()

@@ -28,26 +28,31 @@ public struct LineStore {
 	private var lineStarts: [Int] = [0]
 	/// Carry-out state per line; nil marks a line that needs re-tokenizing.
 	private var carryOuts: [LineState?] = [nil]
+	/// Number of nil entries in `carryOuts`, maintained rather than recounted so
+	/// `hasDirtyLines` (checked after every pass) doesn't scan the whole document.
+	private var dirtyCount = 1
 
 	public init(tokenizer: any LineTokenizer) {
 		self.tokenizer = tokenizer
 	}
 
-	public var lineCount: Int { lineStarts.count }
-
 	/// Full reset: every line becomes dirty. Call on load and on language change.
 	public mutating func reset(text: NSString) {
-		lineStarts = Self.computeLineStarts(of: text)
+		lineStarts = LineIndex.lineStarts(of: text)
 		carryOuts = Array(repeating: nil, count: lineStarts.count)
+		dirtyCount = carryOuts.count
 	}
 
-	/// Splices line bookkeeping after an edit. `editedRange` is the post-edit range
-	/// (as reported by `NSTextStorage.didProcessEditing`).
-	public mutating func noteEdit(in newText: NSString, editedRange: NSRange) {
-		let newStarts = Self.computeLineStarts(of: newText)
+	/// Splices line bookkeeping after an edit. `editedRange` and `changeInLength` are
+	/// the post-edit range and length delta reported by
+	/// `NSTextStorage.didProcessEditing`.
+	public mutating func noteEdit(in newText: NSString, editedRange: NSRange, changeInLength: Int) {
+		let newStarts = LineIndex.splice(
+			lineStarts, in: newText, editedRange: editedRange, changeInLength: changeInLength
+		)
 		let lineDelta = newStarts.count - lineStarts.count
-		let firstDirty = Self.lineIndex(containing: editedRange.location, in: newStarts)
-		let lastDirty = Self.lineIndex(containing: max(editedRange.location, NSMaxRange(editedRange) - 1), in: newStarts)
+		let firstDirty = LineIndex.index(containing: editedRange.location, in: newStarts)
+		let lastDirty = LineIndex.index(containing: max(editedRange.location, NSMaxRange(editedRange) - 1), in: newStarts)
 
 		var newCarryOuts: [LineState?] = []
 		newCarryOuts.reserveCapacity(newStarts.count)
@@ -63,11 +68,16 @@ public struct LineStore {
 
 		lineStarts = newStarts
 		carryOuts = newCarryOuts
+		dirtyCount = newCarryOuts.reduce(0) { $1 == nil ? $0 + 1 : $0 }
 	}
 
 	/// True when at least one line still needs tokenizing.
 	public var hasDirtyLines: Bool {
-		carryOuts.contains(where: { $0 == nil })
+		assert(
+			dirtyCount == carryOuts.reduce(0, { $1 == nil ? $0 + 1 : $0 }),
+			"dirtyCount drifted from carryOuts"
+		)
+		return dirtyCount > 0
 	}
 
 	/// Re-tokenizes dirty regions until carry states stabilize, processing at most
@@ -95,6 +105,9 @@ public struct LineStore {
 				for var token in lineTokens {
 					token.range.location += content.location
 					tokens.append(token)
+				}
+				if previous == nil {
+					dirtyCount -= 1
 				}
 				carryOuts[index] = carryOut
 				recoloredStart = min(recoloredStart, lineStarts[index])
@@ -147,39 +160,5 @@ private extension LineStore {
 			}
 		}
 		return NSRange(location: start, length: end - start)
-	}
-
-	static func computeLineStarts(of text: NSString) -> [Int] {
-		var starts: [Int] = [0]
-		var location = 0
-		while location < text.length {
-			var lineStart = 0
-			var lineEnd = 0
-			var contentsEnd = 0
-			text.getLineStart(
-				&lineStart, end: &lineEnd, contentsEnd: &contentsEnd,
-				for: NSRange(location: location, length: 0)
-			)
-			if lineEnd < text.length {
-				starts.append(lineEnd)
-			}
-			location = lineEnd
-		}
-		return starts
-	}
-
-	/// Index of the line containing `location` (clamped to the last line).
-	static func lineIndex(containing location: Int, in starts: [Int]) -> Int {
-		var low = 0
-		var high = starts.count - 1
-		while low < high {
-			let mid = (low + high + 1) / 2
-			if starts[mid] <= location {
-				low = mid
-			} else {
-				high = mid - 1
-			}
-		}
-		return low
 	}
 }

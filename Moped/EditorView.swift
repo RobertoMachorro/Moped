@@ -38,7 +38,7 @@ struct EditorView: View {
 				.focusedValue(\.documentContent, documentContentBinding)
 				.onAppear {
 					DispatchQueue.main.async {
-						NSDocumentController.shared.currentDocument?.fileType = document.model.docTypeName
+						applyFileType(document.model.docTypeName)
 					}
 				}
 
@@ -71,7 +71,9 @@ struct EditorView: View {
 			Text("alert.file_changed.message")
 		}
 		.alert(
-			"error.file_too_large.description",
+			// Neutral title: `reloadFailure` carries the specific reason, which is
+			// either the size limit or an undecodable encoding.
+			"alert.reload_refused.title",
 			isPresented: Binding(
 				get: { document.reloadFailure != nil },
 				set: { if !$0 { document.reloadFailure = nil } }
@@ -91,9 +93,20 @@ struct EditorView: View {
 				document.model.docTypeName = utTypeId
 				document.model.docTypeLanguage = newValue
 				editorState.applyLanguage(newValue)
-				NSDocumentController.shared.currentDocument?.fileType = utTypeId
+				applyFileType(utTypeId)
 			}
 		)
+	}
+
+	/// Writes the type onto *this* view's document. `currentDocument` is whichever
+	/// document is frontmost, which is not necessarily this one — during the
+	/// launch-time reopen, several documents are opened in a row while another is key.
+	private func applyFileType(_ typeName: String) {
+		guard let url = document.fileURL,
+			  let nsDocument = NSDocumentController.shared.document(for: url) else {
+			return
+		}
+		nsDocument.fileType = typeName
 	}
 
 	private var documentContentBinding: Binding<String> {

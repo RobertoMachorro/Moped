@@ -60,7 +60,4 @@ public struct MopedTheme: Sendable {
 	public func color(for kind: TokenKind) -> NSColor {
 		tokenColors[kind.rawValue] ?? foreground
 	}
-
-	/// The token kinds themes are expected to map. Kept for theme editors and tests.
-	public static let tokenKinds: [String] = TokenKind.allCases.map(\.rawValue)
 }

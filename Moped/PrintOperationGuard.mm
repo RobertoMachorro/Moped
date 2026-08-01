@@ -1,7 +1,16 @@
 //
-//  PrintOperationGuard.m
+//  PrintOperationGuard.mm
 //
 //  Moped - A general purpose text editor, small and light.
+//
+//  AppKit's print machinery raises rather than returning errors: a driver or PDF
+//  workflow that fails throws an NSException (and occasionally a C++ exception) up
+//  through `runOperation`, which would terminate the app since Swift cannot catch
+//  either. This thin Objective-C++ shim converts both into a BOOL plus a reason
+//  string so `MopedCommands.printDocument` can show an alert instead.
+//
+//  The `.mm` extension is load-bearing — the `catch (const std::exception &)` clause
+//  below only compiles as Objective-C++.
 //
 
 #import "PrintOperationGuard.h"
