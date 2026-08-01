@@ -3413,6 +3413,90 @@
         }
       }
     },
+    "error.file_binary.description" : {
+      "comment" : "Alert text when the file is not text, on open or on reload.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped kann nur Textdateien öffnen; diese Datei scheint binär zu sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped can only open text files, and this file appears to be binary."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped solo puede abrir archivos de texto y este archivo parece ser binario."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped voi avata vain tekstitiedostoja, ja tämä tiedosto vaikuttaa binääriseltä."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped ne peut ouvrir que des fichiers texte, et ce fichier semble être binaire."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped יכול לפתוח קבצי טקסט בלבד, והקובץ הזה נראה בינארי."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped केवल टेक्स्ट फ़ाइलें खोल सकता है, और यह फ़ाइल बाइनरी प्रतीत होती है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped può aprire solo file di testo e questo file sembra essere binario."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mopedはテキストファイルのみ開けます。このファイルはバイナリのようです。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped kan alleen tekstbestanden openen en dit bestand lijkt binair te zijn."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Moped só pode abrir ficheiros de texto e este ficheiro parece ser binário."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Moped só pode abrir arquivos de texto e este arquivo parece ser binário."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped може відкривати лише текстові файли, а цей файл виглядає двійковим."
+          }
+        }
+      }
+    },
     "menu.app.about" : {
       "extractionState" : "stale",
       "localizations" : {

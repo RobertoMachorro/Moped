@@ -26,6 +26,10 @@
 - [ ] File over 4 MB — refused with Moped's own alert naming the limit and the file's size, not the system default.
 - [ ] File grows past 4 MB on disk, then Reload — refused with the same message; the open buffer is left untouched.
 - [ ] File grows past 256 KB on disk, then Reload — reloads and highlighting switches off.
+- [ ] Binary file (e.g. `cp /bin/ls ~/Desktop/probe.dat`) — refused with "Moped can only open text files", no document window opens.
+- [ ] Binary file replaces an open text file on disk, then Reload — refused, the open buffer is left untouched.
+- [ ] UTF‑16 file with a BOM (`printf 'a\nb\n' | iconv -f UTF-8 -t UTF-16 > f.txt`) — still opens as text.
+- [ ] UTF‑8 file with a BOM — still opens as text.
 - [ ] Save, close, reopen — content round‑trips through TextFileModel.
 - [ ] External file change → reload alert → reload — still works.
 - [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).

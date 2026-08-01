@@ -20,6 +20,7 @@
 
 import Combine
 import Foundation
+import MopedEditor
 
 class TextFileModel: NSObject, ObservableObject {
 	@Published var content: String
@@ -42,13 +43,34 @@ extension TextFileModel {
 	/// Rejection for data no encoding could decode. Throwing rather than substituting
 	/// placeholder text is deliberate: a placeholder leaves an editable document whose
 	/// next save would write the placeholder over the user's file.
-	static func unknownEncodingError() -> Error {
-		CocoaError(.fileReadUnknownStringEncoding, userInfo: [
-			NSLocalizedDescriptionKey: String(localized: "error.file_unknown_encoding.description")
+	/// Both keys carry the same sentence on purpose. `NSDocumentController` throws away
+	/// `NSLocalizedDescriptionKey` when it opens a file — it substitutes its own
+	/// "The document ... could not be opened" wrapper — and shows only the recovery
+	/// suggestion, so the open alert needs the message there. The reload path in
+	/// `MopedDocument.reloadFromDisk` reads `error.localizedDescription`, which is the
+	/// description key. Dropping either one silently loses the message on one path.
+	private static func readError(_ code: CocoaError.Code, message: String) -> Error {
+		CocoaError(code, userInfo: [
+			NSLocalizedDescriptionKey: message,
+			NSLocalizedRecoverySuggestionErrorKey: message
 		])
 	}
 
+	static func unknownEncodingError() -> Error {
+		readError(.fileReadUnknownStringEncoding, message: String(localized: "error.file_unknown_encoding.description"))
+	}
+
+	/// Rejection for a file that is not text. Moped edits text only, and the decoders
+	/// below cannot be trusted to refuse anything — see `ContentKind`.
+	static func binaryFileError() -> Error {
+		readError(.fileReadCorruptFile, message: String(localized: "error.file_binary.description"))
+	}
+
 	func read(from data: Data, ofType typeName: String) throws {
+		guard ContentKind.of(data) == .text else {
+			throw Self.binaryFileError()
+		}
+
 		var convertedString: NSString?
 		let encodingRaw = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: &convertedString, usedLossyConversion: nil)
 
