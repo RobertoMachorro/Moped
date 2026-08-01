@@ -36,14 +36,25 @@ import UniformTypeIdentifiers
 /// off-main afterwards is `suppressWatchUntil`, from `fileWrapper` during a save, and it
 /// is a `Date` guarding a debounce — a stale read re-prompts a reload at worst.
 final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked Sendable {
-	/// Largest file Moped will open. Benchmarked against the real editor: at this size
-	/// a keystroke plus the frame that follows cost ~45 ms with the line-number gutter
-	/// visible, inside the ~100 ms "feels instant" budget.
+	/// Largest file Moped will open.
 	///
-	/// That measurement predates `LineIndex.splice`. The gutter and the highlighter each
-	/// used to rebuild a whole line-offset array per keystroke — measured in isolation at
-	/// ~6.9 ms apiece at this size, now ~0.09 ms — so the real figure is lower than 45 ms
-	/// today. It has not been re-measured end to end, and the limit stays here until it is.
+	/// Re-measured after `LineIndex.splice`, driving the real editor with the gutter
+	/// visible (median of 25 keystrokes; open = encoding detection, decode, layout and
+	/// first frame):
+	///
+	///     size     keystroke   open
+	///     256 KB     5.9 ms    14 ms
+	///     4 MB       5.5 ms    87 ms
+	///     16 MB      6.0 ms   321 ms
+	///
+	/// Keystroke cost is now flat in document size — it used to grow, which is what this
+	/// limit was originally protecting against, and that reason no longer holds. Open cost
+	/// is linear at roughly 20 ms/MB and is what actually bounds the limit now.
+	///
+	/// 4 MB is therefore conservative rather than necessary; the numbers support raising
+	/// it. Left as-is deliberately: memory is the untested axis — a 16 MB document also
+	/// carries its text storage, attributes and undo stack — and the measurements come
+	/// from one Apple Silicon machine.
 	private static let maxFileLength = 4_194_304 // 4 MB
 	/// Threshold at which we start treating a file as "large" and turn off expensive
 	/// features (currently syntax highlighting). Measured independently of `maxFileLength`:
@@ -55,11 +66,16 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	private static let watchSuppressionInterval: TimeInterval = 2.0
 
 	/// Rejection for a file past `maxFileLength`. Keeps the `.fileReadTooLarge` domain and
-	/// code so existing error handling still matches, but carries Moped's own wording.
-	/// Sizes are formatted rather than hardcoded so the strings survive a limit change.
+	/// code so existing error handling still matches, and carries Moped's own wording as
+	/// the recovery suggestion.
+	///
+	/// Only the recovery suggestion, deliberately: this error is thrown from
+	/// `init(configuration:)`, and `NSDocumentController` replaces any
+	/// `NSLocalizedDescriptionKey` with its own "The document … could not be opened"
+	/// wrapper. A description here would be translated into 13 languages and shown to
+	/// nobody. The reload path never sees this error — it refuses on size before reading.
 	private static func fileTooLargeError(actualBytes: Int) -> Error {
 		CocoaError(.fileReadTooLarge, userInfo: [
-			NSLocalizedDescriptionKey: String(localized: "error.file_too_large.description"),
 			NSLocalizedRecoverySuggestionErrorKey: fileTooLargeRecoverySuggestion(actualBytes: actualBytes)
 		])
 	}
