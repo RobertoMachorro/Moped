@@ -16,12 +16,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install ripgrep
-        run: brew install ripgrep
+      - name: Install tools
+        # Neither ships on the macos runner image: ripgrep for the localization
+        # check, SwiftLint for the lint gate.
+        run: brew install ripgrep swiftlint
       - name: Check localized string usage
         run: ./scripts/check_localized_strings.sh
       - name: Lint
-        run: swiftlint --strict
+        # --strict fails on warnings, which is what "SwiftLint must be clean" in
+        # AGENTS.md means. Homebrew tracks latest, so a release that adds a rule can
+        # fail a PR that did not touch the offending code — the version is printed to
+        # make that obvious when it happens.
+        run: |
+          swiftlint version
+          swiftlint --strict
       - name: Test editor package
         run: swift test --package-path MopedEditor
       - name: Build
