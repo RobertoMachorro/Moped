@@ -10,7 +10,13 @@
 - [ ] Open an XML file, an `Info.plist`, and an `.svg` — the `<?xml … ?>` prolog, tag names, and quoted attribute values are all colored; a multiline `<![CDATA[ … ]]>` stays literal and markup after it highlights again.
 - [ ] Open a language with no definition yet (e.g. Dart, AutoHotkey) — shows plain, no crash.
 - [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document, in place, without the scroll position jumping.
+- [ ] Select the System theme — editor uses the system text colors; flip System Settings → Appearance between Light and Dark with a document open and the background, text, selection, gutter, caret, and syntax colors all follow without reopening the file.
 - [ ] Change font and font size in Preferences — propagates to the editor and to the gutter.
+- [ ] Settings window — titled "Settings", sidebar lists General / Appearance / Editing / Advanced, each pane's labels and controls line up in one column.
+- [ ] Settings in a non‑English locale (German is the longest) — no label truncation and the control column stays aligned.
+- [ ] "Show only monospaced fonts" — checking it shrinks the font list to fixed‑pitch faces; with a proportional font already selected (e.g. Helvetica) the picker still shows it rather than going blank, and the stored font is not rewritten.
+- [ ] Wrap long lines / Show line numbers are checkboxes, not Yes/No pickers, and still drive the editor.
+- [ ] Advanced → Manage… renders as a button (not a popup) and opens Default File Associations.
 - [ ] Cmd‑+, Cmd‑−, Cmd‑0 — increase/decrease/reset font size.
 - [ ] Tab key with no selection: hard‑tab file inserts \t; 2‑space file inserts 2 spaces aligned to column.
 - [ ] Tab/Shift‑Tab with multi‑line selection — indents/outdents block.
@@ -34,3 +40,6 @@
 - [ ] External file change → reload alert → reload — still works.
 - [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
 - [ ] MopedCLI moped --wait — unaffected.
+- [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
+- [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
+- [ ] On Launch = Reopen Previous — open two files, quit, relaunch: both come back at their saved frames. Close both, quit, relaunch: one untitled window. Quit, then `moped <file>`: only that file, no session restore.

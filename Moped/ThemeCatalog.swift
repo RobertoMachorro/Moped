@@ -18,6 +18,7 @@
 //	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+import AppKit
 import MopedEditor
 
 /// Resolves the stored theme preference to a `MopedEditor` theme. The themes
@@ -27,8 +28,18 @@ enum ThemeCatalog {
 	/// Look up a theme by name, resolving legacy Highlightr theme strings to the closest
 	/// built-in. Returns the default theme when nothing matches so existing preferences
 	/// don't reset users on first launch.
+	///
+	/// `@MainActor` because the System theme is resolved against `NSApp`'s appearance.
+	/// Both callers live in `EditorState`, which is already main-actor isolated;
+	/// `localizedName(for:)` below touches no app state and stays nonisolated.
+	@MainActor
 	static func theme(named name: String) -> MopedTheme {
 		let key = name.lowercased()
+		if key == MopedTheme.systemName.lowercased() {
+			// Only an opening value: `MopedTextView` re-resolves it against its own
+			// effective appearance, and again whenever that appearance changes.
+			return .system(for: NSApp.effectiveAppearance)
+		}
 		if let direct = MopedTheme.allBuiltIn.first(where: { $0.name.lowercased() == key }) {
 			return direct
 		}
@@ -50,6 +61,7 @@ enum ThemeCatalog {
 	/// which is untranslated but never blank.
 	static func localizedName(for name: String) -> String {
 		switch name {
+		case MopedTheme.systemName:          return String(localized: "option.theme.system")
 		case MopedTheme.defaultLight.name:   return String(localized: "option.theme.default_light")
 		case MopedTheme.defaultDark.name:    return String(localized: "option.theme.default_dark")
 		case MopedTheme.xcodeLike.name:      return String(localized: "option.theme.xcode_like")

@@ -53,7 +53,7 @@ extension MopedTextView {
 		guard lineRect.intersects(rect) else {
 			return
 		}
-		theme.selection.withAlphaComponent(0.35).setFill()
+		resolvedTheme.selection.withAlphaComponent(0.35).setFill()
 		lineRect.fill()
 	}
 

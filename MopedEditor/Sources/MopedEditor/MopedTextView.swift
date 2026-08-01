@@ -217,20 +217,42 @@ public final class MopedTextView: NSTextView {
 
 	// MARK: Appearance
 
+	/// The theme actually painted. The System theme is rebuilt against this view's own
+	/// effective appearance so it tracks Auto light/dark; every other theme is fixed and
+	/// passes straight through.
+	var resolvedTheme: MopedTheme {
+		theme.name == MopedTheme.systemName ? .system(for: effectiveAppearance) : theme
+	}
+
+	/// Re-resolves the System theme when the user (or the schedule) flips light/dark.
+	/// A repaint alone would not be enough: token colours live as layout-manager
+	/// temporary attributes, so the highlighter has to be handed the new palette and
+	/// re-run, which assigning `highlighter.theme` in `applyTheme()` does.
+	public override func viewDidChangeEffectiveAppearance() {
+		super.viewDidChangeEffectiveAppearance()
+		guard theme.name == MopedTheme.systemName else {
+			return
+		}
+		applyTheme()
+	}
+
 	private func applyTheme() {
-		highlighter.theme = theme
-		backgroundColor = theme.background
-		textColor = theme.foreground
-		insertionPointColor = Self.caretColor(using: theme.background)
-		selectedTextAttributes = [.backgroundColor: theme.selection]
+		// Resolved once per pass: `system(for:)` rebuilds a whole palette, and several
+		// of the assignments below would otherwise each trigger their own resolution.
+		let resolved = resolvedTheme
+		highlighter.theme = resolved
+		backgroundColor = resolved.background
+		textColor = resolved.foreground
+		insertionPointColor = resolved.caret
+		selectedTextAttributes = [.backgroundColor: resolved.selection]
 		typingAttributes = baseAttributes()
-		enclosingScrollView?.backgroundColor = theme.background
+		enclosingScrollView?.backgroundColor = resolved.background
 		textStorage?.addAttribute(
 			.foregroundColor,
-			value: theme.foreground,
+			value: resolved.foreground,
 			range: NSRange(location: 0, length: textStorage?.length ?? 0)
 		)
-		lineNumberRuler?.theme = theme
+		lineNumberRuler?.theme = resolved
 		needsDisplay = true
 	}
 
@@ -247,7 +269,7 @@ public final class MopedTextView: NSTextView {
 	}
 
 	private func baseAttributes() -> [NSAttributedString.Key: Any] {
-		[.font: editorFont, .foregroundColor: theme.foreground]
+		[.font: editorFont, .foregroundColor: resolvedTheme.foreground]
 	}
 
 	private func installLineNumberRuler() {
@@ -297,23 +319,6 @@ public final class MopedTextView: NSTextView {
 	private static func gutterFont(matching font: NSFont) -> NSFont {
 		let size = font.pointSize * 0.9
 		return NSFont.userFixedPitchFont(ofSize: size) ?? NSFont.systemFont(ofSize: size)
-	}
-
-	/// Caret color as the inverse of the background, matching the previous editor.
-	private static func caretColor(using color: NSColor) -> NSColor {
-		let resolved = color.usingColorSpace(.sRGB)
-			?? color.usingColorSpace(.deviceRGB)
-			?? color.usingColorSpace(.genericRGB)
-
-		guard let rgb = resolved else {
-			return .black
-		}
-		var red: CGFloat = 1
-		var green: CGFloat = 1
-		var blue: CGFloat = 1
-		var alpha: CGFloat = 1
-		rgb.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-		return NSColor(red: 1 - red, green: 1 - green, blue: 1 - blue, alpha: alpha)
 	}
 
 }

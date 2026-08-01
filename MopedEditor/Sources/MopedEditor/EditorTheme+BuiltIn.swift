@@ -27,6 +27,11 @@ extension MopedTheme {
 
 	public static let allNames: [String] = allBuiltIn.map(\.name)
 
+	/// Everything the settings picker offers, appearance-following theme first. Kept
+	/// separate from `allNames` because `system` is a function of the appearance rather
+	/// than a fixed theme, so it cannot join `allBuiltIn`.
+	public static let selectableNames: [String] = [systemName] + allNames
+
 	public static let defaultName: String = defaultLight.name
 }
 

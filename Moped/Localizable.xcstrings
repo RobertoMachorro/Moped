@@ -3161,6 +3161,90 @@
         }
       }
     },
+    "error.file_binary.description" : {
+      "comment" : "Alert text when the file is not text, on open or on reload.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped kann nur Textdateien öffnen; diese Datei scheint binär zu sein."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moped can only open text files, and this file appears to be binary."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped solo puede abrir archivos de texto y este archivo parece ser binario."
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped voi avata vain tekstitiedostoja, ja tämä tiedosto vaikuttaa binääriseltä."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped ne peut ouvrir que des fichiers texte, et ce fichier semble être binaire."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped יכול לפתוח קבצי טקסט בלבד, והקובץ הזה נראה בינארי."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped केवल टेक्स्ट फ़ाइलें खोल सकता है, और यह फ़ाइल बाइनरी प्रतीत होती है।"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped può aprire solo file di testo e questo file sembra essere binario."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mopedはテキストファイルのみ開けます。このファイルはバイナリのようです。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped kan alleen tekstbestanden openen en dit bestand lijkt binair te zijn."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Moped só pode abrir ficheiros de texto e este ficheiro parece ser binário."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "O Moped só pode abrir arquivos de texto e este arquivo parece ser binário."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Moped може відкривати лише текстові файли, а цей файл виглядає двійковим."
+          }
+        }
+      }
+    },
     "error.file_too_large.recovery_format" : {
       "comment" : "Alert body. %1$@ is the size limit (e.g. \"4 MB\"); %2$@ is the file's actual size.",
       "extractionState" : "stale",
@@ -3325,90 +3409,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Moped не зміг визначити кодування тексту цього файлу."
-          }
-        }
-      }
-    },
-    "error.file_binary.description" : {
-      "comment" : "Alert text when the file is not text, on open or on reload.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped kann nur Textdateien öffnen; diese Datei scheint binär zu sein."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moped can only open text files, and this file appears to be binary."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped solo puede abrir archivos de texto y este archivo parece ser binario."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped voi avata vain tekstitiedostoja, ja tämä tiedosto vaikuttaa binääriseltä."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped ne peut ouvrir que des fichiers texte, et ce fichier semble être binaire."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped יכול לפתוח קבצי טקסט בלבד, והקובץ הזה נראה בינארי."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped केवल टेक्स्ट फ़ाइलें खोल सकता है, और यह फ़ाइल बाइनरी प्रतीत होती है।"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped può aprire solo file di testo e questo file sembra essere binario."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Mopedはテキストファイルのみ開けます。このファイルはバイナリのようです。"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped kan alleen tekstbestanden openen en dit bestand lijkt binair te zijn."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "O Moped só pode abrir ficheiros de texto e este ficheiro parece ser binário."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "O Moped só pode abrir arquivos de texto e este arquivo parece ser binário."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped може відкривати лише текстові файли, а цей файл виглядає двійковим."
           }
         }
       }
@@ -4990,6 +4990,174 @@
         }
       }
     },
+    "option.icon.beige" : {
+      "comment" : "App icon choice in Preferences.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beige"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beige"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beis"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beige"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beige"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "בז'"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "बेज"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beige"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ベージュ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Beige"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bege"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Bege"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Бежева"
+          }
+        }
+      }
+    },
+    "option.icon.black" : {
+      "comment" : "App icon choice in Preferences.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Schwarz"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Negro"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Musta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Noir"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "שחור"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "काला"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Nera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "ブラック"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zwart"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Preto"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Preto"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Чорна"
+          }
+        }
+      }
+    },
     "option.icon.default" : {
       "comment" : "App icon choice in Preferences.",
       "extractionState" : "stale",
@@ -5158,174 +5326,6 @@
         }
       }
     },
-    "option.icon.black" : {
-      "comment" : "App icon choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Schwarz"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Black"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Negro"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Musta"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Noir"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "שחור"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "काला"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Nera"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "ブラック"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Zwart"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Preto"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Preto"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Чорна"
-          }
-        }
-      }
-    },
-    "option.icon.red" : {
-      "comment" : "App icon choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Rot"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Red"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Rojo"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Punainen"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Rouge"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "אדום"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "लाल"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Rossa"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "レッド"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Rood"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Vermelho"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Vermelho"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Червона"
-          }
-        }
-      }
-    },
     "option.icon.rainbow" : {
       "comment" : "App icon choice in Preferences.",
       "extractionState" : "stale",
@@ -5410,86 +5410,86 @@
         }
       }
     },
-    "option.icon.beige" : {
+    "option.icon.red" : {
       "comment" : "App icon choice in Preferences.",
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beige"
+            "value" : "Rot"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beige"
+            "value" : "Red"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beis"
+            "value" : "Rojo"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beige"
+            "value" : "Punainen"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beige"
+            "value" : "Rouge"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "בז'"
+            "value" : "אדום"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "बेज"
+            "value" : "लाल"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beige"
+            "value" : "Rossa"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "ベージュ"
+            "value" : "レッド"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Beige"
+            "value" : "Rood"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Bege"
+            "value" : "Vermelho"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Bege"
+            "value" : "Vermelho"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Бежева"
+            "value" : "Червона"
           }
         }
       }
@@ -5909,90 +5909,6 @@
         }
       }
     },
-    "option.theme.default_light" : {
-      "comment" : "Editor theme choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standard Hell"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default Light"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro predeterminado"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Vaalea oletus"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Clair par défaut"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "בהיר (ברירת מחדל)"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "डिफ़ॉल्ट लाइट"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Chiaro predefinito"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "デフォルト（ライト）"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standaard licht"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro predefinido"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro padrão"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Стандартна світла"
-          }
-        }
-      }
-    },
     "option.theme.default_dark" : {
       "comment" : "Editor theme choice in Preferences.",
       "extractionState" : "stale",
@@ -6077,86 +5993,170 @@
         }
       }
     },
-    "option.theme.xcode_like" : {
+    "option.theme.default_light" : {
       "comment" : "Editor theme choice in Preferences.",
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Xcode-ähnlich"
+            "value" : "Standard Hell"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Xcode-like"
+            "value" : "Default Light"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Estilo Xcode"
+            "value" : "Claro predeterminado"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Xcode-tyylinen"
+            "value" : "Vaalea oletus"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Style Xcode"
+            "value" : "Clair par défaut"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "בסגנון Xcode"
+            "value" : "בהיר (ברירת מחדל)"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Xcode जैसा"
+            "value" : "डिफ़ॉल्ट लाइट"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Stile Xcode"
+            "value" : "Chiaro predefinito"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Xcode風"
+            "value" : "デフォルト（ライト）"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Xcode-achtig"
+            "value" : "Standaard licht"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Estilo Xcode"
+            "value" : "Claro predefinido"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Estilo Xcode"
+            "value" : "Claro padrão"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "У стилі Xcode"
+            "value" : "Стандартна світла"
+          }
+        }
+      }
+    },
+    "option.theme.solarized_dark" : {
+      "comment" : "Editor theme choice in Preferences.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized Dunkel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solarized Dark"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized oscuro"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized tumma"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized sombre"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized כהה"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized डार्क"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized scuro"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized ダーク"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized donker"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized escuro"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized escuro"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Solarized темна"
           }
         }
       }
@@ -6245,86 +6245,170 @@
         }
       }
     },
-    "option.theme.solarized_dark" : {
+    "option.theme.system" : {
+      "comment" : "Theme picker option that follows the system appearance instead of theming.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Järjestelmä"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Système"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מערכת"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सिस्टम"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeem"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistema"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системна"
+          }
+        }
+      }
+    },
+    "option.theme.xcode_like" : {
       "comment" : "Editor theme choice in Preferences.",
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized Dunkel"
+            "value" : "Xcode-ähnlich"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Solarized Dark"
+            "value" : "Xcode-like"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized oscuro"
+            "value" : "Estilo Xcode"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized tumma"
+            "value" : "Xcode-tyylinen"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized sombre"
+            "value" : "Style Xcode"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized כהה"
+            "value" : "בסגנון Xcode"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized डार्क"
+            "value" : "Xcode जैसा"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized scuro"
+            "value" : "Stile Xcode"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized ダーク"
+            "value" : "Xcode風"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized donker"
+            "value" : "Xcode-achtig"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized escuro"
+            "value" : "Estilo Xcode"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized escuro"
+            "value" : "Estilo Xcode"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solarized темна"
+            "value" : "У стилі Xcode"
           }
         }
       }
@@ -6418,79 +6502,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktives Symbol:"
+            "value" : "App-Symbol"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Active Icon:"
+            "value" : "App icon"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icono activo:"
+            "value" : "Icono de la app"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktiivinen kuvake:"
+            "value" : "Apin kuvake"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icône active :"
+            "value" : "Icône de l’app"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "סמל פעיל:"
+            "value" : "סמל היישום"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सक्रिय आइकन:"
+            "value" : "ऐप आइकन"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Icona attiva:"
+            "value" : "Icona dell’app"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクティブアイコン:"
+            "value" : "Appアイコン"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Actief icoon:"
+            "value" : "App-icoon"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ícone ativo:"
+            "value" : "Ícone da app"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ícone ativo:"
+            "value" : "Ícone do app"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Активна іконка:"
+            "value" : "Іконка програми"
           }
         }
       }
@@ -6501,161 +6585,162 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zuordnungen verwalten…"
+            "value" : "Verwalten…"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Manage Defaults…"
+            "value" : "Manage…"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gestionar predeterminados…"
+            "value" : "Gestionar…"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hallitse oletuksia…"
+            "value" : "Hallitse…"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gérer les associations…"
+            "value" : "Gérer…"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "נהל ברירות מחדל…"
+            "value" : "נהל…"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "डिफ़ॉल्ट प्रबंधित करें…"
+            "value" : "प्रबंधित करें…"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gestisci predefiniti…"
+            "value" : "Gestisci…"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "デフォルトを管理…"
+            "value" : "管理…"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Koppelingen beheren…"
+            "value" : "Beheren…"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gerir predefinições…"
+            "value" : "Gerir…"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gerenciar padrões…"
+            "value" : "Gerenciar…"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Керувати асоціаціями…"
+            "value" : "Керувати…"
           }
         }
       }
     },
     "pref.default_editor.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standardeditor:"
+            "value" : "Dateizuordnungen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default Editor:"
+            "value" : "File associations"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Editor predeterminado:"
+            "value" : "Asociaciones de archivos"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oletuseditori:"
+            "value" : "Tiedostoliitokset"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Éditeur par défaut :"
+            "value" : "Associations de fichiers"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "עורך ברירת מחדל:"
+            "value" : "שיוכי קבצים"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "डिफ़ॉल्ट एडिटर:"
+            "value" : "फ़ाइल संबद्धताएँ"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Editor predefinito:"
+            "value" : "Associazioni file"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "デフォルトエディタ:"
+            "value" : "ファイルの関連付け"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standaardeditor:"
+            "value" : "Bestandskoppelingen"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Editor predefinido:"
+            "value" : "Associações de ficheiros"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Editor padrão:"
+            "value" : "Associações de arquivos"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Редактор за замовчуванням:"
+            "value" : "Асоціації файлів"
           }
         }
       }
@@ -6666,79 +6751,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standardeinzug:"
+            "value" : "Einzug"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default Indent:"
+            "value" : "Indentation"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sangría predeterminada:"
+            "value" : "Sangría"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oletussisentäminen:"
+            "value" : "Sisennys"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indentation par défaut :"
+            "value" : "Indentation"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "כניסה ברירת מחדל:"
+            "value" : "כניסה"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "डिफ़ॉल्ट इंडेंट:"
+            "value" : "इंडेंटेशन"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rientro predefinito:"
+            "value" : "Rientro"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "デフォルトのインデント:"
+            "value" : "インデント"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standaard inspringing:"
+            "value" : "Inspringing"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indentação padrão:"
+            "value" : "Indentação"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indentação padrão:"
+            "value" : "Indentação"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Відступ за замовчуванням:"
+            "value" : "Відступ"
           }
         }
       }
@@ -6749,79 +6834,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schriftgröße:"
+            "value" : "Schriftgröße"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Font Size:"
+            "value" : "Font size"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamaño de fuente:"
+            "value" : "Tamaño de fuente"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kirjasinkoko:"
+            "value" : "Kirjasinkoko"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taille de police :"
+            "value" : "Taille de police"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "גודל גופן:"
+            "value" : "גודל גופן"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "फ़ॉन्ट आकार:"
+            "value" : "फ़ॉन्ट आकार"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dimensione carattere:"
+            "value" : "Dimensione"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フォントサイズ:"
+            "value" : "フォントサイズ"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lettergrootte:"
+            "value" : "Lettergrootte"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamanho do tipo de letra:"
+            "value" : "Tamanho da letra"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tamanho da fonte:"
+            "value" : "Tamanho da fonte"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Розмір шрифту:"
+            "value" : "Розмір шрифту"
           }
         }
       }
@@ -6832,79 +6917,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schriftart:"
+            "value" : "Schriftart"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Font:"
+            "value" : "Font"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fuente:"
+            "value" : "Fuente"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kirjasin:"
+            "value" : "Kirjasin"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Police :"
+            "value" : "Police"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "גופן:"
+            "value" : "גופן"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "फ़ॉन्ट:"
+            "value" : "फ़ॉन्ट"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Carattere:"
+            "value" : "Carattere"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フォント:"
+            "value" : "フォント"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lettertype:"
+            "value" : "Lettertype"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tipo de letra:"
+            "value" : "Tipo de letra"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fonte:"
+            "value" : "Fonte"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Шрифт:"
+            "value" : "Шрифт"
           }
         }
       }
@@ -6915,79 +7000,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sprache:"
+            "value" : "Syntaxsprache"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Language:"
+            "value" : "Syntax language"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lenguaje:"
+            "value" : "Lenguaje de sintaxis"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kieli:"
+            "value" : "Syntaksin kieli"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Langage :"
+            "value" : "Langage de syntaxe"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "שפה:"
+            "value" : "שפת תחביר"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "भाषा:"
+            "value" : "सिंटैक्स भाषा"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lingua:"
+            "value" : "Linguaggio sintassi"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "言語:"
+            "value" : "構文言語"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Taal:"
+            "value" : "Syntaxistaal"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Idioma:"
+            "value" : "Linguagem de sintaxe"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Idioma:"
+            "value" : "Linguagem de sintaxe"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Мова:"
+            "value" : "Мова синтаксису"
           }
         }
       }
@@ -6998,79 +7083,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beim Start:"
+            "value" : "Beim Start"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "On Launch:"
+            "value" : "At startup"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al iniciar:"
+            "value" : "Al iniciar"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Käynnistyksessä:"
+            "value" : "Käynnistettäessä"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Au démarrage :"
+            "value" : "Au démarrage"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "בעת הפעלה:"
+            "value" : "בעת ההפעלה"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "लॉन्च पर:"
+            "value" : "प्रारंभ होने पर"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All'avvio:"
+            "value" : "All'avvio"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "起動時:"
+            "value" : "起動時"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bij opstarten:"
+            "value" : "Bij het starten"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ao iniciar:"
+            "value" : "Ao iniciar"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ao iniciar:"
+            "value" : "Ao iniciar"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "При запуску:"
+            "value" : "При запуску"
           }
         }
       }
@@ -7081,79 +7166,499 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeilennummern:"
+            "value" : "Zeilennummern anzeigen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Line Numbers:"
+            "value" : "Show line numbers"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Números de línea:"
+            "value" : "Mostrar números de línea"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rivinumerot:"
+            "value" : "Näytä rivinumerot"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numéros de ligne :"
+            "value" : "Afficher les numéros de ligne"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "מספרי שורות:"
+            "value" : "הצג מספרי שורות"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "पंक्ति संख्याएं:"
+            "value" : "पंक्ति संख्याएँ दिखाएँ"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Numeri di riga:"
+            "value" : "Mostra i numeri di riga"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "行番号:"
+            "value" : "行番号を表示"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Regelnummers:"
+            "value" : "Toon regelnummers"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Números de linha:"
+            "value" : "Mostrar números de linha"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Números de linha:"
+            "value" : "Mostrar números de linha"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Номери рядків:"
+            "value" : "Показувати номери рядків"
+          }
+        }
+      }
+    },
+    "pref.monospaced_only.title" : {
+      "comment" : "Checkbox that filters the font picker down to fixed-pitch faces.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur dicktengleiche Schriften"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show only monospaced fonts"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo monoespaciadas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vain tasalevyiset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chasse fixe uniquement"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הצג רק גופנים ברוחב אחיד"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल मोनोस्पेस फ़ॉन्ट"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo a spaziatura fissa"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等幅フォントのみ表示"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen vaste breedte"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apenas monoespaçados"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apenas monoespaçadas"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лише моноширинні"
+          }
+        }
+      }
+    },
+    "pref.section.advanced" : {
+      "comment" : "Settings sidebar section for file association options.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erweitert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avanzado"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lisäasetukset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avancé"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מתקדם"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "उन्नत"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avanzate"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "詳細"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geavanceerd"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avançado"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avançado"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Додатково"
+          }
+        }
+      }
+    },
+    "pref.section.appearance" : {
+      "comment" : "Settings sidebar section for theme and font options.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erscheinungsbild"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apariencia"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ulkoasu"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מראה"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "दिखावट"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aspetto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外観"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weergave"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparência"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aparência"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вигляд"
+          }
+        }
+      }
+    },
+    "pref.section.editing" : {
+      "comment" : "Settings sidebar section for editor behavior options.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edición"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muokkaus"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Édition"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עריכה"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "संपादन"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifica"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "編集"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewerken"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edição"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edição"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редагування"
+          }
+        }
+      }
+    },
+    "pref.section.general" : {
+      "comment" : "Settings sidebar section for startup and app-wide options.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allgemein"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yleiset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כללי"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सामान्य"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generali"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algemeen"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geral"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geral"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загальні"
           }
         }
       }
@@ -7164,79 +7669,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thema:"
+            "value" : "Thema"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Theme:"
+            "value" : "Theme"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tema:"
+            "value" : "Tema"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teema:"
+            "value" : "Teema"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thème :"
+            "value" : "Thème"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ערכת נושא:"
+            "value" : "ערכת נושא"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "थीम:"
+            "value" : "थीम"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tema:"
+            "value" : "Tema"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "テーマ:"
+            "value" : "テーマ"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Thema:"
+            "value" : "Thema"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tema:"
+            "value" : "Tema"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tema:"
+            "value" : "Tema"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Тема:"
+            "value" : "Тема"
           }
         }
       }
@@ -7247,79 +7752,79 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeilenumbruch:"
+            "value" : "Lange Zeilen umbrechen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Word Wrap:"
+            "value" : "Wrap long lines"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ajuste de línea:"
+            "value" : "Ajustar líneas largas"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rivinvaihto:"
+            "value" : "Rivitä pitkät rivit"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Retour à la ligne :"
+            "value" : "Renvoyer les lignes longues"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "גלישת שורות:"
+            "value" : "גלישת שורות ארוכות"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शब्द लपेट:"
+            "value" : "लंबी पंक्तियाँ लपेटें"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A capo automatico:"
+            "value" : "Manda a capo le righe lunghe"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ワードラップ:"
+            "value" : "長い行を折り返す"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Regelterugloop:"
+            "value" : "Lange regels afbreken"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Translineação:"
+            "value" : "Moldar linhas longas"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quebra de linha:"
+            "value" : "Quebrar linhas longas"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Перенесення рядків:"
+            "value" : "Переносити довгі рядки"
           }
         }
       }
@@ -7486,6 +7991,90 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Асоціації файлів за замовчуванням"
+          }
+        }
+      }
+    },
+    "window.settings.title" : {
+      "comment" : "Title of the settings window.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asetukset"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרות"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सेटिंग्ज़"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impostazioni"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Definições"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Параметри"
           }
         }
       }
