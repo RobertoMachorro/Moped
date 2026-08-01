@@ -141,7 +141,7 @@ private extension HTMLTokenizer {
 	func scanProcessingInstruction(scanner: inout LineScanner, tokens: inout [Token]) -> LineState? {
 		let start = scanner.pos
 		var nameEnd = start + 2
-		while nameEnd < scanner.count, isIdentifierContinueUnit(scanner.units[nameEnd]) || scanner.units[nameEnd] == 0x2D {
+		while nameEnd < scanner.count, UnicodeScalars.isIdentifierContinue(scanner.units[nameEnd]) || scanner.units[nameEnd] == 0x2D {
 			nameEnd += 1
 		}
 		appendToken(.keyword, from: start, to: nameEnd, into: &tokens)
@@ -167,13 +167,13 @@ private extension HTMLTokenizer {
 		if scanner.unit(at: nameStart) == Self.slash {
 			nameStart += 1
 		}
-		guard let first = scanner.unit(at: nameStart), isLetterUnit(first) else {
+		guard let first = scanner.unit(at: nameStart), UnicodeScalars.isLetter(first) else {
 			scanner.pos += 1
 			return nil
 		}
 		var nameEnd = nameStart
 		while nameEnd < scanner.count,
-			  isIdentifierContinueUnit(scanner.units[nameEnd]) || scanner.units[nameEnd] == 0x2D {
+			  UnicodeScalars.isIdentifierContinue(scanner.units[nameEnd]) || scanner.units[nameEnd] == 0x2D {
 			nameEnd += 1
 		}
 		appendToken(.keyword, from: nameStart, to: nameEnd, into: &tokens)
@@ -193,10 +193,10 @@ private extension HTMLTokenizer {
 				scanQuotedValue(quote: unit, scanner: &scanner, tokens: &tokens)
 				continue
 			}
-			if isIdentifierStartUnit(unit) {
+			if UnicodeScalars.isIdentifierStart(unit) {
 				let start = scanner.pos
 				while !scanner.isAtEnd,
-					  isIdentifierContinueUnit(scanner.current) || scanner.current == 0x2D || scanner.current == 0x3A {
+					  UnicodeScalars.isIdentifierContinue(scanner.current) || scanner.current == 0x2D || scanner.current == 0x3A {
 					scanner.pos += 1
 				}
 				appendToken(.variableBuiltin, from: start, to: scanner.pos, into: &tokens)

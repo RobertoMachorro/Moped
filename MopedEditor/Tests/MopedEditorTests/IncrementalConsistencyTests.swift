@@ -137,7 +137,8 @@ final class IncrementalConsistencyTests: XCTestCase {
 			accumulated = shift(
 				accumulated, editStart: editStart, deletedLength: deletedLength, insertedLength: insertedLength
 			)
-			store.noteEdit(in: text, editedRange: NSRange(location: editStart, length: insertedLength))
+			let edited = NSRange(location: editStart, length: insertedLength)
+			store.noteEdit(in: text, editedRange: edited, changeInLength: insertedLength - deletedLength)
 			accumulated = applyPass(&store, text: text, current: accumulated)
 
 			let reference = DocumentTokenizer.tokenize(text as String, using: tokenizer)

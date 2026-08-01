@@ -118,7 +118,7 @@ final class LineStoreTests: XCTestCase {
 		XCTAssertFalse(store.hasDirtyLines)
 
 		let edited = "let a = 1\nlet b = 22\nlet c = 3" as NSString
-		store.noteEdit(in: edited, editedRange: NSRange(location: 18, length: 1))
+		store.noteEdit(in: edited, editedRange: NSRange(location: 18, length: 1), changeInLength: 1)
 		XCTAssertTrue(store.hasDirtyLines, "an edit must mark the touched line dirty again")
 
 		_ = store.highlightPass(text: edited)
@@ -132,7 +132,7 @@ final class LineStoreTests: XCTestCase {
 		_ = store.highlightPass(text: original)
 
 		let edited = "let a = 1\nlet b = 2\nlet c = 3" as NSString
-		store.noteEdit(in: edited, editedRange: NSRange(location: 10, length: 10))
+		store.noteEdit(in: edited, editedRange: NSRange(location: 10, length: 10), changeInLength: 10)
 		XCTAssertTrue(store.hasDirtyLines)
 
 		_ = store.highlightPass(text: edited)

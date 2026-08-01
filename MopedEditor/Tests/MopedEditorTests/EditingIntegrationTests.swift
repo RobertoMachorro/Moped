@@ -169,6 +169,37 @@ final class EditingIntegrationTests: EditorTestCase {
 		XCTAssertFalse(scrollView.rulersVisible)
 	}
 
+	/// The gutter splices its offset array from the storage notification rather than
+	/// rebuilding it. These go through the real editor so a mistake in the wiring — a
+	/// missed notification, a stale array — shows up as a wrong line count.
+	func testGutterTracksEditsIncrementally() throws {
+		let (scrollView, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let ruler = try XCTUnwrap(scrollView.verticalRulerView as? LineNumberRulerView)
+
+		// A programmatic replacement invalidates rather than splices; reading the count
+		// performs the pending rebuild, as drawing would.
+		textView.setPlainText("one\ntwo\nthree")
+		XCTAssertEqual(ruler.knownLineCount, 3)
+
+		textView.setSelectedRange(NSRange(location: 13, length: 0))
+		textView.insertText("\nfour", replacementRange: NSRange(location: 13, length: 0))
+		XCTAssertEqual(ruler.knownLineCount, 4, "typing a newline should splice in a line")
+
+		textView.insertText("\nfive\nsix", replacementRange: NSRange(location: 18, length: 0))
+		XCTAssertEqual(ruler.knownLineCount, 6)
+
+		// Delete the two newlines added last, collapsing three lines back into one.
+		textView.textStorage?.replaceCharacters(in: NSRange(location: 18, length: 9), with: "")
+		XCTAssertEqual(ruler.knownLineCount, 4, "deleting newlines should splice them out")
+
+		XCTAssertEqual(
+			ruler.knownLineCount,
+			LineIndex.lineStarts(of: textView.string as NSString).count,
+			"the spliced count must match a full recompute"
+		)
+	}
+
 	func testFontSizeActions() {
 		let (_, textView) = makeEditor()
 		textView.defaultFontSize = 13.0

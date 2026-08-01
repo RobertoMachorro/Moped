@@ -165,8 +165,8 @@ extension GenericTokenizer {
 
 	func scanNumber(scanner: inout LineScanner, tokens: inout [Token]) -> Bool {
 		let unit = scanner.current
-		let startsNumber = isDigitUnit(unit)
-			|| (unit == UnicodeScalars.dot && isDigitUnit(scanner.unit(at: scanner.pos + 1) ?? 0))
+		let startsNumber = UnicodeScalars.isDigit(unit)
+			|| (unit == UnicodeScalars.dot && UnicodeScalars.isDigit(scanner.unit(at: scanner.pos + 1) ?? 0))
 		guard startsNumber,
 			  let match = scanner.matchRegex(Self.numberRegex, at: scanner.pos),
 			  match.range.length > 0
@@ -179,11 +179,11 @@ extension GenericTokenizer {
 	}
 
 	func scanIdentifier(scanner: inout LineScanner, tokens: inout [Token]) -> Bool {
-		guard isIdentifierStartUnit(scanner.current) else {
+		guard UnicodeScalars.isIdentifierStart(scanner.current) else {
 			return false
 		}
 		let start = scanner.pos
-		while !scanner.isAtEnd && isIdentifierContinueUnit(scanner.current) {
+		while !scanner.isAtEnd && UnicodeScalars.isIdentifierContinue(scanner.current) {
 			scanner.pos += 1
 		}
 		let word = scanner.substring(in: NSRange(location: start, length: scanner.pos - start))
@@ -217,7 +217,7 @@ extension GenericTokenizer {
 		if language.builtins.contains(key) {
 			return .variableBuiltin
 		}
-		let capitalized = isUppercaseLetterUnit(scanner.units[start])
+		let capitalized = UnicodeScalars.isUppercaseLetter(scanner.units[start])
 		if scanner.nextNonSpace(from: end) == UnicodeScalars.openParen {
 			if capitalized {
 				return .constructor

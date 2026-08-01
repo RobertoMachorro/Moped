@@ -43,10 +43,13 @@ public struct LineStore {
 		dirtyCount = carryOuts.count
 	}
 
-	/// Splices line bookkeeping after an edit. `editedRange` is the post-edit range
-	/// (as reported by `NSTextStorage.didProcessEditing`).
-	public mutating func noteEdit(in newText: NSString, editedRange: NSRange) {
-		let newStarts = LineIndex.lineStarts(of: newText)
+	/// Splices line bookkeeping after an edit. `editedRange` and `changeInLength` are
+	/// the post-edit range and length delta reported by
+	/// `NSTextStorage.didProcessEditing`.
+	public mutating func noteEdit(in newText: NSString, editedRange: NSRange, changeInLength: Int) {
+		let newStarts = LineIndex.splice(
+			lineStarts, in: newText, editedRange: editedRange, changeInLength: changeInLength
+		)
 		let lineDelta = newStarts.count - lineStarts.count
 		let firstDirty = LineIndex.index(containing: editedRange.location, in: newStarts)
 		let lastDirty = LineIndex.index(containing: max(editedRange.location, NSMaxRange(editedRange) - 1), in: newStarts)

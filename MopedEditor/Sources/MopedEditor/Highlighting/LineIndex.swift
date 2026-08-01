@@ -46,6 +46,84 @@ enum LineIndex {
 		return starts
 	}
 
+	/// Line starts after an edit, without rescanning the whole document.
+	///
+	/// Offsets below the edit are untouched, the edited span is rescanned, and the tail
+	/// is shifted by `changeInLength`. That last step is still proportional to the line
+	/// count, so this is a constant-factor win rather than a complexity change: an
+	/// integer add over a contiguous array instead of a `getLineStart` walk over every
+	/// character in the document.
+	///
+	/// - Parameters:
+	///   - starts: line starts for the text as it was *before* the edit.
+	///   - newText: the text after the edit.
+	///   - editedRange: edited range in `newText` coordinates, as
+	///     `NSTextStorage.didProcessEditing` reports it.
+	///   - changeInLength: `newText.length` minus the old length.
+	static func splice(
+		_ starts: [Int], in newText: NSString, editedRange: NSRange, changeInLength: Int
+	) -> [Int] {
+		let result = spliced(starts, in: newText, editedRange: editedRange, changeInLength: changeInLength)
+		// Debug-only cross-check against the reference implementation. The randomized
+		// edits in IncrementalConsistencyTests run through here, so any divergence trips
+		// there rather than as a subtle mis-highlight. It makes splicing O(document) in
+		// Debug builds — the speedup is a Release-only effect.
+		assert(result == lineStarts(of: newText), "splice diverged from a full recompute")
+		return result
+	}
+
+	/// The splice itself, without the debug cross-check. Tests call this directly so a
+	/// mismatch is reported by the assertion in the test rather than trapping here.
+	static func spliced(
+		_ starts: [Int], in newText: NSString, editedRange: NSRange, changeInLength: Int
+	) -> [Int] {
+		// Offsets below the edit keep their values, so the pre-edit array can be indexed
+		// with a post-edit location. Their line *starts* are another matter: deleting
+		// between a lone CR and a following LF fuses them into one CRLF terminator and
+		// removes a line start that sits before the edit. Backing up one line puts any
+		// such CR inside the rescanned span. A terminator is at most two units, so one
+		// line is always enough.
+		let firstAffected = index(containing: editedRange.location, in: starts)
+		let rescanFrom = max(firstAffected - 1, 0)
+		var result = Array(starts[...rescanFrom])
+
+		// Rescan from there until reaching a line start whose preceding terminator lies
+		// beyond the edit, and so is unchanged text.
+		let editEnd = NSMaxRange(editedRange)
+		var location = starts[rescanFrom]
+		var resume: Int?
+		while location < newText.length {
+			var lineStart = 0
+			var lineEnd = 0
+			var contentsEnd = 0
+			newText.getLineStart(
+				&lineStart, end: &lineEnd, contentsEnd: &contentsEnd,
+				for: NSRange(location: location, length: 0)
+			)
+			guard lineEnd < newText.length else {
+				break
+			}
+			result.append(lineEnd)
+			if lineEnd > editEnd {
+				resume = lineEnd
+				break
+			}
+			location = lineEnd
+		}
+
+		// From `resume` on, the text is untouched: reuse the old starts, shifted.
+		guard let resume else {
+			return result
+		}
+		let resumeOld = resume - changeInLength
+		var index = index(containing: resumeOld, in: starts) + 1
+		while index < starts.count {
+			result.append(starts[index] + changeInLength)
+			index += 1
+		}
+		return result
+	}
+
 	/// Index of the line containing `location`, clamped to the last line. `starts` must
 	/// be ascending, as produced by `lineStarts(of:)`.
 	static func index(containing location: Int, in starts: [Int]) -> Int {

@@ -36,9 +36,20 @@ final class LineNumberRulerView: NSRulerView {
 		}
 	}
 
-	/// Character offsets where each line starts; rebuilt lazily after edits.
+	/// Character offsets where each line starts. Spliced on edits, rebuilt lazily when
+	/// there is no edited range to splice against.
 	private var lineStarts: [Int] = [0]
 	private var lineStartsAreStale = true
+
+	/// Line count the gutter would draw, performing the pending rebuild if there is one.
+	/// Exposed for tests, which otherwise have no way to observe the offset array
+	/// without a live graphics context.
+	var knownLineCount: Int {
+		guard let content = (clientView as? NSTextView)?.string as NSString? else {
+			return lineStarts.count
+		}
+		return currentLineStarts(for: content).count
+	}
 
 	init(textView: NSTextView, theme: MopedTheme, numberFont: NSFont) {
 		self.theme = theme
@@ -47,11 +58,13 @@ final class LineNumberRulerView: NSRulerView {
 		clientView = textView
 		ruleThickness = 40.0
 
+		// The storage notification rather than `NSText.didChangeNotification`: only this
+		// one carries the edited range and length delta the splice needs.
 		NotificationCenter.default.addObserver(
 			self,
-			selector: #selector(textDidChange(_:)),
-			name: NSText.didChangeNotification,
-			object: textView
+			selector: #selector(storageDidProcessEditing(_:)),
+			name: NSTextStorage.didProcessEditingNotification,
+			object: textView.textStorage
 		)
 		NotificationCenter.default.addObserver(
 			self,
@@ -77,8 +90,27 @@ final class LineNumberRulerView: NSRulerView {
 		needsDisplay = true
 	}
 
-	@objc private func textDidChange(_ notification: Notification) {
-		invalidateLineNumbers()
+	/// Splices the offset array instead of rebuilding it, so an edit costs work
+	/// proportional to the edit rather than a full rescan of the document.
+	@objc private func storageDidProcessEditing(_ notification: Notification) {
+		guard let storage = notification.object as? NSTextStorage,
+			  storage.editedMask.contains(.editedCharacters)
+		else {
+			return
+		}
+		// Nothing to splice onto when a full rebuild is already pending — and splicing
+		// a stale array would be wrong.
+		guard !lineStartsAreStale else {
+			return
+		}
+		lineStarts = LineIndex.splice(
+			lineStarts,
+			in: storage.string as NSString,
+			editedRange: storage.editedRange,
+			changeInLength: storage.changeInLength
+		)
+		updateThickness(forLineCount: lineStarts.count)
+		needsDisplay = true
 	}
 
 	@objc private func selectionDidChange(_ notification: Notification) {
@@ -142,9 +174,8 @@ final class LineNumberRulerView: NSRulerView {
 
 	// MARK: Line bookkeeping
 
-	/// Rebuilds the whole offset array whenever the text changed. Splicing it the way
-	/// `LineStore.noteEdit` does would make this proportional to the edit rather than
-	/// the document; that rewrite is why editing cost still grows with file size.
+	/// Full rebuild, used only when there is no edited range to splice against:
+	/// programmatic replacement via `setPlainText`, and font changes.
 	private func currentLineStarts(for content: NSString) -> [Int] {
 		if lineStartsAreStale {
 			lineStarts = LineIndex.lineStarts(of: content)

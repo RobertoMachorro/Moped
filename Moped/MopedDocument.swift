@@ -24,10 +24,13 @@ import UniformTypeIdentifiers
 
 final class MopedDocument: ReferenceFileDocument, ObservableObject {
 	/// Largest file Moped will open. Benchmarked against the real editor: at this size
-	/// a keystroke plus the frame that follows costs ~45 ms with the line-number gutter
-	/// visible, still inside the ~100 ms "feels instant" budget. Cost grows linearly with
-	/// document size beyond this (~112 ms at 16 MB), because the gutter rebuilds its
-	/// line-start array on every redraw that follows an edit.
+	/// a keystroke plus the frame that follows cost ~45 ms with the line-number gutter
+	/// visible, inside the ~100 ms "feels instant" budget.
+	///
+	/// That measurement predates `LineIndex.splice`. The gutter and the highlighter each
+	/// used to rebuild a whole line-offset array per keystroke — measured in isolation at
+	/// ~6.9 ms apiece at this size, now ~0.09 ms — so the real figure is lower than 45 ms
+	/// today. It has not been re-measured end to end, and the limit stays here until it is.
 	private static let maxFileLength = 4_194_304 // 4 MB
 	/// Threshold at which we start treating a file as "large" and turn off expensive
 	/// features (currently syntax highlighting). Measured independently of `maxFileLength`:
