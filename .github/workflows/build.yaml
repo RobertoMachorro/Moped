@@ -16,17 +16,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install tools
-        # Neither ships on the macos runner image: ripgrep for the localization
-        # check, SwiftLint for the lint gate.
-        run: brew install ripgrep swiftlint
+      - name: Install ripgrep
+        run: brew install ripgrep
+      - name: Install SwiftLint
+        # Pinned to a release artifact rather than installed from Homebrew, which
+        # tracks latest. `--strict` fails on warnings, so a SwiftLint release that adds
+        # a default rule would fail pull requests that never touched the offending
+        # code. AGENTS.md also tells contributors to run SwiftLint locally and expect
+        # CI to agree, which only holds while both sides are the same version.
+        # Bump this deliberately.
+        env:
+          SWIFTLINT_VERSION: 0.65.0
+        run: |
+          curl -sSL --fail -o "$RUNNER_TEMP/swiftlint.zip" \
+            "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/portable_swiftlint.zip"
+          unzip -q "$RUNNER_TEMP/swiftlint.zip" -d "$RUNNER_TEMP/swiftlint"
+          echo "$RUNNER_TEMP/swiftlint" >> "$GITHUB_PATH"
       - name: Check localized string usage
         run: ./scripts/check_localized_strings.sh
       - name: Lint
-        # --strict fails on warnings, which is what "SwiftLint must be clean" in
-        # AGENTS.md means. Homebrew tracks latest, so a release that adds a rule can
-        # fail a PR that did not touch the offending code — the version is printed to
-        # make that obvious when it happens.
         run: |
           swiftlint version
           swiftlint --strict
