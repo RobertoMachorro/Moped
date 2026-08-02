@@ -1,0 +1,34 @@
+diff --git a/Greeter.swift b/Greeter.swift
+index 7c1f2ab..3d9e40b 100644
+--- a/Greeter.swift
++++ b/Greeter.swift
+@@ -1,9 +1,11 @@
+ struct Greeter {
+-	let name: String
++	let name: String
++	let locale: String
+
+ 	func greet() -> String {
+-		return "Hello, \(name)!"
++		let prefix = locale == "es" ? "Hola" : "Hello"
++		return "\(prefix), \(name)!"
+ 	}
+ }
+diff --git a/config.toml b/config.toml
+new file mode 100644
+index 0000000..1a2b3c4
+--- /dev/null
++++ b/config.toml
+@@ -0,0 +1,3 @@
++[greeter]
++locale = "es"
++retries = 3
+diff --git a/Notes.md b/Notes.md
+index aa11bb2..cc33dd4 100644
+--- a/Notes.md
++++ b/Notes.md
+@@ -1,2 +1,2 @@
+ # Notes
+-Old line without a trailing newline
++New line without a trailing newline
+\ No newline at end of file

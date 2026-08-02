@@ -31,7 +31,7 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 ## Features
 
-* **Syntax highlighting** — homegrown, with about twenty languages and switchable themes
+* **Syntax highlighting** — homegrown, with two dozen languages and switchable themes
 * **Line numbers** — toggleable gutter ruler
 * **Word wrap** — configurable per preference
 * **Auto-indentation** — configurable default: tab, 2 spaces, or 4 spaces

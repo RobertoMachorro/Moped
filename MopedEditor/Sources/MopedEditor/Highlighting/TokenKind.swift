@@ -26,6 +26,10 @@ public enum TokenKind: String, CaseIterable, Sendable {
 	case boolean
 	case comment
 	case constructor
+	/// Added and removed lines in a patch. Themes are expected to color these
+	/// green and red — without the contrast a diff reads no better than plain text.
+	case diffPlus = "diff.plus"
+	case diffMinus = "diff.minus"
 	case functionCall = "function.call"
 	case include
 	case keyword

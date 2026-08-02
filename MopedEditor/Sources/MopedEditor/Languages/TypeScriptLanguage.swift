@@ -21,19 +21,11 @@
 extension LanguageDefinition {
 	static let typescriptLanguage = LanguageDefinition(
 		id: "typescript",
-		keywords: javascriptKeywords.union([
-			"abstract", "as", "asserts", "declare", "enum", "implements", "infer",
-			"interface", "is", "keyof", "module", "namespace", "override",
-			"private", "protected", "public", "readonly", "satisfies", "type",
-			"unique"
-		]),
+		keywords: typescriptKeywords,
 		functionDeclKeywords: ["function"],
 		returnKeywords: ["return"],
 		includeKeywords: ["import", "export", "from"],
-		typeKeywords: [
-			"any", "bigint", "boolean", "never", "number", "object", "string",
-			"symbol", "unknown", "void"
-		],
+		typeKeywords: typescriptTypeKeywords,
 		builtins: javascriptBuiltins,
 		lineCommentPrefixes: ["//"],
 		blockComments: [
@@ -45,4 +37,16 @@ extension LanguageDefinition {
 			RegexRule(trigger: "@", pattern: "@\\w+", kind: .punctuationSpecial)
 		]
 	)
+
+	static let typescriptKeywords: Set<String> = javascriptKeywords.union([
+		"abstract", "as", "asserts", "declare", "enum", "implements", "infer",
+		"interface", "is", "keyof", "module", "namespace", "override",
+		"private", "protected", "public", "readonly", "satisfies", "type",
+		"unique"
+	])
+
+	static let typescriptTypeKeywords: Set<String> = [
+		"any", "bigint", "boolean", "never", "number", "object", "string",
+		"symbol", "unknown", "void"
+	]
 }

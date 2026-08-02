@@ -70,6 +70,8 @@
 	<string>//</string>
 	<key>javascript</key>
 	<string>//</string>
+	<key>jsx</key>
+	<string>//</string>
 	<key>julia</key>
 	<string>#</string>
 	<key>kotlin</key>
@@ -150,6 +152,8 @@
 	<string>//</string>
 	<key>toml</key>
 	<string>#</string>
+	<key>tsx</key>
+	<string>//</string>
 	<key>typescript</key>
 	<string>//</string>
 	<key>vala</key>

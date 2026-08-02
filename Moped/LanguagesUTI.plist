@@ -234,6 +234,20 @@
 	<string>twig</string>
 	<key>public.typescript-source</key>
 	<string>typescript</string>
+	<key>public.tsx-source</key>
+	<string>tsx</string>
+	<key>com.microsoft.typescript</key>
+	<string>typescript</string>
+	<!-- Apple's CoreTypes owns the .ts extension for MPEG-2 transport streams, and an
+	     imported public.typescript-source cannot outrank it, so .ts files arrive as
+	     this type. Reading one as TypeScript is the useful guess: a real transport
+	     stream is binary and is rejected before the language is ever consulted. -->
+	<key>public.mpeg-2-transport-stream</key>
+	<string>typescript</string>
+	<key>public.jsx-source</key>
+	<string>jsx</string>
+	<key>public.toml</key>
+	<string>toml</string>
 	<key>public.vala-source</key>
 	<string>vala</string>
 	<key>public.vb-source</key>

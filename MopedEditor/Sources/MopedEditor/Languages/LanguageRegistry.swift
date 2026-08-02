@@ -26,8 +26,9 @@ public enum LanguageRegistry {
 	static let genericDefinitions: [LanguageDefinition] = [
 		.swiftLanguage, .cLanguage, .cppLanguage, .csharpLanguage, .javaLanguage,
 		.goLanguage, .rustLanguage, .pythonLanguage, .rubyLanguage, .phpLanguage,
-		.javascriptLanguage, .typescriptLanguage, .cssLanguage, .jsonLanguage,
-		.yamlLanguage, .tomlLanguage, .sqlLanguage, .bashLanguage
+		.javascriptLanguage, .typescriptLanguage, .jsxLanguage, .tsxLanguage,
+		.cssLanguage, .jsonLanguage, .yamlLanguage, .tomlLanguage, .sqlLanguage,
+		.bashLanguage, .diffLanguage
 	]
 
 	private static let markdownAliases = ["asciidoc"]

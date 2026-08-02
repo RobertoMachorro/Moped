@@ -1,6 +1,4 @@
 # Sample.toml — exercises Moped's TOML tokenizer.
-# Note: .toml has no UTI mapping in LanguagesUTI.plist, so select "toml"
-# manually from the language picker after opening this file.
 
 title = "Sample Config"
 version = "1.0.0"

@@ -62,7 +62,9 @@ extension MopedTheme {
 			"parameter": NSColor(srgbRed: 0.12, green: 0.12, blue: 0.12, alpha: 1.0),
 			"operator": NSColor(srgbRed: 0.30, green: 0.30, blue: 0.30, alpha: 1.0),
 			"punctuation.special": NSColor(srgbRed: 0.30, green: 0.30, blue: 0.30, alpha: 1.0),
-			"text.title": NSColor(srgbRed: 0.04, green: 0.32, blue: 0.74, alpha: 1.0)
+			"text.title": NSColor(srgbRed: 0.04, green: 0.32, blue: 0.74, alpha: 1.0),
+			"diff.plus": NSColor(srgbRed: 0.13, green: 0.50, blue: 0.20, alpha: 1.0),
+			"diff.minus": NSColor(srgbRed: 0.72, green: 0.14, blue: 0.14, alpha: 1.0)
 		]
 	)
 
@@ -92,7 +94,9 @@ extension MopedTheme {
 			"parameter": NSColor(srgbRed: 0.92, green: 0.92, blue: 0.93, alpha: 1.0),
 			"operator": NSColor(srgbRed: 0.77, green: 0.78, blue: 0.81, alpha: 1.0),
 			"punctuation.special": NSColor(srgbRed: 0.77, green: 0.78, blue: 0.81, alpha: 1.0),
-			"text.title": NSColor(srgbRed: 0.54, green: 0.78, blue: 0.99, alpha: 1.0)
+			"text.title": NSColor(srgbRed: 0.54, green: 0.78, blue: 0.99, alpha: 1.0),
+			"diff.plus": NSColor(srgbRed: 0.55, green: 0.82, blue: 0.45, alpha: 1.0),
+			"diff.minus": NSColor(srgbRed: 0.97, green: 0.45, blue: 0.55, alpha: 1.0)
 		]
 	)
 
@@ -122,7 +126,9 @@ extension MopedTheme {
 			"parameter": NSColor(srgbRed: 0.20, green: 0.21, blue: 0.24, alpha: 1.0),
 			"operator": NSColor(srgbRed: 0.00, green: 0.00, blue: 0.00, alpha: 1.0),
 			"punctuation.special": NSColor(srgbRed: 0.40, green: 0.16, blue: 0.62, alpha: 1.0),
-			"text.title": NSColor(srgbRed: 0.40, green: 0.16, blue: 0.62, alpha: 1.0)
+			"text.title": NSColor(srgbRed: 0.40, green: 0.16, blue: 0.62, alpha: 1.0),
+			"diff.plus": NSColor(srgbRed: 0.09, green: 0.51, blue: 0.24, alpha: 1.0),
+			"diff.minus": NSColor(srgbRed: 0.72, green: 0.11, blue: 0.11, alpha: 1.0)
 		]
 	)
 
@@ -152,7 +158,9 @@ extension MopedTheme {
 			"parameter": NSColor(srgbRed: 0.40, green: 0.48, blue: 0.51, alpha: 1.0),
 			"operator": NSColor(srgbRed: 0.40, green: 0.48, blue: 0.51, alpha: 1.0),
 			"punctuation.special": NSColor(srgbRed: 0.80, green: 0.29, blue: 0.09, alpha: 1.0),
-			"text.title": NSColor(srgbRed: 0.15, green: 0.55, blue: 0.82, alpha: 1.0)
+			"text.title": NSColor(srgbRed: 0.15, green: 0.55, blue: 0.82, alpha: 1.0),
+			"diff.plus": NSColor(srgbRed: 0.52, green: 0.60, blue: 0.00, alpha: 1.0),
+			"diff.minus": NSColor(srgbRed: 0.86, green: 0.20, blue: 0.18, alpha: 1.0)
 		]
 	)
 
@@ -182,7 +190,9 @@ extension MopedTheme {
 			"parameter": NSColor(srgbRed: 0.51, green: 0.58, blue: 0.59, alpha: 1.0),
 			"operator": NSColor(srgbRed: 0.51, green: 0.58, blue: 0.59, alpha: 1.0),
 			"punctuation.special": NSColor(srgbRed: 0.80, green: 0.29, blue: 0.09, alpha: 1.0),
-			"text.title": NSColor(srgbRed: 0.15, green: 0.55, blue: 0.82, alpha: 1.0)
+			"text.title": NSColor(srgbRed: 0.15, green: 0.55, blue: 0.82, alpha: 1.0),
+			"diff.plus": NSColor(srgbRed: 0.52, green: 0.60, blue: 0.00, alpha: 1.0),
+			"diff.minus": NSColor(srgbRed: 0.86, green: 0.20, blue: 0.18, alpha: 1.0)
 		]
 	)
 }

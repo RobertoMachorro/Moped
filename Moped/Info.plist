@@ -2183,11 +2183,91 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>ts</string>
-					<string>tsx</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>
 					<string>application/x-typescript</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.typescript-source</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>TypeScript JSX Source File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.tsx-source</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://www.typescriptlang.org/docs/handbook/jsx.html</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tsx</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/tsx</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JavaScript JSX Source File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.jsx-source</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://react.dev/learn/writing-markup-with-jsx</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>jsx</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/jsx</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>TOML Configuration File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.toml</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://toml.io</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>toml</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/toml</string>
 				</array>
 			</dict>
 		</dict>
