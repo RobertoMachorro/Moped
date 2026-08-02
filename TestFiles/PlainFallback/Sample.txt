@@ -1,0 +1,10 @@
+Sample.txt — generic plain text.
+
+This file has no associated language at all. It exists to confirm that
+Moped's default "plaintext" mode renders cleanly: no highlighting, normal
+line wrapping, and correct line-number gutter behavior.
+
+- bullet-looking line, but plain text has no list rendering
+- second line
+
+The quick brown fox jumps over the lazy dog.

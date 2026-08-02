@@ -1,0 +1,25 @@
+# Sample.yaml — exercises Moped's YAML tokenizer.
+name: sample-service
+version: 1.2.3
+enabled: true
+
+environments:
+  - name: staging
+    url: https://staging.example.com
+    replicas: 2
+  - name: production
+    url: https://example.com
+    replicas: 5
+
+settings:
+  timeout_seconds: 30
+  retries: 3
+  tags:
+    - editor
+    - yaml
+    - test
+
+description: |
+  This is a multiline block scalar
+  used to test literal-style text
+  in the YAML tokenizer.

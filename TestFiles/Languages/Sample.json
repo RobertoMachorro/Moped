@@ -1,0 +1,17 @@
+{
+	"name": "Sample.json",
+	"purpose": "Exercise Moped's JSON tokenizer",
+	"version": 1,
+	"enabled": true,
+	"tags": ["editor", "test", "json"],
+	"metadata": {
+		"author": "Moped TestFiles",
+		"created": "2026-08-02",
+		"rating": 4.5,
+		"notes": null
+	},
+	"items": [
+		{ "id": 1, "label": "First" },
+		{ "id": 2, "label": "Second" }
+	]
+}

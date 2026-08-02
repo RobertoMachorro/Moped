@@ -1,0 +1,3 @@
+Small.txt — a minimal file for baseline open/edit/save testing.
+
+Just a few lines of plain text, nothing more.

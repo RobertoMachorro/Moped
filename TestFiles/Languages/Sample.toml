@@ -1,0 +1,25 @@
+# Sample.toml — exercises Moped's TOML tokenizer.
+# Note: .toml has no UTI mapping in LanguagesUTI.plist, so select "toml"
+# manually from the language picker after opening this file.
+
+title = "Sample Config"
+version = "1.0.0"
+debug = false
+
+[server]
+host = "127.0.0.1"
+port = 8080
+tags = ["editor", "toml", "test"]
+
+[database]
+name = "sample_db"
+max_connections = 20
+timeout = 5.5
+
+[[contributors]]
+name = "Ada Lovelace"
+role = "author"
+
+[[contributors]]
+name = "Grace Hopper"
+role = "reviewer"

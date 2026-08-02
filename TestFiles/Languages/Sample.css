@@ -1,0 +1,31 @@
+/* Sample.css — exercises Moped's CSS tokenizer. */
+:root {
+	--accent-color: #3478f6;
+	--spacing-unit: 8px;
+}
+
+body {
+	font-family: -apple-system, "Helvetica Neue", sans-serif;
+	margin: 0;
+	background-color: #fafafa;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	padding: calc(var(--spacing-unit) * 2);
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.card > .title {
+	font-weight: 600;
+	color: var(--accent-color);
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: #1c1c1e;
+		color: #f5f5f5;
+	}
+}

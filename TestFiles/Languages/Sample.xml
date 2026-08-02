@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sample.xml — exercises Moped's XML tokenizer. -->
+<catalog>
+	<book id="bk101">
+		<author>Ada Lovelace</author>
+		<title>Notes on the Analytical Engine</title>
+		<price currency="USD">29.99</price>
+	</book>
+	<book id="bk102">
+		<author>Grace Hopper</author>
+		<title>The Compiler</title>
+		<price currency="USD">19.99</price>
+	</book>
+</catalog>

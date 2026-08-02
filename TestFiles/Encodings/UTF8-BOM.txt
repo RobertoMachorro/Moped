@@ -1,0 +1,2 @@
+﻿Hello from a UTF-8 file with a byte-order mark.
+This line confirms Moped strips the BOM and opens the text normally.

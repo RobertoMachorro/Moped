@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<description>
+		Exercises the XML tokenizer's CDATA handling: everything inside the
+		CDATA section must stay literal even though it looks like markup.
+	</description>
+	<payload><![CDATA[
+		<not-a-real-tag attr="value">
+			This looks like XML but it is literal character data.
+			A lone close-bracket pair is fine; only bracket-bracket-greater-than
+			closes the section, so that exact sequence is avoided here.
+		</not-a-real-tag>
+	]]></payload>
+	<afterward>This element should highlight normally again.</afterward>
+</document>
