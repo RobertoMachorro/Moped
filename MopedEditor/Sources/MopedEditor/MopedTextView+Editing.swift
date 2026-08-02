@@ -179,7 +179,7 @@ extension MopedTextView {
 
 		textStorage.replaceCharacters(in: lineRange, with: transformedBlock)
 		textStorage.setAttributes(
-			[.font: editorFont, .foregroundColor: theme.foreground],
+			[.font: editorFont, .foregroundColor: resolvedTheme.foreground],
 			range: NSRange(location: lineRange.location, length: (transformedBlock as NSString).length)
 		)
 		didChangeText()

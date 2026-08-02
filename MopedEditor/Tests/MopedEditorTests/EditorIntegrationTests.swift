@@ -121,6 +121,58 @@ final class EditorIntegrationTests: EditorTestCase {
 		XCTAssertEqual(textView.string, "let x = 1\n", "Re-theming must not disturb the text")
 	}
 
+	/// The System theme is the only one that has to re-resolve itself: its colours are
+	/// snapshots of AppKit's, taken against whatever appearance was current when the
+	/// snapshot was made.
+	func testSystemThemeFollowsTheViewAppearance() throws {
+		let (_, textView) = makeEditor(theme: .system(for: try XCTUnwrap(NSAppearance(named: .aqua))))
+		textView.appearance = NSAppearance(named: .aqua)
+		textView.language = "swift"
+		textView.setPlainText("let x = 1\n")
+		drainHighlightPasses()
+
+		let lightBackground = try XCTUnwrap(textView.backgroundColor.usingColorSpace(.sRGB))
+		let keywordLocation = (textView.string as NSString).range(of: "let").location
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			MopedTheme.defaultLight.color(for: .keyword),
+			"the light appearance should use the light token palette"
+		)
+
+		textView.appearance = NSAppearance(named: .darkAqua)
+		drainHighlightPasses()
+
+		let darkBackground = try XCTUnwrap(textView.backgroundColor.usingColorSpace(.sRGB))
+		XCTAssertLessThan(
+			darkBackground.brightnessComponent,
+			lightBackground.brightnessComponent,
+			"switching to dark should darken the editor background"
+		)
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			MopedTheme.defaultDark.color(for: .keyword),
+			"token colors are layout-manager temporary attributes, so they only follow "
+				+ "the appearance if the highlighter is re-run"
+		)
+		XCTAssertEqual(textView.string, "let x = 1\n", "Re-resolving must not disturb the text")
+	}
+
+	/// A fixed theme must ignore the appearance entirely — picking Solarized Dark and
+	/// then switching to Light must not repaint the editor.
+	func testFixedThemeIgnoresTheViewAppearance() {
+		let (_, textView) = makeEditor(theme: .solarizedDark)
+		textView.appearance = NSAppearance(named: .aqua)
+		textView.setPlainText("let x = 1\n")
+		drainHighlightPasses()
+
+		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDark.background)
+
+		textView.appearance = NSAppearance(named: .darkAqua)
+		drainHighlightPasses()
+
+		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDark.background)
+	}
+
 	func testDisablingHighlightingClearsColors() {
 		let (_, textView) = makeEditor()
 		textView.language = "swift"

@@ -148,6 +148,17 @@ final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 		}
 	}
 
+	/// Filters the font picker down to fixed-pitch faces. Affects the picker only —
+	/// the stored `font` is never rewritten to satisfy it.
+	@objc dynamic var monospacedFontsOnly: String {
+		get {
+			getStringValue(forKey: "monospacedFontsOnly", otherwiseUse: "No")
+		}
+		set {
+			setStringValue(forKey: "monospacedFontsOnly", to: newValue)
+		}
+	}
+
 	@objc dynamic var fontSize: String {
 		get {
 			getStringValue(forKey: "fontSize", otherwiseUse: "13")
@@ -239,6 +250,10 @@ final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 
 	var doShowLineNumberRuler: Bool {
 		return showLineNumberRuler == "Yes"
+	}
+
+	var showsMonospacedFontsOnly: Bool {
+		return monospacedFontsOnly == "Yes"
 	}
 
 	var selectedAppIcon: AppIcon {

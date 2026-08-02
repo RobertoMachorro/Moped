@@ -28,19 +28,44 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 	// MARK: - Application Delegate
 
+	/// Applies the "On Launch" preference, but only when nothing else is already on its
+	/// way in.
+	///
+	/// The signal is `NSApplication.launchIsDefaultUserInfoKey`, which Launch Services
+	/// sets to `false` when the app was launched *to open something* — a Finder
+	/// double-click or `moped <file>` — and `true` for a plain launch. It is known up
+	/// front, which is what makes it usable here.
+	///
+	/// This replaces a `NSDocumentController.shared.documents.isEmpty` guard that was a
+	/// race rather than a check. `kAEOpenDocuments` is delivered asynchronously and
+	/// `MopedDocument.init(configuration:)` is nonisolated so SwiftUI builds documents
+	/// off the main thread; the guard, running on the main actor, could see an empty
+	/// array while the CLI's file was still being read, and drop an untitled window on
+	/// top of the file the user actually asked for.
+	///
+	/// The work has to happen here rather than in `applicationOpenUntitledFile(_:)`:
+	/// SwiftUI's `DocumentGroup` never consults that hook (verified — neither it nor
+	/// `applicationShouldOpenUntitledFile(_:)` is called), and it presents its own open
+	/// panel shortly after this returns. Acting now is what preempts that panel; the
+	/// "File Open Dialog" case simply declines to act and lets it appear.
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		NSApp.setActivationPolicy(.regular)
 		NSApp.activate(ignoringOtherApps: true)
 		applySelectedAppIcon()
 		startObservingPreferenceChanges()
 
-		// Skip launch behavior if documents were already opened externally
-		// (e.g., via Finder double-click or `moped <file>` from the CLI).
-		guard NSDocumentController.shared.documents.isEmpty else { return }
+		let isPlainLaunch = aNotification
+			.userInfo?[NSApplication.launchIsDefaultUserInfoKey] as? Bool ?? true
+		guard isPlainLaunch else {
+			return
+		}
 
 		let prefs = Preferences.userShared
 		if prefs.reopenPreviousOnLaunch {
-			reopenPreviousDocuments()
+			// An exhausted or fully stale session falls back to an empty editor.
+			if !reopenPreviousDocuments() {
+				NSDocumentController.shared.newDocument(nil)
+			}
 		} else if prefs.openEmptyOnLaunch {
 			NSDocumentController.shared.newDocument(nil)
 		}
@@ -99,10 +124,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		Preferences.userShared.lastOpenDocuments = entries
 	}
 
-	private func reopenPreviousDocuments() {
+	/// Returns whether at least one bookmark resolved and an open was dispatched, so the
+	/// caller can fall back to an empty editor when there is nothing left to restore.
+	private func reopenPreviousDocuments() -> Bool {
 		let entries = Preferences.userShared.lastOpenDocuments
 		var refreshedEntries: [RestoredDocument] = []
 		var refreshedAny = false
+		var openedAny = false
 
 		for entry in entries {
 			var isStale = false
@@ -133,6 +161,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 				refreshedEntries.append(entry)
 			}
 
+			openedAny = true
 			let savedFrame = entry.frame.map { NSRectFromString($0) }
 			NSDocumentController.shared.openDocument(
 				withContentsOf: url,
@@ -148,6 +177,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		if refreshedAny {
 			Preferences.userShared.lastOpenDocuments = refreshedEntries
 		}
+		return openedAny
 	}
 
 	private func applyFrame(_ rect: NSRect, to document: NSDocument, retriesLeft: Int) {

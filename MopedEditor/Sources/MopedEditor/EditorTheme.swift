@@ -36,8 +36,13 @@ public struct MopedTheme: Sendable {
 	public let gutterBackground: NSColor
 	public let gutterForeground: NSColor
 	public let selection: NSColor
+	public let caret: NSColor
 	public let tokenColors: [String: NSColor]
 
+	/// `caret` defaults to the inverse of the background, which is what the editor has
+	/// always drawn. Themes whose background is a system colour pass it explicitly —
+	/// inverting the system text background gives a caret that is wrong in both
+	/// appearances.
 	public init(
 		name: String,
 		background: NSColor,
@@ -45,6 +50,7 @@ public struct MopedTheme: Sendable {
 		gutterBackground: NSColor,
 		gutterForeground: NSColor,
 		selection: NSColor,
+		caret: NSColor? = nil,
 		tokenColors: [String: NSColor]
 	) {
 		self.name = name
@@ -53,11 +59,28 @@ public struct MopedTheme: Sendable {
 		self.gutterBackground = gutterBackground
 		self.gutterForeground = gutterForeground
 		self.selection = selection
+		self.caret = caret ?? Self.inverse(of: background)
 		self.tokenColors = tokenColors
 	}
 
 	/// Color for a token kind, falling back to the plain foreground.
 	public func color(for kind: TokenKind) -> NSColor {
 		tokenColors[kind.rawValue] ?? foreground
+	}
+
+	private static func inverse(of color: NSColor) -> NSColor {
+		let resolved = color.usingColorSpace(.sRGB)
+			?? color.usingColorSpace(.deviceRGB)
+			?? color.usingColorSpace(.genericRGB)
+
+		guard let rgb = resolved else {
+			return .black
+		}
+		var red: CGFloat = 1
+		var green: CGFloat = 1
+		var blue: CGFloat = 1
+		var alpha: CGFloat = 1
+		rgb.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+		return NSColor(red: 1 - red, green: 1 - green, blue: 1 - blue, alpha: alpha)
 	}
 }
