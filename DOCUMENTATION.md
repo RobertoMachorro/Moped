@@ -198,7 +198,7 @@ past the end of the document.
 ## Syntax highlighting
 
 Moped's syntax highlighter is homegrown — there are no third-party dependencies anywhere in
-the app. It ships tokenizers for around twenty languages and offers 32 entries in its
+the app. It ships tokenizers for two dozen languages and offers 35 entries in its
 language pickers once common aliases are counted.
 
 ### How a language is chosen
@@ -215,10 +215,10 @@ nothing useful — new untitled documents, and files with no extension. It defau
 
 ### Available languages
 
-`plaintext` · `asciidoc` · `bash` · `c` · `cpp` · `cs` · `css` · `erb` · `go` · `groovy` ·
-`handlebars` · `html` · `java` · `javascript` · `json` · `kotlin` · `less` · `markdown` ·
-`objectivec` · `php` · `python` · `ruby` · `rust` · `scss` · `shell` · `sql` · `swift` ·
-`toml` · `twig` · `typescript` · `xml` · `yaml`
+`plaintext` · `asciidoc` · `bash` · `c` · `cpp` · `cs` · `css` · `diff` · `erb` · `go` ·
+`groovy` · `handlebars` · `html` · `java` · `javascript` · `json` · `jsx` · `kotlin` ·
+`less` · `markdown` · `objectivec` · `php` · `python` · `ruby` · `rust` · `scss` ·
+`shell` · `sql` · `swift` · `toml` · `tsx` · `twig` · `typescript` · `xml` · `yaml`
 
 Several of these share a tokenizer with a close relative — `kotlin` and `groovy` are
 colored by the Java tokenizer, `scss` and `less` by the CSS one, `objectivec` by the C++
@@ -232,6 +232,13 @@ Moped does not highlight the embedded language inside the fence.
 **HTML and XML** color tag names, attribute names and values, comments, doctypes,
 processing instructions, `CDATA` payloads, and entities. The bodies of `<script>` and
 `<style>` elements render as plain text.
+
+**JSX and TSX** are JavaScript and TypeScript plus element names, so `<Card>` and
+`</Card>` stand out from the code around them. Attribute names are not colored separately.
+
+**Diff** colors whole lines rather than code: added lines green, removed lines red, hunk
+headers and file headers picked out, and the unchanged context left plain so the changes
+are what you see. It applies to `.diff` and `.patch` files.
 
 Highlighting is applied as a display layer, never as part of your text. It is never written
 to disk, it never marks a document as edited, and it never lands on the undo stack —
@@ -313,7 +320,7 @@ Open with **Moped ▸ Settings…** (⌘,). The window has four sections.
 
 | Setting | Choices | Default |
 |---|---|---|
-| Syntax language | Any of the 32 supported languages | plaintext |
+| Syntax language | Any of the 35 supported languages | plaintext |
 | Wrap long lines | Checkbox | On |
 | Show line numbers | Checkbox | On |
 | Indentation | Tab · 2 Spaces · 4 Spaces | Tab |
@@ -332,7 +339,7 @@ Settings apply to open documents immediately.
 
 ### What Moped opens
 
-Moped opens plain text. It registers 84 text file types with macOS — everything from
+Moped opens plain text. It registers 87 text file types with macOS — everything from
 `.swift`, `.py`, and `.json` through `.yaml`, `.toml`, `.ini`, and `.tex` to `.ahk`,
 `.gcode`, and `.nix` — and recognizes over a hundred more type identifiers when opening a
 file, including Apple-specific ones such as property lists, AppleScript text, and Xcode

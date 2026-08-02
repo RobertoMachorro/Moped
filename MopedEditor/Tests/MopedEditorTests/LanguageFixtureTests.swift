@@ -24,9 +24,9 @@ import XCTest
 final class LanguageFixtureTests: XCTestCase {
 	func testAllLanguagesRegistered() {
 		let expected = [
-			"bash", "c", "cpp", "cs", "css", "go", "html", "java", "javascript",
-			"json", "markdown", "php", "python", "ruby", "rust", "sql", "swift",
-			"toml", "typescript", "xml", "yaml"
+			"bash", "c", "cpp", "cs", "css", "diff", "go", "html", "java",
+			"javascript", "json", "jsx", "markdown", "php", "python", "ruby",
+			"rust", "sql", "swift", "toml", "tsx", "typescript", "xml", "yaml"
 		]
 		for name in expected {
 			XCTAssertNotNil(LanguageRegistry.tokenizer(for: name), "Missing tokenizer for \(name)")
@@ -178,6 +178,67 @@ final class LanguageFixtureTests: XCTestCase {
 		assertKind("interface", is: .keyword, in: text, as: "typescript")
 		assertKind("string", is: .type, in: text, as: "typescript")
 		assertKind("User", is: .type, in: text, as: "typescript")
+	}
+
+	func testJsx() {
+		let text = "export function Card({ title }) {\n\treturn <div className=\"card\"><Badge /> {title}</div>;\n}"
+		assertKind("export", is: .include, in: text, as: "jsx")
+		assertKind("<div", is: .type, in: text, as: "jsx")
+		assertKind("<Badge", is: .type, in: text, as: "jsx")
+		assertKind("</div", is: .type, in: text, as: "jsx")
+		assertKind("\"card\"", is: .string, in: text, as: "jsx")
+	}
+
+	/// The tag rule must not fire on a comparison — `<` only opens an element when a
+	/// name follows it immediately and is closed off by whitespace, `/` or `>`.
+	func testJsxDoesNotMistakeComparisonsForTags() {
+		let text = "for (let i = 0; i<n; i++) {}\nif (a < b) {}"
+		assertPlain("n", in: text, as: "jsx")
+		assertPlain("b", in: text, as: "jsx")
+	}
+
+	func testTsx() {
+		let text = "interface Props { title: string }\nconst C = ({ title }: Props) => <p>{title}</p>;"
+		assertKind("interface", is: .keyword, in: text, as: "tsx")
+		assertKind("string", is: .type, in: text, as: "tsx")
+		assertKind("<p", is: .type, in: text, as: "tsx")
+		assertKind("</p", is: .type, in: text, as: "tsx")
+	}
+
+	func testDiff() {
+		let text = """
+		diff --git a/Sample.swift b/Sample.swift
+		index 1234567..89abcde 100644
+		--- a/Sample.swift
+		+++ b/Sample.swift
+		@@ -1,3 +1,3 @@
+		 let unchanged = 1
+		-let removed = 2
+		+let added = 3
+		\\ No newline at end of file
+		"""
+		assertKind("diff --git a/Sample.swift b/Sample.swift", is: .textTitle, in: text, as: "diff")
+		assertKind("index 1234567..89abcde 100644", is: .comment, in: text, as: "diff")
+		assertKind("@@ -1,3 +1,3 @@", is: .include, in: text, as: "diff")
+		assertKind("-let removed = 2", is: .diffMinus, in: text, as: "diff")
+		assertKind("+let added = 3", is: .diffPlus, in: text, as: "diff")
+		assertKind("\\ No newline at end of file", is: .comment, in: text, as: "diff")
+	}
+
+	/// File headers are matched before the bare `-`/`+` rules; getting the order wrong
+	/// would paint them as a removed and an added line.
+	func testDiffFileHeadersOutrankChangeLines() {
+		let text = "--- a/Sample.swift\n+++ b/Sample.swift\n"
+		assertKind("--- a/Sample.swift", is: .textTitle, in: text, as: "diff")
+		assertKind("+++ b/Sample.swift", is: .textTitle, in: text, as: "diff")
+	}
+
+	/// Context lines are claimed whole so the code scanner never runs on them —
+	/// highlighting the patched source as code would bury the actual changes.
+	func testDiffContextLinesStayPlain() {
+		let text = "@@ -1,2 +1,2 @@\n let count = 42\n+let count = 43\n"
+		assertKind(" let count = 42", is: .plain, in: text, as: "diff")
+		assertKind("42", is: .plain, in: text, as: "diff")
 	}
 
 	func testCss() {

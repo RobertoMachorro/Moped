@@ -7,6 +7,9 @@
 - [ ] Type ``` in a Markdown file — no crash, fence contents render as literal text.
 - [ ] Switch language in the bottom picker (Swift → JSON → plaintext → Swift) — re‑colors instantly, no crash.
 - [ ] Open a JSON, Python, Bash, Markdown file — each shows highlighting.
+- [ ] Open a `.jsx` and a `.tsx` file — the picker reads `jsx` / `tsx` without being touched, element names are colored, and a `i<n` comparison is not mistaken for a tag.
+- [ ] Open a `.diff` or `.patch` file — added lines are green, removed lines are red, hunk headers stand out, and the unchanged context lines stay plain.
+- [ ] Open a `.toml` file — the picker reads `toml` without being touched.
 - [ ] Open an XML file, an `Info.plist`, and an `.svg` — the `<?xml … ?>` prolog, tag names, and quoted attribute values are all colored; a multiline `<![CDATA[ … ]]>` stays literal and markup after it highlights again.
 - [ ] Open a language with no definition yet (e.g. Dart, AutoHotkey) — shows plain, no crash.
 - [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document, in place, without the scroll position jumping.
