@@ -82,6 +82,10 @@ final class AppActions: NSObject {
 		}
 	}
 
+	func linkToDocumentation() {
+		showWebsite(using: "https://roberto.machorro.net/Moped/DOCUMENTATION")
+	}
+
 	func linkToLicense() {
 		showWebsite(using: "https://www.gnu.org/licenses/gpl-3.0.html")
 	}

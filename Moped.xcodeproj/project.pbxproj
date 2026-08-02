@@ -33,7 +33,7 @@
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
 		F0A1B2C3D4E5000000000031 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000001 /* main.swift */; };
-		F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped-wait */; };
+		F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped-wait */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F0A1B2C3D4E5000000000051 /* Resources/moped in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000050 /* Resources/moped */; };
 /* End PBXBuildFile section */
 
@@ -231,7 +231,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2620;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2660;
 				ORGANIZATIONNAME = "Roberto Machorro";
 				TargetAttributes = {
 					E9D042082300A9FE00382715 = {

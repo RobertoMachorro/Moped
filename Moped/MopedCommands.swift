@@ -119,7 +119,7 @@ struct MopedCommands: Commands {
 			}
 			Divider()
 			Button("menu.help.moped_help") {
-				NSApp.sendAction(#selector(NSApplication.showHelp(_:)), to: nil, from: nil)
+				AppActions.shared.linkToDocumentation()
 			}
 			.keyboardShortcut("?")
 		}
