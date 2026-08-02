@@ -31,21 +31,15 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 ## Features
 
-* **Syntax highlighting** — homegrown, with about twenty languages and switchable themes
-* **Line numbers** — toggleable gutter ruler
-* **Word wrap** — configurable per preference
-* **Auto-indentation** — configurable default: tab, 2 spaces, or 4 spaces
-* **Status bar** — shows document type, cursor position (line:column), and an inline language picker to override detection on the fly
-* **Find & Replace** — system find bar with full regex support (⌘F / ⌘⌥F)
-* **Jump to Line** — ⌘L dialog that pre-fills the current line
-* **Font & size** — any system font, sizes 9–24, with in-window zoom (⌘+ / ⌘− / ⌘0)
-* **Print** — monospace print view with standard page margins
-* **External change detection** — watches the file on disk and prompts to reload when another app modifies it
-* **Large file mode** — gracefully disables syntax highlighting for very large files to keep the editor responsive
-* **Launch behavior** — open with a file dialog or start with a blank editor
-* **Alternate app icons** — Default, Pink, Black, Red, Rainbow, and Beige
-* **CLI tool** — install a `moped` command to `/usr/local/bin` via *Moped > Set Up CLI Tool*
-* **Set as default editor** — register Moped as the system default for all supported plain-text file types from Preferences
+* **Syntax highlighting** — homegrown, with about twenty languages and six switchable themes
+* **Editing essentials** — line numbers, word wrap, auto-indentation, and comment toggling (⌘/)
+* **Find & Replace** — system find bar with full regex support (⌘F / ⌘⌥F), plus Jump to Line (⌘L)
+* **Status bar** — document type, cursor position, and an inline language picker to override detection on the fly
+* **Careful with your files** — encoding auto-detection, binary-file protection, and a prompt to reload when another app changes the file
+* **CLI tool** — a `moped` command with a `--wait` mode, so it works as your `git` editor
+* **Native macOS** — printing, alternate app icons, session restore, and 13 interface languages
+
+**[Read the full documentation →](DOCUMENTATION.md)**
 
 ## Manifesto - General Audience
 
