@@ -39,7 +39,7 @@ class EditorTestCase: XCTestCase {
 	private var undoDelegate: UndoProvidingDelegate?
 
 	func makeEditor(
-		theme: MopedTheme = .defaultLight
+		theme: MopedTheme = .defaultLightPalette
 	) -> (scrollView: NSScrollView, textView: MopedTextView) {
 		let editor = MopedTextView.scrollableEditor(theme: theme)
 		editor.scrollView.frame = NSRect(x: 0, y: 0, width: 600, height: 400)

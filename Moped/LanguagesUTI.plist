@@ -72,6 +72,11 @@
 	<string>css</string>
 	<key>public.json</key>
 	<string>json</string>
+	<!-- Moped's own theme format, exported as a UTI in Info.plist. The key must be
+	     lowercase even though the bundle id is not: UTType.identifier always reports a
+	     lowercased identifier, and getLanguageForType matches these keys exactly. -->
+	<key>net.machorro.roberto.moped.theme</key>
+	<string>json</string>
 	<key>public.xml</key>
 	<string>xml</string>
 	<key>com.sun.java-source</key>

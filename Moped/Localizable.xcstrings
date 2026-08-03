@@ -5909,338 +5909,86 @@
         }
       }
     },
-    "option.theme.default_dark" : {
+    "option.theme.default" : {
       "comment" : "Editor theme choice in Preferences.",
       "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Standard Dunkel"
+            "value" : "Standard"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default Dark"
+            "value" : "Default"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Oscuro predeterminado"
+            "value" : "Predeterminado"
           }
         },
         "fi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Tumma oletus"
+            "value" : "Oletus"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Sombre par défaut"
+            "value" : "Par défaut"
           }
         },
         "he" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "כהה (ברירת מחדל)"
+            "value" : "ברירת מחדל"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "डिफ़ॉल्ट डार्क"
+            "value" : "डिफ़ॉल्ट"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Scuro predefinito"
+            "value" : "Predefinito"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "デフォルト（ダーク）"
+            "value" : "デフォルト"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Standaard donker"
+            "value" : "Standaard"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Escuro predefinido"
+            "value" : "Predefinido"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Escuro padrão"
+            "value" : "Padrão"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Стандартна темна"
-          }
-        }
-      }
-    },
-    "option.theme.default_light" : {
-      "comment" : "Editor theme choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standard Hell"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Default Light"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro predeterminado"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Vaalea oletus"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Clair par défaut"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "בהיר (ברירת מחדל)"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "डिफ़ॉल्ट लाइट"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Chiaro predefinito"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "デフォルト（ライト）"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Standaard licht"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro predefinido"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Claro padrão"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Стандартна світла"
-          }
-        }
-      }
-    },
-    "option.theme.solarized_dark" : {
-      "comment" : "Editor theme choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized Dunkel"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solarized Dark"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized oscuro"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized tumma"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized sombre"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized כהה"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized डार्क"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized scuro"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized ダーク"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized donker"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized escuro"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized escuro"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized темна"
-          }
-        }
-      }
-    },
-    "option.theme.solarized_light" : {
-      "comment" : "Editor theme choice in Preferences.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized Hell"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solarized Light"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized claro"
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized vaalea"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized clair"
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized בהיר"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized लाइट"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized chiaro"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized ライト"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized licht"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized claro"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized claro"
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Solarized світла"
+            "value" : "Стандартна"
           }
         }
       }
@@ -7742,6 +7490,90 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Тема"
+          }
+        }
+      }
+    },
+    "pref.themes.reveal" : {
+      "comment" : "Button in Preferences that opens the themes folder in Finder.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Themenordner öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reveal Themes Folder"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostrar carpeta de temas"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Näytä teemakansio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Afficher le dossier des thèmes"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "הצג את תיקיית ערכות הנושא"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "थीम फ़ोल्डर दिखाएँ"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostra cartella dei temi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "テーマフォルダを表示"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Toon thema's-map"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostrar pasta de temas"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Mostrar pasta de temas"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Показати теку тем"
           }
         }
       }

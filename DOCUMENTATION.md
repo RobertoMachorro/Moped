@@ -256,27 +256,139 @@ direction applies.
 
 ## Themes and appearance
 
-*Settings ▸ Appearance ▸ Theme* offers six themes:
+*Settings ▸ Appearance ▸ Theme* ships with eight themes, and lists any you add yourself
+alongside them:
 
 | Theme | Notes |
 |---|---|
-| **System** | Follows the macOS appearance. |
-| **Default Light** | |
-| **Default Dark** | |
-| **Xcode-like** | The default. |
-| **Solarized Light** | |
-| **Solarized Dark** | |
+| **System** | No theme: macOS's own text colors. |
+| **Default** | |
+| **Forest** | Olive and fern greens over warm paper. |
+| **Nebula** | Violet and magenta, with mint and cyan accents. |
+| **Ocean** | Cool blues and teals, with one warm accent for numbers. |
+| **Solarized** | The original low-contrast palette, kept faithful. |
+| **Turbo** | Borland's Turbo C++ and Turbo Pascal: yellow on blue. Always dark. |
+| **Xcode-like** | The default. Approximates Xcode's own two themes. |
 
 Each theme sets the background, text, gutter, selection, and cursor colors along with a
 color for every kind of syntax token.
 
-**System** is worth calling out: it takes its background, text, and selection colors from
-macOS itself and follows the Light/Dark switch **live**. Flip your Mac between Light and
-Dark with a document open and the editor changes with it — no reopening, no restart. It
-keeps a hand-tuned set of syntax colors for each appearance, so you do not lose your
-highlighting the way a purely system-colored editor would.
+A theme can carry **two palettes**, one for Light and one for Dark, and switch between
+them **live**. Flip your Mac between Light and Dark with a document open and the editor
+changes with it — no reopening, no restart. Every theme above does this except **Turbo**,
+which reproduces a fixed DOS screen and has no light half to switch to. A theme of your
+own follows the appearance only if its file has a `dark` section; without one it stays
+pinned to a single palette, exactly as Turbo does — which is how you get an always-dark
+editor on a Mac running Light.
+
+**System** is the odd one out: it takes its background, text, and selection colors from
+macOS itself rather than from fixed values. It still keeps a hand-tuned set of syntax
+colors for each appearance, so you do not lose your highlighting the way a purely
+system-colored editor would.
 
 Changing any theme applies to open documents in place, without losing your scroll position.
+
+### Custom themes
+
+Themes are plain JSON files with a `.mopedtheme` extension, and the ones Moped ships are
+real files you can read. **Settings ▸ Appearance ▸ Reveal Themes Folder** opens the
+folder they live in. Every `.mopedtheme` in there shows up in the theme picker under
+whatever `name` it declares. Moped re-reads the folder each time you switch back to it,
+so saving a file is enough — no restart.
+
+Moped owns the `.mopedtheme` type, so double-clicking one opens it in Moped with JSON
+highlighting already on — Reveal Themes Folder, double-click, edit, save is the whole
+loop.
+
+**To change a theme, copy it rather than editing it in place.** Duplicate the file, give
+the copy a new filename *and* a new `name`, and edit that. Moped never overwrites a
+theme file that already exists, but it does recreate one of its own that has gone
+missing — so an edited `Default.mopedtheme` survives, while a deleted one comes back on
+the next launch. A copy under your own name is yours for good.
+
+If a file will not parse, Moped skips it and loads the rest; the reason is written to
+the system log. If two files claim the same `name`, the one whose filename sorts first
+wins.
+
+#### The format
+
+```json
+{
+  "version": 1,
+  "name": "Nord",
+  "colors": {
+    "background": "#ECEFF4",
+    "foreground": "#2E3440",
+    "gutterBackground": "#E5E9F0",
+    "gutterForeground": "#8FBCBB",
+    "selection": "#D8DEE9",
+    "caret": "#2E3440"
+  },
+  "tokens": {
+    "comment": "#616E88",
+    "keyword": "#81A1C1",
+    "string": "#A3BE8C"
+  },
+  "dark": {
+    "colors": {
+      "background": "#2E3440",
+      "foreground": "#D8DEE9",
+      "gutterBackground": "#3B4252",
+      "gutterForeground": "#4C566A",
+      "selection": "#434C5E"
+    }
+  }
+}
+```
+
+| Key | Required | Meaning |
+|---|---|---|
+| `version` | yes | Format version. Currently always `1`; Moped refuses anything else. |
+| `name` | yes | What the theme picker shows, and what gets stored in your preferences. Not the filename. |
+| `colors` | yes | The editor chrome — see below. |
+| `tokens` | no | Syntax colors. Any kind you leave out is drawn in `colors.foreground`. |
+| `dark` | no | A second palette for Dark appearance. Same shape, minus `name` and `version`. |
+
+Inside `colors`:
+
+| Key | Required | Meaning |
+|---|---|---|
+| `background` | yes | Editor background. |
+| `foreground` | yes | Body text, and the fallback for any token you do not color. |
+| `gutterBackground` | yes | Line-number gutter background. |
+| `gutterForeground` | yes | Line numbers. |
+| `selection` | yes | Selection highlight. Also tints the current line, at reduced opacity. |
+| `caret` | no | The insertion point. Defaults to the inverse of `background`. |
+
+Colors are hexadecimal and nothing else: `#RGB`, `#RRGGBB`, or `#RRGGBBAA` for
+transparency. The `#` is optional and case does not matter, so `#81A1C1`, `81a1c1`, and
+`#81A1C1FF` are the same color.
+
+Every key `tokens` accepts:
+
+| | | |
+|---|---|---|
+| `boolean` | `keyword` | `punctuation.special` |
+| `comment` | `keyword.function` | `string` |
+| `constructor` | `keyword.return` | `text.literal` |
+| `diff.minus` | `method` | `text.title` |
+| `diff.plus` | `number` | `type` |
+| `function.call` | `operator` | `variable` |
+| `include` | `parameter` | `variable.builtin` |
+
+Names Moped does not recognize are ignored rather than treated as errors, so a file
+written for a newer version still loads here.
+
+#### Light and dark in one file
+
+Add a `dark` section and the theme follows the macOS appearance: the top level becomes
+the Light palette, `dark` is used under Dark. `dark` needs its own `colors`, but its
+`tokens` are optional — leave them out and it reuses the top-level ones, which is what
+you want when only the chrome should change.
+
+To pin a theme to one appearance instead, give it no `dark` section. That is also how
+you get an always-dark editor on a Mac running Light: copy the `dark` block's contents
+up to the top level of a new file and delete the `dark` section.
 
 ### Font
 
@@ -311,7 +423,7 @@ Open with **Moped ▸ Settings…** (⌘,). The window has four sections.
 
 | Setting | Choices | Default |
 |---|---|---|
-| Theme | System · Default Light · Default Dark · Xcode-like · Solarized Light · Solarized Dark | Xcode-like |
+| Theme | System · Default · Forest · Nebula · Ocean · Solarized · Turbo · Xcode-like, plus any custom `.mopedtheme` | Xcode-like |
 | Font | Any installed font | Menlo |
 | Show only monospaced fonts | Checkbox | Off |
 | Font size | 9–24 | 13 |

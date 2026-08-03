@@ -54,6 +54,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		applySelectedAppIcon()
 		startObservingPreferenceChanges()
 
+		// Touching the store is what seeds the themes folder and reads it. Doing it here
+		// rather than leaving it to the first `ThemeCatalog` lookup means the folder
+		// exists even on a launch that opens no document at all.
+		_ = ThemeStore.shared
+
 		let isPlainLaunch = aNotification
 			.userInfo?[NSApplication.launchIsDefaultUserInfoKey] as? Bool ?? true
 		guard isPlainLaunch else {

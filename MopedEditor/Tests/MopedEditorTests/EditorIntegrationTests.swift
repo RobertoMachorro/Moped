@@ -33,7 +33,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		drainHighlightPasses()
 
 		let text = textView.string as NSString
-		let theme = MopedTheme.defaultLight
+		let theme = MopedTheme.defaultLightPalette
 		XCTAssertEqual(color(at: text.range(of: "import").location, in: textView), theme.color(for: .include))
 		XCTAssertEqual(color(at: text.range(of: "let").location, in: textView), theme.color(for: .keyword))
 		XCTAssertEqual(color(at: text.range(of: "42").location, in: textView), theme.color(for: .number))
@@ -49,7 +49,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		drainHighlightPasses()
 
 		let text = textView.string as NSString
-		let theme = MopedTheme.defaultLight
+		let theme = MopedTheme.defaultLightPalette
 		XCTAssertEqual(color(at: text.range(of: "<?xml").location, in: textView), theme.color(for: .keyword))
 		XCTAssertEqual(color(at: text.range(of: "\"1.0\"").location, in: textView), theme.color(for: .string))
 		XCTAssertEqual(color(at: text.range(of: "key").location, in: textView), theme.color(for: .keyword))
@@ -76,7 +76,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		drainHighlightPasses()
 
 		let text = textView.string as NSString
-		let theme = MopedTheme.defaultLight
+		let theme = MopedTheme.defaultLightPalette
 		XCTAssertEqual(color(at: text.range(of: "var").location, in: textView), theme.color(for: .keyword))
 		XCTAssertEqual(color(at: text.range(of: "// tail").location, in: textView), theme.color(for: .comment))
 		// The untouched first line keeps its coloring.
@@ -94,7 +94,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		drainHighlightPasses()
 
 		let text = textView.string as NSString
-		let theme = MopedTheme.defaultLight
+		let theme = MopedTheme.defaultLightPalette
 		for fragment in ["let a", "let b", "let c"] {
 			XCTAssertEqual(
 				color(at: text.range(of: fragment).location, in: textView),
@@ -111,21 +111,21 @@ final class EditorIntegrationTests: EditorTestCase {
 		drainHighlightPasses()
 
 		let keywordLocation = (textView.string as NSString).range(of: "let").location
-		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.defaultLight.color(for: .keyword))
+		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.defaultLightPalette.color(for: .keyword))
 
-		textView.theme = .solarizedDark
+		textView.theme = .solarizedDarkPalette
 		drainHighlightPasses()
 
-		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.solarizedDark.color(for: .keyword))
-		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDark.background)
+		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.solarizedDarkPalette.color(for: .keyword))
+		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDarkPalette.background)
 		XCTAssertEqual(textView.string, "let x = 1\n", "Re-theming must not disturb the text")
 	}
 
-	/// The System theme is the only one that has to re-resolve itself: its colours are
-	/// snapshots of AppKit's, taken against whatever appearance was current when the
-	/// snapshot was made.
+	/// A paired theme has to re-resolve itself against the view's appearance. System is
+	/// the extreme case: its colours are snapshots of AppKit's, taken against whatever
+	/// appearance was current when the snapshot was made.
 	func testSystemThemeFollowsTheViewAppearance() throws {
-		let (_, textView) = makeEditor(theme: .system(for: try XCTUnwrap(NSAppearance(named: .aqua))))
+		let (_, textView) = makeEditor(theme: .system)
 		textView.appearance = NSAppearance(named: .aqua)
 		textView.language = "swift"
 		textView.setPlainText("let x = 1\n")
@@ -135,7 +135,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		let keywordLocation = (textView.string as NSString).range(of: "let").location
 		XCTAssertEqual(
 			color(at: keywordLocation, in: textView),
-			MopedTheme.defaultLight.color(for: .keyword),
+			MopedTheme.defaultLightPalette.color(for: .keyword),
 			"the light appearance should use the light token palette"
 		)
 
@@ -150,27 +150,79 @@ final class EditorIntegrationTests: EditorTestCase {
 		)
 		XCTAssertEqual(
 			color(at: keywordLocation, in: textView),
-			MopedTheme.defaultDark.color(for: .keyword),
+			MopedTheme.defaultDarkPalette.color(for: .keyword),
 			"token colors are layout-manager temporary attributes, so they only follow "
 				+ "the appearance if the highlighter is re-run"
 		)
 		XCTAssertEqual(textView.string, "let x = 1\n", "Re-resolving must not disturb the text")
 	}
 
-	/// A fixed theme must ignore the appearance entirely — picking Solarized Dark and
-	/// then switching to Light must not repaint the editor.
+	/// An unpaired theme must ignore the appearance entirely — a theme file with no
+	/// `dark` section stays put when the user switches to Light.
 	func testFixedThemeIgnoresTheViewAppearance() {
-		let (_, textView) = makeEditor(theme: .solarizedDark)
+		let (_, textView) = makeEditor(theme: .solarizedDarkPalette)
 		textView.appearance = NSAppearance(named: .aqua)
 		textView.setPlainText("let x = 1\n")
 		drainHighlightPasses()
 
-		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDark.background)
+		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDarkPalette.background)
 
 		textView.appearance = NSAppearance(named: .darkAqua)
 		drainHighlightPasses()
 
-		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDark.background)
+		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDarkPalette.background)
+	}
+
+	/// The user-facing path the built-in themes do not exercise: a theme decoded from a
+	/// `.mopedtheme` file, with a `dark` section, has to follow the appearance the same
+	/// way `system` does. Nothing else covered decode → pair → live appearance switch.
+	func testThemeFromFileWithDarkSectionFollowsTheViewAppearance() throws {
+		let json = """
+		{
+			"version": 1, "name": "Paired",
+			"colors": {
+				"background": "#FFFFFF", "foreground": "#101010",
+				"gutterBackground": "#F5F5F5", "gutterForeground": "#888888",
+				"selection": "#BFD7FF"
+			},
+			"tokens": {"keyword": "#AA00AA"},
+			"dark": {
+				"colors": {
+					"background": "#1F2129", "foreground": "#EAEAEE",
+					"gutterBackground": "#262932", "gutterForeground": "#7A7D85",
+					"selection": "#3D578C"
+				},
+				"tokens": {"keyword": "#66DDFF"}
+			}
+		}
+		"""
+		let theme = try MopedTheme(data: Data(json.utf8))
+		let (_, textView) = makeEditor(theme: theme)
+		textView.appearance = NSAppearance(named: .aqua)
+		textView.language = "swift"
+		textView.setPlainText("let x = 1\n")
+		drainHighlightPasses()
+
+		let keywordLocation = (textView.string as NSString).range(of: "let").location
+		XCTAssertEqual(textView.backgroundColor, NSColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			NSColor(srgbRed: 0xAA / 255, green: 0, blue: 0xAA / 255, alpha: 1)
+		)
+
+		textView.appearance = NSAppearance(named: .darkAqua)
+		drainHighlightPasses()
+
+		XCTAssertEqual(
+			textView.backgroundColor,
+			NSColor(srgbRed: 0x1F / 255, green: 0x21 / 255, blue: 0x29 / 255, alpha: 1),
+			"the dark section's chrome should take over"
+		)
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			NSColor(srgbRed: 0x66 / 255, green: 0xDD / 255, blue: 1, alpha: 1),
+			"token colors are temporary attributes, so they only follow if the highlighter re-runs"
+		)
 	}
 
 	func testDisablingHighlightingClearsColors() {
@@ -197,7 +249,7 @@ final class EditorIntegrationTests: EditorTestCase {
 
 		let text = textView.string as NSString
 		let keywordLocation = text.range(of: "let").location
-		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.defaultLight.color(for: .keyword))
+		XCTAssertEqual(color(at: keywordLocation, in: textView), MopedTheme.defaultLightPalette.color(for: .keyword))
 
 		textView.language = "json"
 		drainHighlightPasses()
@@ -205,7 +257,7 @@ final class EditorIntegrationTests: EditorTestCase {
 		XCTAssertNil(color(at: keywordLocation, in: textView), "`let` is not a JSON keyword")
 		XCTAssertEqual(
 			color(at: text.range(of: "1").location, in: textView),
-			MopedTheme.defaultLight.color(for: .number),
+			MopedTheme.defaultLightPalette.color(for: .number),
 			"Numbers still highlight under JSON"
 		)
 	}

@@ -72,6 +72,22 @@ final class LineNumberRulerView: NSRulerView {
 			name: NSTextView.didChangeSelectionNotification,
 			object: textView
 		)
+
+		// Everything this view draws — the background fill, every number's Y, and which
+		// lines are in range — is a function of the clip view's scroll offset, but
+		// scrolling does not invalidate a ruler on its own. The clip view blits what is
+		// already on screen and only repaints the newly exposed strip, so without this
+		// the gutter keeps the pixels it drew at offset zero: numbers slide up out of
+		// view and the strip revealed at the bottom is never painted at all.
+		if let clipView = scrollView?.contentView {
+			clipView.postsBoundsChangedNotifications = true
+			NotificationCenter.default.addObserver(
+				self,
+				selector: #selector(clipViewDidScroll(_:)),
+				name: NSView.boundsDidChangeNotification,
+				object: clipView
+			)
+		}
 	}
 
 	@available(*, unavailable)
@@ -99,8 +115,10 @@ final class LineNumberRulerView: NSRulerView {
 			return
 		}
 		// Nothing to splice onto when a full rebuild is already pending — and splicing
-		// a stale array would be wrong.
+		// a stale array would be wrong. The rebuild still has to reach the screen,
+		// so the redraw is requested either way.
 		guard !lineStartsAreStale else {
+			needsDisplay = true
 			return
 		}
 		lineStarts = LineIndex.splice(
@@ -117,6 +135,12 @@ final class LineNumberRulerView: NSRulerView {
 		needsDisplay = true
 	}
 
+	/// The whole gutter, not a band: the numbers move relative to the ruler on every
+	/// scroll, so there is no partial invalidation to make here.
+	@objc private func clipViewDidScroll(_ notification: Notification) {
+		needsDisplay = true
+	}
+
 	override func drawHashMarksAndLabels(in rect: NSRect) {
 		theme.gutterBackground.setFill()
 		bounds.fill()
@@ -130,23 +154,54 @@ final class LineNumberRulerView: NSRulerView {
 
 		drawSeparator()
 
-		let content = textView.string as NSString
 		let visibleRect = scrollView?.contentView.bounds ?? textView.visibleRect
-		let visibleGlyphs = layoutManager.glyphRange(forBoundingRect: visibleRect, in: textContainer)
-		let visibleChars = layoutManager.characterRange(forGlyphRange: visibleGlyphs, actualGlyphRange: nil)
-
-		let starts = currentLineStarts(for: content)
+		let starts = currentLineStarts(for: textView.string as NSString)
 		let caretLine = LineIndex.index(containing: textView.selectedRange().location, in: starts)
-		var index = LineIndex.index(containing: visibleChars.location, in: starts)
 		let inset = textView.textContainerInset.height
 
-		while index < starts.count, starts[index] <= NSMaxRange(visibleChars) {
+		for index in visibleLineNumbers(for: visibleRect) {
 			let glyphIndex = layoutManager.glyphIndexForCharacter(at: starts[index])
 			let fragment = layoutManager.lineFragmentRect(forGlyphAt: glyphIndex, effectiveRange: nil)
 			let originY = fragment.minY + inset - visibleRect.minY
 			draw(number: index + 1, atY: originY, height: fragment.height, isCaretLine: index == caretLine)
-			index += 1
 		}
+	}
+
+	/// Zero-based logical line indices the gutter should number for `visibleRect`, which
+	/// arrives in the clip view's coordinates.
+	///
+	/// Split out of `drawHashMarksAndLabels` because a wrong range is invisible until
+	/// somebody looks at the screen: drawing needs a graphics context, so nothing could
+	/// assert on the range that actually broke.
+	func visibleLineNumbers(for visibleRect: NSRect) -> Range<Int> {
+		guard let textView = clientView as? NSTextView,
+			  let layoutManager = textView.layoutManager,
+			  let textContainer = textView.textContainer
+		else {
+			return 0..<0
+		}
+
+		// The clip view's coordinates are the text view's; the container's are inset by
+		// `textContainerInset`. Placing the numbers already accounts for that, so the
+		// query has to as well or it asks about a band 4pt off from the one it draws.
+		let queryRect = visibleRect.offsetBy(dx: 0, dy: -textView.textContainerInset.height)
+
+		// `allowsNonContiguousLayout` is on, so `glyphRange(forBoundingRect:)` reports
+		// only what happens to be laid out already. Without this the range comes back
+		// short for a region scrolled into for the first time, and numbering stops
+		// partway down with nothing to indicate it went wrong.
+		layoutManager.ensureLayout(forBoundingRect: queryRect, in: textContainer)
+
+		let visibleGlyphs = layoutManager.glyphRange(forBoundingRect: queryRect, in: textContainer)
+		let visibleChars = layoutManager.characterRange(forGlyphRange: visibleGlyphs, actualGlyphRange: nil)
+		let starts = currentLineStarts(for: textView.string as NSString)
+
+		let first = LineIndex.index(containing: visibleChars.location, in: starts)
+		var last = first
+		while last < starts.count, starts[last] <= NSMaxRange(visibleChars) {
+			last += 1
+		}
+		return first..<last
 	}
 
 	private func draw(number: Int, atY originY: CGFloat, height: CGFloat, isCaretLine: Bool) {
@@ -185,11 +240,30 @@ final class LineNumberRulerView: NSRulerView {
 		return lineStarts
 	}
 
+	/// Widens the gutter to fit the largest line number, **on a later runloop turn**.
+	///
+	/// Assigning `ruleThickness` makes the scroll view re-tile. Both callers reach here
+	/// from somewhere that must not be re-entered: `currentLineStarts` is called from
+	/// inside `drawHashMarksAndLabels`, and `storageDidProcessEditing` runs inside
+	/// `NSTextStorage.processEditing`. Re-tiling from either one re-lays out the ruler
+	/// and clip view underneath code that has already captured their geometry, and left
+	/// the ruler at a stale height — numbering stopped partway down the viewport and the
+	/// strip below it never got painted, which was invisible until a theme shipped with
+	/// a gutter that did not match `NSRulerView`'s own light background.
+	///
+	/// Deferring is the same move `SyntaxHighlighter` makes for the same reason.
 	private func updateThickness(forLineCount count: Int) {
 		let widest = NSAttributedString(string: "\(max(count, 1))", attributes: [.font: numberFont])
 		let thickness = max(28.0, widest.size().width + Self.horizontalPadding * 2.0)
-		if abs(thickness - ruleThickness) > 0.5 {
-			ruleThickness = thickness
+		guard abs(thickness - ruleThickness) > 0.5 else {
+			return
+		}
+		DispatchQueue.main.async { [weak self] in
+			guard let self, abs(thickness - self.ruleThickness) > 0.5 else {
+				return
+			}
+			self.ruleThickness = thickness
+			self.needsDisplay = true
 		}
 	}
 }

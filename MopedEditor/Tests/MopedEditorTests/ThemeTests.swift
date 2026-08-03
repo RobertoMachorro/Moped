@@ -23,33 +23,96 @@ import XCTest
 
 final class ThemeTests: XCTestCase {
 	func testBuiltInThemes() {
-		XCTAssertEqual(MopedTheme.allBuiltIn.count, 5)
-		XCTAssertEqual(MopedTheme.allNames, [
-			"Default Light", "Default Dark", "Xcode-like", "Solarized Light", "Solarized Dark"
-		])
-		XCTAssertEqual(MopedTheme.defaultName, "Default Light")
+		XCTAssertEqual(MopedTheme.allBuiltIn.count, 7)
+		XCTAssertEqual(
+			MopedTheme.allNames,
+			["Default", "Forest", "Nebula", "Ocean", "Solarized", "Turbo", "Xcode-like"],
+			"the picker shows these in order, so the list is kept alphabetical"
+		)
+		XCTAssertEqual(MopedTheme.defaultName, "Default")
+	}
+
+	/// Shipped themes carry both appearances so they follow the system, with one
+	/// deliberate exception: Turbo reproduces a fixed DOS screen and has no light
+	/// counterpart. Asserting the exception by name keeps it a decision rather than
+	/// something that could rot into an oversight.
+	func testEveryBuiltInIsPairedExceptTurbo() {
+		for theme in MopedTheme.allBuiltIn where theme.name != "Turbo" {
+			XCTAssertNotNil(theme.darkVariant, "\(theme.name) should carry a dark palette")
+		}
+		// Xcode-like is the default, so losing its pairing would mean the out-of-the-box
+		// editor silently stops following the system.
+		XCTAssertNotNil(MopedTheme.xcodeLike.darkVariant)
+		XCTAssertNil(MopedTheme.turbo.darkVariant)
 	}
 
 	func testEveryThemeColorsEveryTokenKind() {
 		for theme in MopedTheme.allBuiltIn {
-			for kind in TokenKind.allCases where kind != .plain {
-				XCTAssertNotNil(
-					theme.tokenColors[kind.rawValue],
-					"\(theme.name) is missing a color for \(kind.rawValue)"
-				)
+			// A paired theme has to colour every kind in both palettes, or flipping the
+			// appearance would silently drop half the highlighting.
+			for palette in [theme] + [theme.darkVariant].compactMap({ $0 }) {
+				for kind in TokenKind.allCases where kind != .plain {
+					XCTAssertNotNil(
+						palette.tokenColors[kind.rawValue],
+						"\(theme.name) is missing a color for \(kind.rawValue)"
+					)
+				}
 			}
 		}
 	}
 
+	// MARK: - Pairing
+
+	func testPairedThemeResolvesByAppearance() throws {
+		let paired = MopedTheme.default
+		let light = try XCTUnwrap(NSAppearance(named: .aqua))
+		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
+
+		XCTAssertEqual(paired.resolved(for: light).background, MopedTheme.defaultLightPalette.background)
+		XCTAssertEqual(paired.resolved(for: dark).background, MopedTheme.defaultDarkPalette.background)
+	}
+
+	func testXcodeLikeResolvesByAppearance() throws {
+		let paired = MopedTheme.xcodeLike
+		let light = try XCTUnwrap(NSAppearance(named: .aqua))
+		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
+
+		XCTAssertEqual(paired.resolved(for: light).background, MopedTheme.xcodeLikeLightPalette.background)
+		XCTAssertEqual(paired.resolved(for: dark).background, MopedTheme.xcodeLikeDarkPalette.background)
+		XCTAssertGreaterThan(
+			try brightness(of: paired.resolved(for: light).background),
+			try brightness(of: paired.resolved(for: dark).background)
+		)
+	}
+
+	/// Callers apply `resolved(for:)` unconditionally, so an unpaired theme — which is
+	/// what a `.mopedtheme` with no `dark` section decodes to — has to answer with
+	/// itself rather than needing a check first. No built-in is unpaired any more, so
+	/// this uses a lone palette.
+	func testUnpairedThemeResolvesToItself() throws {
+		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
+		let unpaired = MopedTheme.xcodeLikeLightPalette
+		XCTAssertNil(unpaired.darkVariant)
+		XCTAssertEqual(unpaired.resolved(for: dark).background, unpaired.background)
+	}
+
+	/// `name` is the stored preference value, so both halves of a pair must answer to
+	/// the same one — otherwise resolving would hand the editor a theme the picker
+	/// cannot match.
+	func testPairedThemeSharesOneNameAndDoesNotNest() {
+		XCTAssertEqual(MopedTheme.default.darkVariant?.name, "Default")
+		XCTAssertNil(MopedTheme.default.darkVariant?.darkVariant)
+	}
+
 	func testColorFallsBackToForeground() {
-		let theme = MopedTheme.defaultLight
+		let theme = MopedTheme.defaultLightPalette
 		XCTAssertEqual(theme.color(for: .plain), theme.foreground)
 	}
 
 	// MARK: - System theme
 
-	/// `system` is deliberately absent from `allBuiltIn`: it is a function of the
-	/// appearance, so it cannot be one of the fixed themes.
+	/// `system` is deliberately absent from `allBuiltIn`: its chrome comes from AppKit
+	/// rather than from fixed values, so it is never written to a theme file.
 	func testSystemThemeIsSelectableButNotBuiltIn() {
 		XCTAssertFalse(MopedTheme.allNames.contains(MopedTheme.systemName))
 		XCTAssertEqual(MopedTheme.selectableNames.first, MopedTheme.systemName)
@@ -74,6 +137,22 @@ final class ThemeTests: XCTestCase {
 			try brightness(of: lightTheme.foreground),
 			try brightness(of: darkTheme.foreground),
 			"the light appearance should produce the darker editor text"
+		)
+	}
+
+	/// The theme actually handed to the editor is the paired one, so that it follows the
+	/// appearance through the same `resolved(for:)` path every other theme uses.
+	func testSystemThemeIsPaired() throws {
+		let paired = MopedTheme.system
+		let light = try XCTUnwrap(NSAppearance(named: .aqua))
+		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
+
+		XCTAssertNotNil(paired.darkVariant)
+		XCTAssertEqual(paired.resolved(for: light).name, MopedTheme.systemName)
+		XCTAssertEqual(paired.resolved(for: dark).name, MopedTheme.systemName)
+		XCTAssertGreaterThan(
+			try brightness(of: paired.resolved(for: light).background),
+			try brightness(of: paired.resolved(for: dark).background)
 		)
 	}
 
@@ -111,7 +190,7 @@ final class ThemeTests: XCTestCase {
 
 	func testFixedThemesStillInvertTheirBackgroundForTheCaret() {
 		// Default Light is pure white, so its caret must come out pure black.
-		let caret = try? XCTUnwrap(MopedTheme.defaultLight.caret.usingColorSpace(.sRGB))
+		let caret = try? XCTUnwrap(MopedTheme.defaultLightPalette.caret.usingColorSpace(.sRGB))
 		XCTAssertEqual(caret?.redComponent ?? 1, 0, accuracy: 0.001)
 		XCTAssertEqual(caret?.greenComponent ?? 1, 0, accuracy: 0.001)
 		XCTAssertEqual(caret?.blueComponent ?? 1, 0, accuracy: 0.001)

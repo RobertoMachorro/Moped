@@ -31,7 +31,8 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 ## Features
 
-* **Syntax highlighting** — homegrown, with two dozen languages and six switchable themes
+* **Syntax highlighting** — homegrown, with two dozen languages and eight switchable
+  themes, plus any you write yourself as a `.mopedtheme` file
 * **Editing essentials** — line numbers, word wrap, auto-indentation, and comment toggling (⌘/)
 * **Find & Replace** — system find bar with full regex support (⌘F / ⌘⌥F), plus Jump to Line (⌘L)
 * **Status bar** — document type, cursor position, and an inline language picker to override detection on the fly

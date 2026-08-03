@@ -62,6 +62,10 @@ struct PreferencesView: View {
 	/// that it must stay free of stored properties.
 	@State private var section: SettingsSection = .general
 
+	/// Rebuilt rather than fixed at init, because the themes come from a folder the user
+	/// can add to, edit, and delete while Moped is running.
+	@State private var themes: [PreferenceOption] = []
+
 	/// Enumerating every installed font is expensive enough to do once per launch
 	/// rather than once per view init, which the sidebar makes far more frequent.
 	private static let allFonts: [String] = NSFontManager.shared.availableFonts.sorted()
@@ -69,7 +73,6 @@ struct PreferencesView: View {
 		(NSFontManager.shared.availableFontNames(with: .fixedPitchFontMask) ?? []).sorted()
 
 	private let languages: [PreferenceOption]
-	private let themes: [PreferenceOption]
 	private let fontSizes: [PreferenceOption]
 	private let launchBehaviorOptions: [PreferenceOption]
 	private let defaultIndentationOptions: [PreferenceOption]
@@ -82,9 +85,6 @@ struct PreferencesView: View {
 
 		languages = LanguageCatalog.shared.supportedLanguages.map {
 			PreferenceOption(value: $0, label: $0)
-		}
-		themes = MopedTheme.selectableNames.map {
-			PreferenceOption(value: $0, label: ThemeCatalog.localizedName(for: $0))
 		}
 		fontSizes = (9...24).map { PreferenceOption(value: String($0), label: String($0)) }
 		launchBehaviorOptions = [
@@ -118,12 +118,16 @@ struct PreferencesView: View {
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 		}
-		// Sized by measurement, not by eye. The binding constraints are pt-BR's "At
-		// startup" popup (581pt including padding — the widest control in any of the 13
-		// locales) and Hindi's Appearance pane (206pt tall, Devanagari has taller line
-		// boxes). English needs far less, but one fixed window has to fit the worst case
-		// or that popup silently truncates.
-		.frame(width: 590, height: 210)
+		// Sized by measurement, not by eye. Width is bound by pt-BR's "At startup" popup
+		// (581pt including padding — the widest control in any of the 13 locales);
+		// English needs far less, but one fixed window has to fit the worst case or that
+		// popup silently truncates.
+		//
+		// Height was 210 for the four-row Appearance pane. Adding the Reveal Themes
+		// Folder button costs 36pt — a bordered button's 24pt plus one `verticalSpacing`
+		// — measured identically in all 13 locales, because every row here is as tall as
+		// its control and a popup button already out-measures a label in any script.
+		.frame(width: 590, height: 246)
 		.navigationTitle("window.settings.title")
 	}
 
@@ -174,6 +178,12 @@ struct PreferencesView: View {
 				picker(binding(\.theme), options: themes)
 			}
 			GridRow {
+				emptyLabel
+				Button("pref.themes.reveal") {
+					ThemeStore.shared.revealInFinder()
+				}
+			}
+			GridRow {
 				label("pref.font.title")
 				picker(binding(\.font), options: fontOptions)
 			}
@@ -186,6 +196,30 @@ struct PreferencesView: View {
 				picker(binding(\.fontSize), options: fontSizes)
 					.fixedSize()
 			}
+		}
+		.onAppear(perform: refreshThemes)
+		// Editing a theme means leaving Moped for Finder or another window and coming
+		// back, so activation is the moment the folder is worth re-reading. It saves a
+		// Reload button that would only ever be pressed right after this fires anyway.
+		.onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+			refreshThemes()
+		}
+	}
+
+	/// Re-reads the themes folder and rebuilds the picker.
+	///
+	/// Also normalizes the stored preference to whatever it actually resolves to. A
+	/// value naming a theme that no longer exists — a legacy name, or a file the user
+	/// deleted — would otherwise leave the picker with nothing selected.
+	private func refreshThemes() {
+		ThemeStore.shared.reload()
+		themes = ThemeCatalog.selectableNames.map {
+			PreferenceOption(value: $0, label: ThemeCatalog.localizedName(for: $0))
+		}
+
+		let resolved = ThemeCatalog.theme(named: preferences.theme).name
+		if resolved != preferences.theme {
+			preferences.theme = resolved
 		}
 	}
 
