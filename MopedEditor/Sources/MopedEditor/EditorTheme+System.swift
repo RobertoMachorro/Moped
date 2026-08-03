@@ -22,9 +22,21 @@ import AppKit
 
 extension MopedTheme {
 	/// Stored preference value and identity of the appearance-following theme. Not a
-	/// member of `allBuiltIn`: unlike the fixed themes it cannot be a `static let`,
-	/// because its colours depend on the appearance it is asked about.
+	/// member of `allBuiltIn`: unlike the shipped themes its chrome comes from AppKit
+	/// rather than from fixed values, and it is never written to the themes folder.
 	public static let systemName = "System"
+
+	/// The "no theme" choice: both appearances of the editor dressed in AppKit's own
+	/// text colours, paired so it follows the effective appearance the same way any
+	/// theme with a `dark` section does.
+	///
+	/// Computed rather than stored so every lookup re-reads AppKit's current values —
+	/// the system colours this is built from can change under the app.
+	public static var system: MopedTheme {
+		let light = system(for: NSAppearance(named: .aqua) ?? NSAppearance.currentDrawing())
+		let dark = system(for: NSAppearance(named: .darkAqua) ?? NSAppearance.currentDrawing())
+		return light.paired(withDark: dark)
+	}
 
 	/// The editor dressed in AppKit's own text colours, resolved against `appearance`.
 	///
@@ -39,7 +51,7 @@ extension MopedTheme {
 	/// syntax highlighting.
 	public static func system(for appearance: NSAppearance) -> MopedTheme {
 		let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
-		let fallback: MopedTheme = isDark ? .defaultDark : .defaultLight
+		let fallback: MopedTheme = isDark ? .defaultDarkPalette : .defaultLightPalette
 
 		var background = fallback.background
 		var foreground = fallback.foreground

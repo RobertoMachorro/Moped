@@ -21,23 +21,32 @@
 import AppKit
 
 extension MopedTheme {
-	public static let allBuiltIn: [MopedTheme] = [
-		.defaultLight, .defaultDark, .xcodeLike, .solarizedLight, .solarizedDark
-	]
+	/// Default and Solarized ship as single appearance-following themes: the light
+	/// palette paired with the dark one. Xcode-like has no dark counterpart to pair
+	/// with and stays a lone palette.
+	public static let `default` = defaultLightPalette.paired(withDark: defaultDarkPalette)
+
+	public static let solarized = solarizedLightPalette.paired(withDark: solarizedDarkPalette)
+
+	public static let allBuiltIn: [MopedTheme] = [.default, .solarized, .xcodeLike]
 
 	public static let allNames: [String] = allBuiltIn.map(\.name)
 
-	/// Everything the settings picker offers, appearance-following theme first. Kept
-	/// separate from `allNames` because `system` is a function of the appearance rather
-	/// than a fixed theme, so it cannot join `allBuiltIn`.
+	/// Everything the settings picker offers before any theme files are read,
+	/// appearance-following theme first. Kept separate from `allNames` because `system`
+	/// takes its chrome from AppKit rather than from fixed values, so it cannot join
+	/// `allBuiltIn`.
 	public static let selectableNames: [String] = [systemName] + allNames
 
-	public static let defaultName: String = defaultLight.name
+	public static let defaultName: String = `default`.name
 }
 
 extension MopedTheme {
-	public static let defaultLight = MopedTheme(
-		name: "Default Light",
+	/// The individual palettes are internal: outside the package a theme is always the
+	/// paired whole, resolved against an appearance. `system(for:)` uses them directly
+	/// for its token colours.
+	static let defaultLightPalette = MopedTheme(
+		name: "Default",
 		background: NSColor(srgbRed: 1.00, green: 1.00, blue: 1.00, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.12, green: 0.12, blue: 0.12, alpha: 1.0),
 		gutterBackground: NSColor(srgbRed: 0.97, green: 0.97, blue: 0.97, alpha: 1.0),
@@ -68,8 +77,8 @@ extension MopedTheme {
 		]
 	)
 
-	public static let defaultDark = MopedTheme(
-		name: "Default Dark",
+	static let defaultDarkPalette = MopedTheme(
+		name: "Default",
 		background: NSColor(srgbRed: 0.12, green: 0.13, blue: 0.16, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.92, green: 0.92, blue: 0.93, alpha: 1.0),
 		gutterBackground: NSColor(srgbRed: 0.15, green: 0.16, blue: 0.19, alpha: 1.0),
@@ -132,8 +141,8 @@ extension MopedTheme {
 		]
 	)
 
-	public static let solarizedLight = MopedTheme(
-		name: "Solarized Light",
+	static let solarizedLightPalette = MopedTheme(
+		name: "Solarized",
 		background: NSColor(srgbRed: 0.99, green: 0.96, blue: 0.89, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.40, green: 0.48, blue: 0.51, alpha: 1.0),
 		gutterBackground: NSColor(srgbRed: 0.93, green: 0.91, blue: 0.83, alpha: 1.0),
@@ -164,8 +173,8 @@ extension MopedTheme {
 		]
 	)
 
-	public static let solarizedDark = MopedTheme(
-		name: "Solarized Dark",
+	static let solarizedDarkPalette = MopedTheme(
+		name: "Solarized",
 		background: NSColor(srgbRed: 0.00, green: 0.17, blue: 0.21, alpha: 1.0),
 		foreground: NSColor(srgbRed: 0.51, green: 0.58, blue: 0.59, alpha: 1.0),
 		gutterBackground: NSColor(srgbRed: 0.03, green: 0.21, blue: 0.26, alpha: 1.0),

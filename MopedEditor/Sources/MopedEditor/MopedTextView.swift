@@ -104,7 +104,7 @@ public final class MopedTextView: NSTextView {
 	/// Builds the editor inside a configured scroll view. This is the only supported
 	/// way to create a `MopedTextView`.
 	public static func scrollableEditor(
-		theme: MopedTheme = .defaultLight,
+		theme: MopedTheme = .default,
 		font: NSFont? = nil
 	) -> (scrollView: NSScrollView, textView: MopedTextView) {
 		let resolvedFont = font
@@ -231,13 +231,13 @@ public final class MopedTextView: NSTextView {
 
 	// MARK: Appearance
 
-	/// Re-resolves the System theme when the user (or the schedule) flips light/dark.
+	/// Re-resolves a paired theme when the user (or the schedule) flips light/dark.
 	/// A repaint alone would not be enough: token colours live as layout-manager
 	/// temporary attributes, so the highlighter has to be handed the new palette and
 	/// re-run, which assigning `highlighter.theme` in `applyTheme()` does.
 	public override func viewDidChangeEffectiveAppearance() {
 		super.viewDidChangeEffectiveAppearance()
-		guard theme.name == MopedTheme.systemName else {
+		guard theme.darkVariant != nil else {
 			return
 		}
 		refreshResolvedTheme()
@@ -247,9 +247,7 @@ public final class MopedTextView: NSTextView {
 	/// the cache are a new `theme` and a change of effective appearance, so those are
 	/// the only callers.
 	private func refreshResolvedTheme() {
-		resolvedTheme = theme.name == MopedTheme.systemName
-			? .system(for: effectiveAppearance)
-			: theme
+		resolvedTheme = theme.resolved(for: effectiveAppearance)
 		applyTheme()
 	}
 
