@@ -261,18 +261,20 @@ alongside them:
 
 | Theme | Notes |
 |---|---|
-| **System** | No theme: macOS's own text colors. Follows the macOS appearance. |
-| **Default** | Follows the macOS appearance. |
-| **Xcode-like** | The default. Light only. |
-| **Solarized** | Follows the macOS appearance. |
+| **System** | No theme: macOS's own text colors. |
+| **Default** | |
+| **Xcode-like** | The default. Approximates Xcode's own two themes. |
+| **Solarized** | |
 
 Each theme sets the background, text, gutter, selection, and cursor colors along with a
 color for every kind of syntax token.
 
 A theme can carry **two palettes**, one for Light and one for Dark, and switch between
 them **live**. Flip your Mac between Light and Dark with a document open and the editor
-changes with it — no reopening, no restart. Default, Solarized, and System all work this
-way; Xcode-like has a single light palette and stays put.
+changes with it — no reopening, no restart. All four themes above do this. A theme of
+your own follows the appearance only if its file has a `dark` section; without one it
+stays pinned to a single palette, which is how you get an always-dark editor on a Mac
+running Light.
 
 **System** is the odd one out: it takes its background, text, and selection colors from
 macOS itself rather than from fixed values. It still keeps a hand-tuned set of syntax

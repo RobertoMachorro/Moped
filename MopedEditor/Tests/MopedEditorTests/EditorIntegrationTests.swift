@@ -173,6 +173,58 @@ final class EditorIntegrationTests: EditorTestCase {
 		XCTAssertEqual(textView.backgroundColor, MopedTheme.solarizedDarkPalette.background)
 	}
 
+	/// The user-facing path the built-in themes do not exercise: a theme decoded from a
+	/// `.mopedtheme` file, with a `dark` section, has to follow the appearance the same
+	/// way `system` does. Nothing else covered decode → pair → live appearance switch.
+	func testThemeFromFileWithDarkSectionFollowsTheViewAppearance() throws {
+		let json = """
+		{
+			"version": 1, "name": "Paired",
+			"colors": {
+				"background": "#FFFFFF", "foreground": "#101010",
+				"gutterBackground": "#F5F5F5", "gutterForeground": "#888888",
+				"selection": "#BFD7FF"
+			},
+			"tokens": {"keyword": "#AA00AA"},
+			"dark": {
+				"colors": {
+					"background": "#1F2129", "foreground": "#EAEAEE",
+					"gutterBackground": "#262932", "gutterForeground": "#7A7D85",
+					"selection": "#3D578C"
+				},
+				"tokens": {"keyword": "#66DDFF"}
+			}
+		}
+		"""
+		let theme = try MopedTheme(data: Data(json.utf8))
+		let (_, textView) = makeEditor(theme: theme)
+		textView.appearance = NSAppearance(named: .aqua)
+		textView.language = "swift"
+		textView.setPlainText("let x = 1\n")
+		drainHighlightPasses()
+
+		let keywordLocation = (textView.string as NSString).range(of: "let").location
+		XCTAssertEqual(textView.backgroundColor, NSColor(srgbRed: 1, green: 1, blue: 1, alpha: 1))
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			NSColor(srgbRed: 0xAA / 255, green: 0, blue: 0xAA / 255, alpha: 1)
+		)
+
+		textView.appearance = NSAppearance(named: .darkAqua)
+		drainHighlightPasses()
+
+		XCTAssertEqual(
+			textView.backgroundColor,
+			NSColor(srgbRed: 0x1F / 255, green: 0x21 / 255, blue: 0x29 / 255, alpha: 1),
+			"the dark section's chrome should take over"
+		)
+		XCTAssertEqual(
+			color(at: keywordLocation, in: textView),
+			NSColor(srgbRed: 0x66 / 255, green: 0xDD / 255, blue: 1, alpha: 1),
+			"token colors are temporary attributes, so they only follow if the highlighter re-runs"
+		)
+	}
+
 	func testDisablingHighlightingClearsColors() {
 		let (_, textView) = makeEditor()
 		textView.language = "swift"

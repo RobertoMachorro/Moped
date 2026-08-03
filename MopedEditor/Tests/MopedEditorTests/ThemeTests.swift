@@ -28,12 +28,14 @@ final class ThemeTests: XCTestCase {
 		XCTAssertEqual(MopedTheme.defaultName, "Default")
 	}
 
-	/// Default and Solarized ship both appearances in one theme; Xcode-like has only a
-	/// light palette and so must stay unpaired.
-	func testBuiltInPairing() {
-		XCTAssertNotNil(MopedTheme.default.darkVariant)
-		XCTAssertNotNil(MopedTheme.solarized.darkVariant)
-		XCTAssertNil(MopedTheme.xcodeLike.darkVariant)
+	/// Every shipped theme carries both appearances. Xcode-like is the one worth
+	/// asserting by name: it is the default, so a regression here means the
+	/// out-of-the-box editor stops following the system.
+	func testEveryBuiltInIsPaired() {
+		for theme in MopedTheme.allBuiltIn {
+			XCTAssertNotNil(theme.darkVariant, "\(theme.name) should carry a dark palette")
+		}
+		XCTAssertNotNil(MopedTheme.xcodeLike.darkVariant)
 	}
 
 	func testEveryThemeColorsEveryTokenKind() {
@@ -62,13 +64,28 @@ final class ThemeTests: XCTestCase {
 		XCTAssertEqual(paired.resolved(for: dark).background, MopedTheme.defaultDarkPalette.background)
 	}
 
-	/// Callers apply `resolved(for:)` unconditionally, so an unpaired theme has to
-	/// answer with itself rather than needing a check first.
+	func testXcodeLikeResolvesByAppearance() throws {
+		let paired = MopedTheme.xcodeLike
+		let light = try XCTUnwrap(NSAppearance(named: .aqua))
+		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
+
+		XCTAssertEqual(paired.resolved(for: light).background, MopedTheme.xcodeLikeLightPalette.background)
+		XCTAssertEqual(paired.resolved(for: dark).background, MopedTheme.xcodeLikeDarkPalette.background)
+		XCTAssertGreaterThan(
+			try brightness(of: paired.resolved(for: light).background),
+			try brightness(of: paired.resolved(for: dark).background)
+		)
+	}
+
+	/// Callers apply `resolved(for:)` unconditionally, so an unpaired theme — which is
+	/// what a `.mopedtheme` with no `dark` section decodes to — has to answer with
+	/// itself rather than needing a check first. No built-in is unpaired any more, so
+	/// this uses a lone palette.
 	func testUnpairedThemeResolvesToItself() throws {
 		let dark = try XCTUnwrap(NSAppearance(named: .darkAqua))
-		XCTAssertEqual(
-			MopedTheme.xcodeLike.resolved(for: dark).background, MopedTheme.xcodeLike.background
-		)
+		let unpaired = MopedTheme.xcodeLikeLightPalette
+		XCTAssertNil(unpaired.darkVariant)
+		XCTAssertEqual(unpaired.resolved(for: dark).background, unpaired.background)
 	}
 
 	/// `name` is the stored preference value, so both halves of a pair must answer to

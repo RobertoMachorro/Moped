@@ -14,7 +14,7 @@
 - [ ] Open a language with no definition yet (e.g. Dart, AutoHotkey) — shows plain, no crash.
 - [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document, in place, without the scroll position jumping.
 - [ ] Select the System theme — editor uses the system text colors; flip System Settings → Appearance between Light and Dark with a document open and the background, text, selection, gutter, caret, and syntax colors all follow without reopening the file.
-- [ ] Select Default, then Solarized — both follow the Light/Dark switch the same way System does. Xcode-like does not: it stays light under a Dark system.
+- [ ] Select each of Default, Solarized and Xcode-like in turn — all three follow the Light/Dark switch the same way System does, chrome and syntax colors both. A custom theme whose file has no `dark` section must *not* follow.
 - [ ] Appearance → Reveal Themes Folder — opens a folder holding `Default`, `Solarized`, and `Xcode-like` `.mopedtheme` files. On a first-ever launch they are created; on later launches they are left exactly as they were.
 - [ ] Double-click a `.mopedtheme` in Finder — it opens in Moped, Finder's Get Info shows Kind "Moped Theme", the keys and string values are colored, and the language picker reads `json` without being touched. The status bar shows `net.machorro.roberto.moped.theme`; a `dyn.…` there means Launch Services has a stale registration, not a bug.
 - [ ] Open `Default.mopedtheme` in Moped, change a color under `colors`, save, switch away and back — the picker and the open document both pick up the change without a restart.
