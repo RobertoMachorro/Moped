@@ -12,6 +12,7 @@
 - [ ] Open a `.toml` file — the picker reads `toml` without being touched.
 - [ ] Open an XML file, an `Info.plist`, and an `.svg` — the `<?xml … ?>` prolog, tag names, and quoted attribute values are all colored; a multiline `<![CDATA[ … ]]>` stays literal and markup after it highlights again.
 - [ ] Open a language with no definition yet (e.g. Dart, AutoHotkey) — shows plain, no crash.
+- [ ] Scroll a file taller than the window with a dark-gutter theme (Turbo shows this best) — every visible line keeps its number all the way to the bottom edge, and the gutter background stays the theme's colour. A strip with no numbers and the wrong background means the ruler stopped being repainted on scroll.
 - [ ] Toggle each theme in Preferences — background, foreground, gutter, and syntax token colors all update on the open document, in place, without the scroll position jumping.
 - [ ] Select the System theme — editor uses the system text colors; flip System Settings → Appearance between Light and Dark with a document open and the background, text, selection, gutter, caret, and syntax colors all follow without reopening the file.
 - [ ] Select each shipped theme in turn — Default, Forest, Nebula, Ocean, Solarized, Xcode-like — and check all six follow the Light/Dark switch the same way System does, chrome and syntax colors both. Turbo must *not* follow: it stays yellow-on-blue under a Light system, as must any custom theme whose file has no `dark` section.
