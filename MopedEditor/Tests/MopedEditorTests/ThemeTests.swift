@@ -23,19 +23,27 @@ import XCTest
 
 final class ThemeTests: XCTestCase {
 	func testBuiltInThemes() {
-		XCTAssertEqual(MopedTheme.allBuiltIn.count, 3)
-		XCTAssertEqual(MopedTheme.allNames, ["Default", "Solarized", "Xcode-like"])
+		XCTAssertEqual(MopedTheme.allBuiltIn.count, 7)
+		XCTAssertEqual(
+			MopedTheme.allNames,
+			["Default", "Forest", "Nebula", "Ocean", "Solarized", "Turbo", "Xcode-like"],
+			"the picker shows these in order, so the list is kept alphabetical"
+		)
 		XCTAssertEqual(MopedTheme.defaultName, "Default")
 	}
 
-	/// Every shipped theme carries both appearances. Xcode-like is the one worth
-	/// asserting by name: it is the default, so a regression here means the
-	/// out-of-the-box editor stops following the system.
-	func testEveryBuiltInIsPaired() {
-		for theme in MopedTheme.allBuiltIn {
+	/// Shipped themes carry both appearances so they follow the system, with one
+	/// deliberate exception: Turbo reproduces a fixed DOS screen and has no light
+	/// counterpart. Asserting the exception by name keeps it a decision rather than
+	/// something that could rot into an oversight.
+	func testEveryBuiltInIsPairedExceptTurbo() {
+		for theme in MopedTheme.allBuiltIn where theme.name != "Turbo" {
 			XCTAssertNotNil(theme.darkVariant, "\(theme.name) should carry a dark palette")
 		}
+		// Xcode-like is the default, so losing its pairing would mean the out-of-the-box
+		// editor silently stops following the system.
 		XCTAssertNotNil(MopedTheme.xcodeLike.darkVariant)
+		XCTAssertNil(MopedTheme.turbo.darkVariant)
 	}
 
 	func testEveryThemeColorsEveryTokenKind() {

@@ -256,25 +256,30 @@ direction applies.
 
 ## Themes and appearance
 
-*Settings ▸ Appearance ▸ Theme* ships with four themes, and lists any you add yourself
+*Settings ▸ Appearance ▸ Theme* ships with eight themes, and lists any you add yourself
 alongside them:
 
 | Theme | Notes |
 |---|---|
 | **System** | No theme: macOS's own text colors. |
 | **Default** | |
+| **Forest** | Olive and fern greens over warm paper. |
+| **Nebula** | Violet and magenta, with mint and cyan accents. |
+| **Ocean** | Cool blues and teals, with one warm accent for numbers. |
+| **Solarized** | The original low-contrast palette, kept faithful. |
+| **Turbo** | Borland's Turbo C++ and Turbo Pascal: yellow on blue. Always dark. |
 | **Xcode-like** | The default. Approximates Xcode's own two themes. |
-| **Solarized** | |
 
 Each theme sets the background, text, gutter, selection, and cursor colors along with a
 color for every kind of syntax token.
 
 A theme can carry **two palettes**, one for Light and one for Dark, and switch between
 them **live**. Flip your Mac between Light and Dark with a document open and the editor
-changes with it — no reopening, no restart. All four themes above do this. A theme of
-your own follows the appearance only if its file has a `dark` section; without one it
-stays pinned to a single palette, which is how you get an always-dark editor on a Mac
-running Light.
+changes with it — no reopening, no restart. Every theme above does this except **Turbo**,
+which reproduces a fixed DOS screen and has no light half to switch to. A theme of your
+own follows the appearance only if its file has a `dark` section; without one it stays
+pinned to a single palette, exactly as Turbo does — which is how you get an always-dark
+editor on a Mac running Light.
 
 **System** is the odd one out: it takes its background, text, and selection colors from
 macOS itself rather than from fixed values. It still keeps a hand-tuned set of syntax
@@ -418,7 +423,7 @@ Open with **Moped ▸ Settings…** (⌘,). The window has four sections.
 
 | Setting | Choices | Default |
 |---|---|---|
-| Theme | System · Default · Solarized · Xcode-like, plus any custom `.mopedtheme` | Xcode-like |
+| Theme | System · Default · Forest · Nebula · Ocean · Solarized · Turbo · Xcode-like, plus any custom `.mopedtheme` | Xcode-like |
 | Font | Any installed font | Menlo |
 | Show only monospaced fonts | Checkbox | Off |
 | Font size | 9–24 | 13 |
