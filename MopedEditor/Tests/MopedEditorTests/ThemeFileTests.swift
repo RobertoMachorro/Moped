@@ -104,7 +104,11 @@ final class ThemeFileTests: XCTestCase {
 			("F0A", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
 			("#ff00aa", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
 			("#FF00AA", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
-			("#FF00AA80", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 0x80 / 255))
+			("#FF00AA80", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 0x80 / 255)),
+			// Surrounding whitespace survives hand-editing and copy-paste, so it is
+			// trimmed rather than rejected — newlines and tabs included.
+			("  #FF00AA  ", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
+			("\\t#FF00AA\\n", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1))
 		]
 
 		for (hex, expected) in cases {

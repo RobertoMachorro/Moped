@@ -115,13 +115,24 @@ final class ThemeStore {
 		let names = (try? FileManager.default.contentsOfDirectory(atPath: directory.path)) ?? []
 		var files: [String: Data] = [:]
 		for name in names where name.hasSuffix(".\(MopedTheme.fileExtension)") {
-			files[name] = try? Data(contentsOf: directory.appendingPathComponent(name))
+			do {
+				files[name] = try Data(contentsOf: directory.appendingPathComponent(name))
+			} catch {
+				// A theme that vanishes from the picker should always be explainable
+				// from the log; a file that cannot be read at all is no different from
+				// one that cannot be decoded.
+				NSLog("Moped: could not open theme %@: %@", name, "\(error)")
+			}
 		}
 		return files
 	}
 
 	/// Filename order decides which of two files claiming the same theme name wins. Any
 	/// deterministic rule would do; this one is the only rule a user can predict.
+	///
+	/// Names are claimed case-insensitively because `ThemeCatalog` looks them up that
+	/// way. Letting `Nord` and `nord` both load would put two entries in the picker that
+	/// resolve to the same theme, and not necessarily the one that was clicked.
 	private static func decode(_ files: [String: Data]) -> [MopedTheme] {
 		var themes: [MopedTheme] = []
 		var claimed: Set<String> = []
@@ -129,7 +140,7 @@ final class ThemeStore {
 		for (filename, data) in files.sorted(by: { $0.key < $1.key }) {
 			do {
 				let theme = try MopedTheme(data: data)
-				guard claimed.insert(theme.name).inserted else {
+				guard claimed.insert(theme.name.lowercased()).inserted else {
 					NSLog("Moped: %@ claims the theme name \"%@\", already taken — skipping.", filename, theme.name)
 					continue
 				}

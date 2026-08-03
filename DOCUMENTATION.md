@@ -290,7 +290,7 @@ Changing any theme applies to open documents in place, without losing your scrol
 
 ### Custom themes
 
-Themes are plain JSON files with a `.mopedtheme` extension, and the four Moped ships are
+Themes are plain JSON files with a `.mopedtheme` extension, and the ones Moped ships are
 real files you can read. **Settings ▸ Appearance ▸ Reveal Themes Folder** opens the
 folder they live in. Every `.mopedtheme` in there shows up in the theme picker under
 whatever `name` it declares. Moped re-reads the folder each time you switch back to it,

@@ -63,12 +63,6 @@ extension MopedTheme {
 
 	public static let fileExtension = "mopedtheme"
 
-	/// Chrome colors a file must carry. `caret` is deliberately absent: it defaults to
-	/// the inverse of the background, the same as in the memberwise initializer.
-	private static let requiredColorKeys = [
-		"background", "foreground", "gutterBackground", "gutterForeground", "selection"
-	]
-
 	/// Reads a `.mopedtheme`.
 	///
 	/// A file with a `dark` section becomes a paired theme following the effective
@@ -179,9 +173,10 @@ extension MopedTheme {
 	/// `Sendable` promise on `MopedTheme`: there is no spelling of a dynamic or catalog
 	/// colour a file could reach for.
 	private static func color(fromHex hex: String, key: String) throws -> NSColor {
-		let digits = hex.trimmingCharacters(in: .whitespaces).hasPrefix("#")
-			? String(hex.trimmingCharacters(in: .whitespaces).dropFirst())
-			: hex.trimmingCharacters(in: .whitespaces)
+		// Newlines as well as spaces: a value that survived a copy-paste with a stray
+		// line break is visually a valid colour, and rejecting it would be baffling.
+		let trimmed = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+		let digits = trimmed.hasPrefix("#") ? String(trimmed.dropFirst()) : trimmed
 
 		guard digits.allSatisfy(\.isHexDigit), let value = UInt64(digits, radix: 16) else {
 			throw MopedThemeFileError.badColor(key: key, value: hex)
