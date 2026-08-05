@@ -131,7 +131,21 @@ extension GenericTokenizer {
 			tokens.append(Token(kind: .string, range: NSRange(location: 0, length: scanner.count)))
 		}
 		let trimmed = line.trimmingCharacters(in: .whitespaces)
-		return (tokens, trimmed == terminator ? .none : .heredoc(terminator: terminator))
+		return (tokens, Self.closesHeredoc(trimmed, terminator: terminator)
+			? .none
+			: .heredoc(terminator: terminator))
+	}
+
+	/// A heredoc body ends on a line holding nothing but the terminator — except that PHP
+	/// closes one as part of the surrounding expression (`SQL;`, `SQL);`, `SQL],`), which is
+	/// its canonical form. Tolerating trailing expression punctuation everywhere keeps that
+	/// working; the alternative is carrying `.string` to the end of the file. The terminator
+	/// still has to start the line, so `EOFX` does not close an `EOF` heredoc.
+	static func closesHeredoc(_ trimmed: String, terminator: String) -> Bool {
+		guard trimmed.hasPrefix(terminator) else {
+			return false
+		}
+		return trimmed.dropFirst(terminator.count).allSatisfy { ";,)]".contains($0) }
 	}
 }
 

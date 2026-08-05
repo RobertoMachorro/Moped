@@ -148,11 +148,29 @@ private extension GenericTokenizer {
 private extension GenericTokenizer {
 	func scanLineComment(scanner: inout LineScanner, tokens: inout [Token]) -> Bool {
 		for prefix in language.lineCommentPrefixesUTF16 where scanner.matches(prefix) {
+			guard !language.lineCommentNeedsBoundary || startsAtCommentBoundary(scanner) else {
+				continue
+			}
 			appendToken(.comment, from: scanner.pos, length: scanner.count - scanner.pos, into: &tokens)
 			scanner.pos = scanner.count
 			return true
 		}
 		return false
+	}
+
+	/// True when the caret starts the line or follows whitespace or a statement boundary, so
+	/// a prefix there opens a comment instead of sitting mid-value. `(` is deliberately not a
+	/// boundary — that would let the protocol-relative `url(//cdn/x.png)` open a comment.
+	func startsAtCommentBoundary(_ scanner: LineScanner) -> Bool {
+		guard let previous = scanner.unit(at: scanner.pos - 1) else {
+			return true
+		}
+		switch previous {
+		case 0x20, 0x09, 0x7B, 0x7D, 0x3B, 0x2C: // space tab { } ; ,
+			return true
+		default:
+			return false
+		}
 	}
 
 	func scanBlockCommentOpen(scanner: inout LineScanner, tokens: inout [Token], carry: inout LineState) -> Bool {

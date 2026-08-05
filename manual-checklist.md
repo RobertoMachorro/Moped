@@ -49,6 +49,8 @@
 - [ ] UTF‑16 file with a BOM (`printf 'a\nb\n' | iconv -f UTF-8 -t UTF-16 > f.txt`) — still opens as text.
 - [ ] UTF‑8 file with a BOM — still opens as text.
 - [ ] Save, close, reopen — content round‑trips through TextFileModel.
+- [ ] Type into a new document, then Cmd‑Q **without saving** — macOS must offer to save before quitting. `AppDelegate.applicationShouldTerminate` answers `.terminateNow` unconditionally, which is the documented way to *skip* `NSDocumentController`'s unsaved‑document review; if no prompt appears, that method is discarding edits and should be removed. Repeat with an edited, previously‑saved file.
+- [ ] Same for Cmd‑W on an edited document — closing one window must prompt even when quitting does.
 - [ ] New document, pick `markdown` in the bottom picker, Cmd‑S — the Save panel's File Type is already Markdown and the name field gets `.md`. The status bar reads `net.daringfireball.markdown`; `public.markdown` there means the language→UTI map handed out a type nothing declares.
 - [ ] New document, leave the picker alone, Cmd‑S, choose Markdown (or Python) in the File Type popup — after saving, the picker and the highlighting switch to that language. Choosing plain text leaves it `plaintext`.
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.

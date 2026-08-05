@@ -42,7 +42,11 @@ extension LanguageDefinition {
 		strings: [
 			StringRule(delimiter: "r#\"", terminator: "\"#", multiline: true, escape: nil),
 			StringRule(delimiter: "r\"", terminator: "\"", multiline: true, escape: nil),
-			StringRule(delimiter: "\"", multiline: true)
+			StringRule(delimiter: "\"", multiline: true),
+			// Char literals. The lifetime pre-pass below declines `'a'`, so without this rule
+			// they fell through unhighlighted — and `'"'` left the `"` to open a multiline
+			// string that ran to the end of the file. Not `multiline`: a `'` never spans lines.
+			StringRule(delimiter: "'", terminator: "'")
 		],
 		capitalizedTypesHeuristic: true,
 		prePassRules: [

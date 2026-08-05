@@ -24,6 +24,7 @@ extension LanguageDefinition {
 		id: "css",
 		aliases: ["scss", "less"],
 		lineCommentPrefixes: ["//"],
+		lineCommentNeedsBoundary: true,
 		blockComments: [
 			BlockCommentRule(open: "/*", close: "*/")
 		],

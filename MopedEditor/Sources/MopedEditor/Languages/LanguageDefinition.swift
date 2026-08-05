@@ -152,6 +152,10 @@ struct LanguageDefinition: Sendable {
 	let builtins: Set<String>
 	let caseInsensitiveKeywords: Bool
 	let lineCommentPrefixes: [String]
+	/// Require a line comment to start the line or follow whitespace, `{`, `}`, `;` or `,`.
+	/// CSS needs it: `//` is carried only for the scss/less aliases, and unguarded it turned
+	/// the `//` in `url(http://example.com/a.png)` into a comment to end of line.
+	let lineCommentNeedsBoundary: Bool
 	let blockComments: [BlockCommentRule]
 	let strings: [StringRule]
 	let capitalizedTypesHeuristic: Bool
@@ -174,6 +178,7 @@ struct LanguageDefinition: Sendable {
 		builtins: Set<String> = [],
 		caseInsensitiveKeywords: Bool = false,
 		lineCommentPrefixes: [String] = [],
+		lineCommentNeedsBoundary: Bool = false,
 		blockComments: [BlockCommentRule] = [],
 		strings: [StringRule] = [],
 		capitalizedTypesHeuristic: Bool = false,
@@ -192,6 +197,7 @@ struct LanguageDefinition: Sendable {
 		self.builtins = builtins
 		self.caseInsensitiveKeywords = caseInsensitiveKeywords
 		self.lineCommentPrefixes = lineCommentPrefixes
+		self.lineCommentNeedsBoundary = lineCommentNeedsBoundary
 		self.blockComments = blockComments
 		self.strings = strings
 		self.capitalizedTypesHeuristic = capitalizedTypesHeuristic
