@@ -26,7 +26,7 @@ import UniformTypeIdentifiers
 ///
 /// `ReferenceFileDocument` refines `Sendable` while declaring `init(configuration:)`
 /// and `fileWrapper(snapshot:configuration:)` nonisolated, so SwiftUI can read and
-/// write off the main thread — worth keeping for a 4 MB file. A reference document
+/// write off the main thread — worth keeping for a 16 MB file. A reference document
 /// therefore cannot satisfy the checker: it exists to hold a mutable model. Apple marks
 /// the protocol `@preconcurrency` for exactly this reason.
 ///
@@ -56,11 +56,11 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// limit was originally protecting against, and that reason no longer holds. Open cost
 	/// is linear at roughly 20 ms/MB and is what actually bounds the limit now.
 	///
-	/// 4 MB is therefore conservative rather than necessary; the numbers support raising
-	/// it. Left as-is deliberately: memory is the untested axis — a 16 MB document also
-	/// carries its text storage, attributes and undo stack — and the measurements come
-	/// from one Apple Silicon machine.
-	private static let maxFileLength = 4_194_304 // 4 MB
+	/// 16 MB is the largest size actually measured, and its ~321 ms open is what sets the
+	/// ceiling. Treat it as the ceiling rather than a step toward more: memory is still the
+	/// untested axis — a 16 MB document also carries its text storage, attributes and undo
+	/// stack — and the measurements come from one Apple Silicon machine.
+	private static let maxFileLength = 16_777_216 // 16 MB
 	/// Threshold at which we start treating a file as "large" and turn off expensive
 	/// features (currently syntax highlighting). Measured independently of `maxFileLength`:
 	/// highlighting a whole document costs ~51 ms here, ~203 ms at 1 MB and ~821 ms at 4 MB,
@@ -85,8 +85,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		])
 	}
 
-	/// The limit is a power of two, so it needs `.memory` to read as a round "4 MB";
-	/// `.file` is decimal and would render it "4.2 MB". The file's own size stays on
+	/// The limit is a power of two, so it needs `.memory` to read as a round "16 MB";
+	/// `.file` is decimal and would render it "16.8 MB". The file's own size stays on
 	/// `.file` so the number matches what the Finder shows for the same file.
 	private static func fileTooLargeRecoverySuggestion(actualBytes: Int) -> String {
 		String(
@@ -158,7 +158,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// SwiftUI view code and therefore main-actor. The document itself cannot be
 	/// isolated — `ReferenceFileDocument` declares `init(configuration:)` and
 	/// `fileWrapper(snapshot:configuration:)` nonisolated so reads and writes can run
-	/// off the main thread, which for a 4 MB file is the point — so the isolation is
+	/// off the main thread, which for a 16 MB file is the point — so the isolation is
 	/// asserted here instead.
 	private func updateWatcher() {
 		MainActor.assumeIsolated {

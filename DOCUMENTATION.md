@@ -462,10 +462,10 @@ its contents are actually text.
 
 ### Size limit
 
-Moped opens files up to **4 MB**. Larger files are refused with a message naming both the
+Moped opens files up to **16 MB**. Larger files are refused with a message naming both the
 limit and the actual size of the file:
 
-> Moped opens files up to 4 MB. This file is 6.2 MB.
+> Moped opens files up to 16 MB. This file is 24.3 MB.
 
 Files above **256 KB** open normally but without syntax highlighting, as described under
 [Large files](#large-files).
@@ -513,7 +513,7 @@ This handles the atomic saves other editors perform — where the file is replac
 than written in place — and it ignores Moped's own writes, so saving your own document
 never triggers the prompt.
 
-If a reload cannot proceed, because the file has grown past 4 MB or has become binary or
+If a reload cannot proceed, because the file has grown past 16 MB or has become binary or
 undecodable, Moped tells you and **leaves your open document untouched**:
 
 > Moped could not reload this file.
@@ -659,7 +659,7 @@ mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOU
 ```
 
 **My file won't open at all.**
-Moped refuses three kinds of file, and says which applies: it is larger than 4 MB, it is
+Moped refuses three kinds of file, and says which applies: it is larger than 16 MB, it is
 binary rather than text, or its text encoding could not be determined. See
 [Working with files](#working-with-files).
 

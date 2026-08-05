@@ -3246,7 +3246,7 @@
       }
     },
     "error.file_too_large.recovery_format" : {
-      "comment" : "Alert body. %1$@ is the size limit (e.g. \"4 MB\"); %2$@ is the file's actual size.",
+      "comment" : "Alert body. %1$@ is the size limit (e.g. \"16 MB\"); %2$@ is the file's actual size.",
       "extractionState" : "stale",
       "localizations" : {
         "de" : {

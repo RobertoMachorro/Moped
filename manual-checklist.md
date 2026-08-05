@@ -40,9 +40,9 @@
 - [ ] Word wrap on/off — reflows correctly, with and without the gutter visible.
 - [ ] Show/hide line number gutter — gutter appears/disappears and reclaims its space.
 - [ ] Large file (>256 KB) — opens without locking up and stays responsive while typing; highlighting is off.
-- [ ] 2 MB file — opens (was refused before the 4 MB limit) and stays responsive while typing.
-- [ ] File over 4 MB — refused with Moped's own alert naming the limit and the file's size, not the system default.
-- [ ] File grows past 4 MB on disk, then Reload — refused with the same message; the open buffer is left untouched.
+- [ ] 8 MB file — opens (was refused before the 16 MB limit) and stays responsive while typing.
+- [ ] File over 16 MB — refused with Moped's own alert naming the limit and the file's size, not the system default.
+- [ ] File grows past 16 MB on disk, then Reload — refused with the same message; the open buffer is left untouched.
 - [ ] File grows past 256 KB on disk, then Reload — reloads and highlighting switches off.
 - [ ] Binary file (e.g. `cp /bin/ls ~/Desktop/probe.dat`) — refused with "Moped can only open text files", no document window opens.
 - [ ] Binary file replaces an open text file on disk, then Reload — refused, the open buffer is left untouched.
