@@ -184,9 +184,8 @@ final class EditorState: NSObject, ObservableObject {
 	func updateCursorPosition(for textView: NSTextView) {
 		let nsText = textView.string as NSString
 		let location = min(textView.selectedRange().location, nsText.length)
-		let preceding = nsText.substring(to: location)
-		let components = preceding.components(separatedBy: "\n")
-		let position = "\(components.count):\(components.last?.count ?? 0)"
+		let (line, column) = Self.lineAndColumn(upTo: location, in: nsText)
+		let position = "\(line):\(column)"
 
 		guard position != cursorPosition else {
 			return
@@ -200,6 +199,36 @@ final class EditorState: NSObject, ObservableObject {
 			return
 		}
 		cursorPosition = position
+	}
+
+	/// Line and column for the status bar without materializing the text before the
+	/// caret. The old `substring(to:)` + `components(separatedBy:)` allocated a copy
+	/// of everything preceding the caret plus an array of its lines on every selection
+	/// change — at the 16 MB file limit, tens of megabytes per caret move. This scans
+	/// through a reusable 4 K chunk instead. The column stays a `Character` count of
+	/// the current line, so the displayed numbers are unchanged.
+	private static func lineAndColumn(upTo location: Int, in text: NSString) -> (line: Int, column: Int) {
+		let chunkSize = 4096
+		var buffer = [unichar](repeating: 0, count: chunkSize)
+		var newlineCount = 0
+		var lastLineStart = 0
+		var offset = 0
+		while offset < location {
+			let length = min(chunkSize, location - offset)
+			buffer.withUnsafeMutableBufferPointer { pointer in
+				guard let base = pointer.baseAddress else {
+					return
+				}
+				text.getCharacters(base, range: NSRange(location: offset, length: length))
+			}
+			for index in 0..<length where buffer[index] == 0x0A {
+				newlineCount += 1
+				lastLineStart = offset + index + 1
+			}
+			offset += length
+		}
+		let lineRange = NSRange(location: lastLineStart, length: location - lastLineStart)
+		return (newlineCount + 1, text.substring(with: lineRange).count)
 	}
 
 	private func scheduleCursorPositionUpdate(for textView: NSTextView) {

@@ -38,6 +38,9 @@ public enum LineState: Equatable, Sendable {
 	case htmlTag
 	/// XML: inside a `<![CDATA[ … ]]>` section.
 	case cdata
+	/// Markup: inside a `<!DOCTYPE …>` (or other `<!…>` declaration) whose `>`
+	/// hasn't been reached yet — a multi-line internal subset, typically.
+	case doctype
 	/// Outside the language's code region (PHP before `<?php` / after `?>`).
 	case rawOutside
 }

@@ -47,6 +47,24 @@ final class MarkdownAndHTMLTests: XCTestCase {
 		)
 	}
 
+	/// CommonMark: a closing fence must be at least as long as its opener, so a
+	/// three-backtick line inside a five-backtick block stays part of the block.
+	func testMarkdownLongFenceNotClosedByShorterFence() {
+		let text = "`````\ncode\n```\nstill code\n`````\nafter"
+		let tokens = tokenize(text, as: "markdown")
+		let nsText = text as NSString
+		let inner = nsText.range(of: "still code")
+		XCTAssertTrue(
+			tokens.contains { $0.kind == .textLiteral && NSIntersectionRange($0.range, inner).length == inner.length },
+			"Content after a too-short closer must still be inside the block"
+		)
+		let after = nsText.range(of: "after")
+		XCTAssertFalse(
+			tokens.contains { $0.kind == .textLiteral && NSIntersectionRange($0.range, after).length > 0 },
+			"A matching-length closer must end the block"
+		)
+	}
+
 	/// Regression shape for the macOS 26 crash: a lone ``` fence being typed —
 	/// tokenizing must stay sane while the fence is unclosed.
 	func testMarkdownUnclosedFenceWhileTyping() {
@@ -113,6 +131,15 @@ final class MarkdownAndHTMLTests: XCTestCase {
 		assertKind("root", is: .keyword, in: text, as: "xml")
 		assertKind("version", is: .variableBuiltin, in: text, as: "xml")
 		assertKind("\"1.0\"", is: .string, in: text, as: "xml")
+	}
+
+	/// A DOCTYPE whose internal subset spans lines carries state like comments and
+	/// CDATA do: the continuation lines stay part of the declaration, and markup
+	/// after the closing `]>` highlights again.
+	func testXMLMultilineDoctypeCarriesState() {
+		let text = "<!DOCTYPE note [\n  more declarations\n]>\n<song>hi</song>"
+		assertKind("more declarations", is: .include, in: text, as: "xml")
+		assertKind("song", is: .keyword, in: text, as: "xml")
 	}
 
 	func testXMLEntitiesAndComments() {

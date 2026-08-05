@@ -18,7 +18,7 @@ If there are conflicting rules in this or the documents below, prompt for clarif
 These are the same three gates CI runs on every pull request. A change is not done
 until all three pass.
 
-* Run SwiftLint for verification; SwiftLint must be clean for the changed lines/files only, not the whole project
+* Run SwiftLint for verification; CI runs `swiftlint --strict` over the whole project, so it must be clean everywhere
 * Run the editor package tests: `swift test --package-path MopedEditor`
 * Run the localization check: `./scripts/check_localized_strings.sh` (needs `ripgrep`)
 

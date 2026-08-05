@@ -11,7 +11,7 @@
 	<key>public.yaml</key>
 	<string>yaml</string>
 	<key>public.c-source</key>
-	<string>cpp</string>
+	<string>c</string>
 	<key>public.c-header</key>
 	<string>cpp</string>
 	<key>org.tug.tex</key>

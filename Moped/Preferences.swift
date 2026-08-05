@@ -20,6 +20,7 @@
 
 import Combine
 import Foundation
+import MopedEditor
 
 struct RestoredDocument: Codable {
 	let bookmark: Data
@@ -132,7 +133,9 @@ final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 
 	@objc dynamic var theme: String {
 		get {
-			getStringValue(forKey: "theme", otherwiseUse: "xcode")
+			// The current theme name, not the legacy "xcode" alias — a fresh install
+			// should not depend on ThemeCatalog's alias table to land on a theme.
+			getStringValue(forKey: "theme", otherwiseUse: MopedTheme.xcodeLike.name)
 		}
 		set {
 			setStringValue(forKey: "theme", to: newValue)

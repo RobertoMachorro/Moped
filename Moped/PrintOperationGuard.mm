@@ -9,6 +9,12 @@
 //  either. This thin Objective-C++ shim converts both into a BOOL plus a reason
 //  string so `MopedCommands.printDocument` can show an alert instead.
 //
+//  Scope: the window path (`runOperationModalForWindow:`) presents a sheet and
+//  returns immediately, so there YES means "the sheet was presented" and the guard
+//  covers setup and presentation only — the rendering happens later, inside
+//  AppKit's own sheet callbacks. The no-window `runOperation` path is synchronous
+//  and covered end to end.
+//
 //  The `.mm` extension is load-bearing — the `catch (const std::exception &)` clause
 //  below only compiles as Objective-C++.
 //

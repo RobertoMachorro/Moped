@@ -25,8 +25,8 @@ import MopedEditor
 /// `plaintext` for "no highlighting".
 ///
 /// This used to fold in every value from `LanguagesUTI.plist` as well, listing ~107
-/// names when only 21 tokenizers exist — most of the picker did nothing. File types
-/// with no tokenizer now resolve to `plaintext` instead, in
+/// names when only a fraction had tokenizers — most of the picker did nothing. File
+/// types with no tokenizer now resolve to `plaintext` instead, in
 /// `TextFileModel.getLanguageForType`.
 /// `Sendable` holds trivially: the one stored property is an immutable `[String]`,
 /// fixed at init from the registry.

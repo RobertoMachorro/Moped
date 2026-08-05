@@ -144,12 +144,16 @@ struct MopedCommands: Commands {
 		let printView = SourcePrintView(content: content, printInfo: printInfo)
 		let printOperation = NSPrintOperation(view: printView, printInfo: printInfo)
 		var exceptionReason: NSString?
-		let didComplete = PrintOperationGuard.run(
+		// With a key window this means "the print sheet was presented", not "printing
+		// finished" — the sheet path is asynchronous and the guard covers setup and
+		// presentation only (see PrintOperationGuard.mm). False is a failure to even
+		// start, which is what the alert below reports.
+		let didStart = PrintOperationGuard.run(
 			printOperation,
 			in: NSApp.keyWindow,
 			exceptionReason: &exceptionReason
 		)
-		if !didComplete {
+		if !didStart {
 			if let reason = exceptionReason as String? {
 				NSLog("Printing failed: %@", reason)
 			}

@@ -129,6 +129,19 @@ extension TextFileModel {
 		return LanguageRegistry.canonicalID(for: name) ?? "plaintext"
 	}
 
+	/// Languages whose several UTIs would tie under `betterUTI`'s generic rules. Without
+	/// an explicit winner the outcome would follow lexicographic order, which picks the
+	/// wrong type — `public.mpeg-2-transport-stream` (the `.ts` video type) sorts ahead
+	/// of `public.typescript-source`, and the `-header` variants sort ahead of their
+	/// `-source` siblings.
+	private static let preferredUTIs: [String: String] = [
+		"c": "public.c-source",
+		"cpp": "public.c-plus-plus-source",
+		"objectivec": "public.objective-c-source",
+		"typescript": "public.typescript-source",
+		"xml": "public.xml"
+	]
+
 	/// Reverse of `languagesFromUTI`, and the source of the type a Save panel preselects.
 	///
 	/// Identifiers the system cannot resolve are skipped: several plist keys name types
@@ -142,16 +155,36 @@ extension TextFileModel {
 			guard UTType(uti) != nil else {
 				continue
 			}
-			if let existing = result[language] {
-				if uti.hasPrefix("public.") && !existing.hasPrefix("public.") {
-					result[language] = uti
-				}
-			} else {
+			guard let existing = result[language] else {
+				result[language] = uti
+				continue
+			}
+			if betterUTI(uti, than: existing, for: language) {
 				result[language] = uti
 			}
 		}
 		return result
 	}()
+
+	/// Deterministic tie-break: the preferred table first, then `public.` identifiers
+	/// over vendor ones, then lexicographic order so the winner never depends on
+	/// per-process dictionary hashing.
+	private static func betterUTI(_ candidate: String, than existing: String, for language: String) -> Bool {
+		if let preferred = preferredUTIs[language] {
+			if existing == preferred {
+				return false
+			}
+			if candidate == preferred {
+				return true
+			}
+		}
+		let candidateIsPublic = candidate.hasPrefix("public.")
+		let existingIsPublic = existing.hasPrefix("public.")
+		if candidateIsPublic != existingIsPublic {
+			return candidateIsPublic
+		}
+		return candidate < existing
+	}
 
 	static func getUTTypeForLanguage(_ language: String) -> String {
 		guard language != "plaintext" else { return "public.plain-text" }

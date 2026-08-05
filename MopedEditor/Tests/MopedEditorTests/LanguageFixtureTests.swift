@@ -293,6 +293,13 @@ final class LanguageFixtureTests: XCTestCase {
 		assertPlain("finished", in: text, as: "bash")
 	}
 
+	/// The arithmetic left-shift must not read as a heredoc opener — a phantom
+	/// heredoc would swallow everything below it as a string.
+	func testBashLeftShiftIsNotAHeredoc() {
+		let text = "x=$(( 1 << n ))\necho after"
+		assertPlain("after", in: text, as: "bash")
+	}
+
 	func testPhpVariablesInsideStrings() {
 		let text = "<?php\n$greeting = \"hello $name and {$user->id}\";\n"
 		assertKind("$name", is: .variable, in: text, as: "php")

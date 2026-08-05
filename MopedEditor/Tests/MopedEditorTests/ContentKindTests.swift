@@ -83,8 +83,15 @@ final class ContentKindTests: XCTestCase {
 		XCTAssertEqual(ContentKind.of(payload), .binary)
 	}
 
-	func testRealBinaryIsRefused() throws {
-		let data = try XCTUnwrap(FileManager.default.contents(atPath: "/bin/ls"))
+	/// A synthesized Mach-O header shape rather than a read of `/bin/ls`, so the test
+	/// doesn't depend on the machine it runs on: the 64-bit magic, load-command
+	/// fields full of NUL bytes, and stretches of zero padding — the byte pattern the
+	/// sniffer actually sees at the head of a real executable.
+	func testMachOShapedBinaryIsRefused() {
+		var data = Data([0xCF, 0xFA, 0xED, 0xFE])
+		data += Data(repeating: 0x00, count: 512)
+		data += Data("some embedded strings survive".utf8)
+		data += Data(repeating: 0x00, count: 512)
 		XCTAssertEqual(ContentKind.of(data), .binary, "a Mach-O executable must not open")
 	}
 

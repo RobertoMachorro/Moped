@@ -56,10 +56,6 @@ ln -sf "$INSTALL_PATH/Contents/Resources/moped" "$CLI_LINK"
 echo "==> Verifying bundle contents..."
 echo "    CLI script:"
 ls -l "$INSTALL_PATH/Contents/Resources/moped"
-echo "    moped-wait helper:"
-ls -l "$INSTALL_PATH/Contents/Resources/moped-wait"
-echo "    moped-wait entitlements:"
-codesign -d --entitlements - "$INSTALL_PATH/Contents/Resources/moped-wait" 2>&1 | grep -A1 'app-sandbox'
 
 echo ""
 echo "==> Ready. Open a NEW terminal and test:"
@@ -69,9 +65,9 @@ echo ""
 
 if [ "${1:-}" = "--log" ]; then
 	echo "==> Tailing sandbox and LaunchServices logs (Ctrl-C to stop)..."
-	echo "    Watching for: $APP_NAME, moped, moped-wait, Sandbox, deny"
+	echo "    Watching for: $APP_NAME, moped, Sandbox, deny"
 	echo ""
 	log stream --level debug --predicate \
-		'(process == "moped-wait") OR (process == "Moped") OR (sender == "Sandbox") OR (eventMessage CONTAINS[c] "sandbox") OR (eventMessage CONTAINS[c] "deny" AND (process == "moped-wait" OR process == "Moped"))' \
+		'(process == "Moped") OR (sender == "Sandbox") OR (eventMessage CONTAINS[c] "sandbox") OR (eventMessage CONTAINS[c] "deny" AND process == "Moped")' \
 		--style compact
 fi

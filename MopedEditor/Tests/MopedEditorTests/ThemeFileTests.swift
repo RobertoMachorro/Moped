@@ -105,6 +105,7 @@ final class ThemeFileTests: XCTestCase {
 			("#ff00aa", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
 			("#FF00AA", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
 			("#FF00AA80", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 0x80 / 255)),
+			("#F0A8", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 0x88 / 255)),
 			// Surrounding whitespace survives hand-editing and copy-paste, so it is
 			// trimmed rather than rejected — newlines and tabs included.
 			("  #FF00AA  ", NSColor(srgbRed: 1, green: 0, blue: 0xAA / 255, alpha: 1)),
@@ -120,7 +121,7 @@ final class ThemeFileTests: XCTestCase {
 	/// An empty value is deliberately absent from this list: it is reported as a missing
 	/// key, which is what a user who deleted a color rather than mistyping one expects.
 	func testRejectsMalformedHex() {
-		for bad in ["#GGGGGG", "#FFFF", "blue", "#1234567"] {
+		for bad in ["#GGGGGG", "#12345", "blue", "#1234567"] {
 			XCTAssertThrowsError(try MopedTheme(data: Self.json(Self.body(background: bad)))) { error in
 				guard case MopedThemeFileError.badColor(let key, _)? = error as? MopedThemeFileError else {
 					return XCTFail("\(bad) should be rejected as a bad color, got \(error)")
@@ -146,6 +147,32 @@ final class ThemeFileTests: XCTestCase {
 					return XCTFail("expected a missingKey error for \(expectedKey), got \(error)")
 				}
 				XCTAssertEqual(key, expectedKey)
+			}
+		}
+	}
+
+	/// Structurally broken files — invalid JSON, or a key holding the wrong type —
+	/// surface as `notAThemeFile` with a location, never as a raw `DecodingError`.
+	func testRejectsNonJSONBytes() {
+		XCTAssertThrowsError(try MopedTheme(data: Data("this is not json".utf8))) { error in
+			guard case MopedThemeFileError.notAThemeFile? = error as? MopedThemeFileError else {
+				return XCTFail("expected notAThemeFile, got \(error)")
+			}
+		}
+	}
+
+	func testRejectsWrongTypesWithAFriendlyError() {
+		let bodies = [
+			##""version": "1", "name": "X", "colors": {}"##,
+			##""version": 1, "name": "X", "colors": []"##,
+			##""version": 1, "name": "X", "colors": {"background": 123}"##
+		]
+		for body in bodies {
+			XCTAssertThrowsError(try MopedTheme(data: Self.json(body))) { error in
+				guard case MopedThemeFileError.notAThemeFile(let detail)? = error as? MopedThemeFileError else {
+					return XCTFail("expected notAThemeFile for \(body), got \(error)")
+				}
+				XCTAssertFalse(detail.isEmpty, "the detail should name the spot or say the JSON is invalid")
 			}
 		}
 	}

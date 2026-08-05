@@ -50,6 +50,5 @@ jobs:
         with:
           name: Moped.zip
           path: Moped.zip
-          # Duration after which artifact will expire in days. 0 means using default retention.
-          # Minimum 1 day. Maximum 90 days unless changed from the repository settings page.
-          retention-days: 0
+          # Duration after which the artifact expires, in days (1-90).
+          retention-days: 14

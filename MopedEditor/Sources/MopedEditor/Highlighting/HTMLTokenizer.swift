@@ -59,6 +59,11 @@ struct HTMLTokenizer: LineTokenizer {
 				return (tokens, carry)
 			}
 		}
+		if case .doctype = carryIn {
+			if let carry = continueDoctype(scanner: &scanner, tokens: &tokens, tokenStart: 0) {
+				return (tokens, carry)
+			}
+		}
 		return scanText(scanner: &scanner, tokens: &tokens)
 	}
 }
@@ -101,8 +106,7 @@ private extension HTMLTokenizer {
 			return scanProcessingInstruction(scanner: &scanner, tokens: &tokens)
 		}
 		if scanner.unit(at: scanner.pos + 1) == Self.bang {
-			scanDoctype(scanner: &scanner, tokens: &tokens)
-			return nil
+			return continueDoctype(scanner: &scanner, tokens: &tokens, tokenStart: scanner.pos)
 		}
 		return scanTagOpen(scanner: &scanner, tokens: &tokens)
 	}
@@ -149,15 +153,22 @@ private extension HTMLTokenizer {
 		return scanTagAttributes(scanner: &scanner, tokens: &tokens)
 	}
 
-	func scanDoctype(scanner: inout LineScanner, tokens: inout [Token]) {
-		let start = scanner.pos
+	/// `<!DOCTYPE …>` and other `<!…>` declarations. Returns the carry state when
+	/// the closing `>` is beyond this line — a DOCTYPE with a multi-line internal
+	/// subset — matching how comments and CDATA carry. The first `>` ends the
+	/// declaration; entities inside an internal subset close it early, which only
+	/// costs some coloring on what follows, never lost state.
+	func continueDoctype(scanner: inout LineScanner, tokens: inout [Token], tokenStart: Int) -> LineState? {
 		while !scanner.isAtEnd && scanner.current != UnicodeScalars.greaterThan {
 			scanner.pos += 1
 		}
 		if !scanner.isAtEnd {
 			scanner.pos += 1
+			appendToken(.include, from: tokenStart, to: scanner.pos, into: &tokens)
+			return nil
 		}
-		appendToken(.include, from: start, to: scanner.pos, into: &tokens)
+		appendToken(.include, from: tokenStart, to: scanner.count, into: &tokens)
+		return .doctype
 	}
 
 	/// `<tag` or `</tag`: the name is a keyword, then attributes follow. Returns the

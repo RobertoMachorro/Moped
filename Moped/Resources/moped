@@ -21,8 +21,7 @@
 # osascript (unsandboxed, so DNC posting works), creates a session file inside
 # the app's sandbox container, and polls for its deletion. WaitManager deletes
 # the session file when all tracked documents close. A sandboxed Mach-O binary
-# cannot post distributed notifications — that's why --wait is also handled
-# here rather than in the moped-wait helper.
+# cannot post distributed notifications — that's why --wait lives here too.
 
 set -e
 
@@ -61,7 +60,14 @@ done
 # unsandboxed under the user's shell, /usr/bin/open is also unsandboxed,
 # and the resulting Apple Event reaches Moped.app with a proper powerbox
 # grant for the opened documents.
-/usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}"
+#
+# `open` exits non-zero when any argument fails (e.g. a missing file) even
+# though it still opens the rest, so a failure must not abort --wait: the
+# files that did open still deserve their wait, and WaitManager completes
+# the never-opened ones on its first poll. The status is carried through
+# as the script's own exit code.
+open_status=0
+/usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}" || open_status=$?
 
 if [ "$wait_mode" = "1" ]; then
 	session_id="$(uuidgen)"
@@ -90,36 +96,50 @@ if [ "$wait_mode" = "1" ]; then
 	export MOPED_NOTIFICATION="$NOTIFICATION_NAME"
 	export MOPED_FILES="$(printf '%s\n' "${abs_files[@]}")"
 
-	osascript -l JavaScript -e '
-	ObjC.import("Foundation");
-	var env = $.NSProcessInfo.processInfo.environment;
-	var sessionId   = env.objectForKey($("MOPED_SESSION_ID")).js;
-	var sessionFile = env.objectForKey($("MOPED_SESSION_FILE")).js;
-	var notifName   = env.objectForKey($("MOPED_NOTIFICATION")).js;
-	var filesStr    = env.objectForKey($("MOPED_FILES")).js;
-	var filesArr    = filesStr.split("\n").filter(function(s) { return s.length > 0; });
+	post_wait_request() {
+		osascript -l JavaScript -e '
+		ObjC.import("Foundation");
+		var env = $.NSProcessInfo.processInfo.environment;
+		var sessionId   = env.objectForKey($("MOPED_SESSION_ID")).js;
+		var sessionFile = env.objectForKey($("MOPED_SESSION_FILE")).js;
+		var notifName   = env.objectForKey($("MOPED_NOTIFICATION")).js;
+		var filesStr    = env.objectForKey($("MOPED_FILES")).js;
+		var filesArr    = filesStr.split("\n").filter(function(s) { return s.length > 0; });
 
-	var center  = $.NSDistributedNotificationCenter.defaultCenter;
-	var nsFiles = $.NSMutableArray.alloc.init;
-	for (var i = 0; i < filesArr.length; i++) {
-		nsFiles.addObject($(filesArr[i]));
+		var center  = $.NSDistributedNotificationCenter.defaultCenter;
+		var nsFiles = $.NSMutableArray.alloc.init;
+		for (var i = 0; i < filesArr.length; i++) {
+			nsFiles.addObject($(filesArr[i]));
+		}
+		var userInfo = $.NSMutableDictionary.alloc.init;
+		userInfo.setObjectForKey($(sessionId),   $("sessionID"));
+		userInfo.setObjectForKey(nsFiles,        $("files"));
+		userInfo.setObjectForKey($(sessionFile), $("sessionFilePath"));
+
+		center.postNotificationNameObjectUserInfoOptions(
+			$(notifName), $.nil, userInfo, 0
+		);
+		'
 	}
-	var userInfo = $.NSMutableDictionary.alloc.init;
-	userInfo.setObjectForKey($(sessionId),   $("sessionID"));
-	userInfo.setObjectForKey(nsFiles,        $("files"));
-	userInfo.setObjectForKey($(sessionFile), $("sessionFilePath"));
 
-	center.postNotificationNameObjectUserInfoOptions(
-		$(notifName), $.nil, userInfo, 0
-	);
-	'
+	post_wait_request
 
 	# Block until WaitManager deletes the session file (documents closed)
-	# or the app quits entirely.
+	# or the app quits entirely. A notification posted before WaitManager
+	# starts observing (a cold launch slower than the sleep above) is
+	# dropped silently, so repost once after ~5 s of waiting — receiving
+	# the same session twice just re-registers the same file set.
+	ticks=0
 	while [ -f "$session_file" ]; do
 		if ! pgrep -qx Moped 2>/dev/null; then
 			break
 		fi
+		ticks=$((ticks + 1))
+		if [ "$ticks" -eq 10 ]; then
+			post_wait_request
+		fi
 		sleep 0.5
 	done
 fi
+
+exit "$open_status"

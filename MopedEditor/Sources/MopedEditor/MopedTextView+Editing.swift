@@ -59,8 +59,11 @@ extension MopedTextView {
 		return false
 	}
 
-	public override func insertText(_ insertString: Any, replacementRange: NSRange) {
-		super.insertText(insertString, replacementRange: replacementRange)
+	/// One reset for every path that changes the text — typing, deletes, paste,
+	/// drops, undo and redo all funnel through here. Per-override resets used to
+	/// miss deletions and undo, leaving a stale style for `insertTab` to keep using.
+	public override func didChangeText() {
+		super.didChangeText()
 		cachedIndentStyle = nil
 	}
 
@@ -183,7 +186,6 @@ extension MopedTextView {
 			range: NSRange(location: lineRange.location, length: (transformedBlock as NSString).length)
 		)
 		didChangeText()
-		cachedIndentStyle = nil
 
 		let replacementLength = (transformedBlock as NSString).length
 		let replacementRange = NSRange(location: lineRange.location, length: replacementLength)
