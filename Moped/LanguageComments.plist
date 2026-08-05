@@ -20,6 +20,8 @@
 	<string>#</string>
 	<key>basic</key>
 	<string>'</string>
+	<key>c</key>
+	<string>//</string>
 	<key>capnproto</key>
 	<string>#</string>
 	<key>clojure</key>

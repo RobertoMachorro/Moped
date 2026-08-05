@@ -110,6 +110,37 @@ final class LineStoreTests: XCTestCase {
 		XCTAssertFalse(store.hasDirtyLines, "repeated passes should eventually settle")
 	}
 
+	func testDisjointDirtyRegionsAreRecoloredInSeparateRuns() {
+		var store = makeStore()
+		let text = (0..<50).map { "let value\($0) = \($0)" }.joined(separator: "\n") as NSString
+		store.reset(text: text)
+
+		// Settle the first five lines only; lines 5-49 stay dirty.
+		XCTAssertNotNil(store.highlightPass(text: text, limit: 5))
+		XCTAssertTrue(store.hasDirtyLines)
+
+		// Retype the first character: line 0 is dirty again while lines 1-4 stay
+		// clean, so the store now holds two disjoint dirty regions.
+		store.noteEdit(in: text, editedRange: NSRange(location: 0, length: 1), changeInLength: 0)
+
+		guard let result = store.highlightPass(text: text) else {
+			return XCTFail("a dirty store must produce a pass result")
+		}
+		let starts = LineIndex.lineStarts(of: text)
+		XCTAssertLessThanOrEqual(
+			NSMaxRange(result.recolored), starts[5],
+			"a pass must not clear colors across clean lines it returns no tokens for"
+		)
+		XCTAssertTrue(store.hasDirtyLines, "the second dirty region is left for the next pass")
+
+		var guardCount = 0
+		while store.hasDirtyLines, guardCount < 100 {
+			_ = store.highlightPass(text: text)
+			guardCount += 1
+		}
+		XCTAssertFalse(store.hasDirtyLines, "repeated passes should settle both regions")
+	}
+
 	func testEditReintroducesDirtyLines() {
 		var store = makeStore()
 		let original = "let a = 1\nlet b = 2\nlet c = 3" as NSString

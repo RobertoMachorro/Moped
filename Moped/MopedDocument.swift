@@ -38,8 +38,8 @@ import UniformTypeIdentifiers
 ///
 /// `snapshot(contentType:)` is the other method the save can call off the main thread. It
 /// reads the model to build the snapshot, which is the handoff working as intended, and
-/// hops to the main actor for the one thing it writes back — see
-/// `adoptContentTypeOnFirstSave`.
+/// hops to the main actor for anything it writes back — the adopted content type and the
+/// UTF-8 encoding upgrade.
 final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked Sendable {
 	/// Largest file Moped will open.
 	///
@@ -178,8 +178,17 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	}
 
 	func reloadFromDisk() {
-		guard let url = fileURL,
-			  let data = try? Data(contentsOf: url) else { return }
+		guard let url = fileURL else { return }
+		let data: Data
+		do {
+			data = try Data(contentsOf: url)
+		} catch {
+			// The file vanished or became unreadable since the change was noticed
+			// (deleted, permissions, lost sandbox scope). Keep the open buffer and
+			// say why instead of doing nothing.
+			refuseReload(because: error.localizedDescription)
+			return
+		}
 
 		// The file can have grown past the limit since it was opened. Keep what is in
 		// memory and say why, rather than reloading unbounded or failing silently.
@@ -246,17 +255,25 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 
 	func snapshot(contentType: UTType) throws -> Snapshot {
 		// If the content has characters the detected encoding can't represent (e.g. CJK
-		// added to a file originally read as ASCII), upgrade the live model to UTF-8 so
-		// the change persists for the rest of the session.
-		if model.content.data(using: model.encoding) == nil {
-			model.encoding = .utf8
+		// added to a file originally read as ASCII), upgrade to UTF-8 so the change
+		// persists for the rest of the session. The snapshot carries the upgraded value
+		// directly; the live model is only written on the main actor, same as
+		// `adoptContentTypeOnFirstSave` — this method can run on the save's thread.
+		var encoding = model.encoding
+		if model.content.data(using: encoding) == nil {
+			encoding = .utf8
+			DispatchQueue.main.async { [self] in
+				MainActor.assumeIsolated {
+					model.encoding = .utf8
+				}
+			}
 		}
 		adoptContentTypeOnFirstSave(contentType)
 		return Snapshot(
 			content: model.content,
 			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
-			encoding: model.encoding
+			encoding: encoding
 		)
 	}
 

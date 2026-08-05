@@ -108,6 +108,85 @@ final class EditingIntegrationTests: EditorTestCase {
 		)
 	}
 
+	/// Deleting content must invalidate the cached indent analysis — a 2-space
+	/// document emptied by a delete falls back to the default (tab) indentation
+	/// instead of keeping the stale 2-space style.
+	func testDeleteInvalidatesIndentStyleCache() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("function a() {\n  if (x) {\n    go();\n  }\n}\n")
+		XCTAssertEqual(textView.detectIndentStyle(in: textView.string), .softSpaces(2))
+
+		textView.setSelectedRange(NSRange(location: 0, length: (textView.string as NSString).length))
+		textView.deleteBackward(nil)
+		XCTAssertEqual(textView.string, "")
+
+		textView.insertTab(nil)
+		XCTAssertEqual(
+			textView.string, "\t",
+			"An emptied document must fall back to the default tab indent"
+		)
+	}
+
+	func testInsertNewlinePreservesLeadingWhitespace() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("\tindented line")
+		textView.setSelectedRange(NSRange(location: (textView.string as NSString).length, length: 0))
+
+		textView.insertNewline(nil)
+
+		XCTAssertEqual(textView.string, "\tindented line\n\t")
+	}
+
+	func testCommandBracketKeyEquivalentsAdjustIndent() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("\tline one\n\tline two\n")
+		textView.setSelectedRange(NSRange(location: 0, length: 0))
+
+		guard let indentEvent = commandKeyEvent("]"), let outdentEvent = commandKeyEvent("[") else {
+			return XCTFail("Could not synthesize key events")
+		}
+
+		XCTAssertTrue(textView.performKeyEquivalent(with: indentEvent))
+		XCTAssertTrue(
+			textView.string.hasPrefix("\t\tline one"),
+			"Cmd-] must indent, got \(textView.string.debugDescription)"
+		)
+
+		XCTAssertTrue(textView.performKeyEquivalent(with: outdentEvent))
+		XCTAssertTrue(
+			textView.string.hasPrefix("\tline one"),
+			"Cmd-[ must outdent, got \(textView.string.debugDescription)"
+		)
+	}
+
+	private func commandKeyEvent(_ character: String) -> NSEvent? {
+		NSEvent.keyEvent(
+			with: .keyDown, location: .zero, modifierFlags: .command, timestamp: 0,
+			windowNumber: 0, context: nil, characters: character,
+			charactersIgnoringModifiers: character, isARepeat: false, keyCode: 0
+		)
+	}
+
+	/// Paste must land as plain text in the editor font even when the pasteboard
+	/// carries styled content. (Uses the general pasteboard, as `paste` does.)
+	func testPasteArrivesAsPlainTextInEditorFont() {
+		let (_, textView) = makeEditor()
+		textView.setPlainText("")
+
+		let pasteboard = NSPasteboard.general
+		pasteboard.clearContents()
+		let styled = NSAttributedString(
+			string: "styled", attributes: [.font: NSFont.boldSystemFont(ofSize: 32)]
+		)
+		pasteboard.writeObjects([styled])
+
+		textView.paste(nil)
+
+		XCTAssertEqual(textView.string, "styled")
+		let font = textView.textStorage?.attribute(.font, at: 0, effectiveRange: nil) as? NSFont
+		XCTAssertEqual(font, textView.editorFont, "Pasted text must use the editor font, not the source's")
+	}
+
 	func testOutdentRemovesFourSpacesInFourSpaceDocument() {
 		let (_, textView) = makeEditor()
 		textView.setPlainText("def a():\n    x = 1\n        y = 2\n")

@@ -185,9 +185,11 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func pollOpenDocuments() {
+		// A miniaturized window reports `isVisible == false` but its document is
+		// still open, so it must keep its wait session alive.
 		let openPaths: Set<String> = Set(
 			NSApplication.shared.windows.compactMap { window in
-				guard window.isVisible,
+				guard window.isVisible || window.isMiniaturized,
 					let url = window.representedURL else {
 					return nil
 				}

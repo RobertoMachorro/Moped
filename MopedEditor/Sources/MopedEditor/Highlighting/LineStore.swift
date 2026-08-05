@@ -28,8 +28,10 @@ public struct LineStore {
 	private var lineStarts: [Int] = [0]
 	/// Carry-out state per line; nil marks a line that needs re-tokenizing.
 	private var carryOuts: [LineState?] = [nil]
-	/// Number of nil entries in `carryOuts`, maintained rather than recounted so
-	/// `hasDirtyLines` (checked after every pass) doesn't scan the whole document.
+	/// Number of nil entries in `carryOuts`. Maintained during passes so
+	/// `hasDirtyLines` (checked after every pass) doesn't scan the whole document;
+	/// on edits it is recounted, which costs nothing extra — `noteEdit` already
+	/// rebuilds the array it counts.
 	private var dirtyCount = 1
 
 	public init(tokenizer: any LineTokenizer) {
@@ -80,49 +82,49 @@ public struct LineStore {
 		return dirtyCount > 0
 	}
 
-	/// Re-tokenizes dirty regions until carry states stabilize, processing at most
-	/// `limit` lines so a large cascade can be spread over several runloop turns
-	/// (leftover lines stay dirty). Returns the document range that must be
-	/// recolored and its tokens (document coordinates), or nil when nothing is dirty.
+	/// Re-tokenizes the first dirty run until its carry state stabilizes, processing at
+	/// most `limit` lines so a large cascade can be spread over several runloop turns
+	/// (leftover lines stay dirty). Returns the document range that must be recolored
+	/// and its tokens (document coordinates), or nil when nothing is dirty.
+	///
+	/// One contiguous run per pass, deliberately: the caller clears colors over the
+	/// whole returned range before re-adding the returned tokens, so the range must
+	/// never span clean lines whose tokens are not in the result. A second, disjoint
+	/// dirty region is left for the next pass — `hasDirtyLines` stays true and the
+	/// highlighter reschedules.
 	public mutating func highlightPass(text: NSString, limit: Int = .max) -> (recolored: NSRange, tokens: [Token])? {
 		guard carryOuts.count == lineStarts.count else {
 			reset(text: text)
 			return highlightPass(text: text, limit: limit)
+		}
+		guard let dirty = carryOuts.firstIndex(where: { $0 == nil }) else {
+			return nil
 		}
 		var tokens: [Token] = []
 		var recoloredStart = Int.max
 		var recoloredEnd = 0
 		var processed = 0
 
-		var index = 0
-		while processed < limit, let dirty = carryOuts[index...].firstIndex(where: { $0 == nil }) {
-			index = dirty
-			var state = dirty == 0 ? tokenizer.initialState : (carryOuts[dirty - 1] ?? tokenizer.initialState)
-			while index < lineStarts.count {
-				let content = lineContentRange(at: index, in: text)
-				let previous = carryOuts[index]
-				let (lineTokens, carryOut) = tokenizer.tokenize(line: text.substring(with: content), carryIn: state)
-				for var token in lineTokens {
-					token.range.location += content.location
-					tokens.append(token)
-				}
-				if previous == nil {
-					dirtyCount -= 1
-				}
-				carryOuts[index] = carryOut
-				recoloredStart = min(recoloredStart, lineStarts[index])
-				recoloredEnd = max(recoloredEnd, lineEnd(at: index, in: text))
-				state = carryOut
-				index += 1
-				processed += 1
-				if let previous, previous == carryOut {
-					break
-				}
-				if processed >= limit {
-					break
-				}
+		var index = dirty
+		var state = dirty == 0 ? tokenizer.initialState : (carryOuts[dirty - 1] ?? tokenizer.initialState)
+		while index < lineStarts.count, processed < limit {
+			let content = lineContentRange(at: index, in: text)
+			let previous = carryOuts[index]
+			let (lineTokens, carryOut) = tokenizer.tokenize(line: text.substring(with: content), carryIn: state)
+			for var token in lineTokens {
+				token.range.location += content.location
+				tokens.append(token)
 			}
-			if index >= lineStarts.count {
+			if previous == nil {
+				dirtyCount -= 1
+			}
+			carryOuts[index] = carryOut
+			recoloredStart = min(recoloredStart, lineStarts[index])
+			recoloredEnd = max(recoloredEnd, lineEnd(at: index, in: text))
+			state = carryOut
+			index += 1
+			processed += 1
+			if let previous, previous == carryOut {
 				break
 			}
 		}

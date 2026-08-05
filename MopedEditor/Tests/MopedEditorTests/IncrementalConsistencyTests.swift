@@ -94,6 +94,97 @@ final class IncrementalConsistencyTests: XCTestCase {
 		runRandomEdits(language: "xml", seedText: seedText, seed: 17)
 	}
 
+	// The languages with the trickiest carry states: PHP's raw boundaries, bash and
+	// PHP heredocs, Rust's nesting block comments and raw strings, C#'s verbatim and
+	// interpolated strings, Python's and TOML's triple-quoted multiline strings.
+
+	func testPhpRandomEdits() {
+		let seedText = """
+		<?php
+		$greeting = "hello $name";
+		/* block
+		comment */
+		$sql = <<<SQL
+		select 1
+		SQL;
+		echo $greeting;
+		?>
+		tail text
+		"""
+		runRandomEdits(language: "php", seedText: seedText, seed: 11)
+	}
+
+	func testBashRandomEdits() {
+		let seedText = """
+		#!/bin/sh
+		if [ -n "$HOME" ]; then
+			echo "${PATH}"
+		fi
+		cat <<EOF
+		body text
+		EOF
+		x=$(( 1 << 2 ))
+		echo done
+		"""
+		runRandomEdits(language: "bash", seedText: seedText, seed: 23)
+	}
+
+	func testRustRandomEdits() {
+		let seedText = """
+		fn main() {
+			/* outer /* nested */ comment */
+			let s = r#"raw "string" here"#;
+			let t = "multi
+			line";
+			println!("{}", s);
+		}
+		"""
+		runRandomEdits(language: "rust", seedText: seedText, seed: 31)
+	}
+
+	func testCSharpRandomEdits() {
+		let seedText = """
+		using System;
+		class P {
+			static void Main() {
+				var v = @"verbatim ""quoted""
+				spanning";
+				var i = $"count {v.Length}";
+				/* block
+				comment */
+			}
+		}
+		"""
+		runRandomEdits(language: "cs", seedText: seedText, seed: 47)
+	}
+
+	func testPythonRandomEdits() {
+		let seedText = """
+		import os
+		def f():
+			'''triple
+			quoted'''
+			s = "one"
+			# comment
+			return f"{s}!"
+		"""
+		runRandomEdits(language: "python", seedText: seedText, seed: 53)
+	}
+
+	func testTomlRandomEdits() {
+		let seedText = """
+		[table]
+		key = "value"
+		multi = \"\"\"
+		spans
+		lines
+		\"\"\"
+		# comment
+		nums = [1, 2, 3]
+		"""
+		runRandomEdits(language: "toml", seedText: seedText, seed: 61)
+	}
+
 	private func runRandomEdits(language: String, seedText: String, seed: UInt64, iterations: Int = 120) {
 		guard let tokenizer = LanguageRegistry.tokenizer(for: language) else {
 			XCTFail("No tokenizer for \(language)")
@@ -171,13 +262,15 @@ final class IncrementalConsistencyTests: XCTestCase {
 		return result
 	}
 
-	/// Runs a highlight pass and merges its recolored tokens over the accumulated set.
+	/// Runs highlight passes until the store settles, merging each pass's recolored
+	/// tokens over the accumulated set — the same clear-then-reapply the highlighter
+	/// does, including its reschedule loop for disjoint dirty regions.
 	private func applyPass(_ store: inout LineStore, text: NSString, current: [Token]) -> [Token] {
-		guard let result = store.highlightPass(text: text) else {
-			return current
+		var merged = current
+		while let result = store.highlightPass(text: text) {
+			merged = merged.filter { NSIntersectionRange($0.range, result.recolored).length == 0 }
+			merged.append(contentsOf: result.tokens)
 		}
-		var merged = current.filter { NSIntersectionRange($0.range, result.recolored).length == 0 }
-		merged.append(contentsOf: result.tokens)
 		return merged
 	}
 

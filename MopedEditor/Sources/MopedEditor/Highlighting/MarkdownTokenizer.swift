@@ -59,7 +59,10 @@ struct MarkdownTokenizer: LineTokenizer {
 
 		if let match = scanner.matchLineRegex(Self.fenceRegex) {
 			tokens.append(Token(kind: .punctuationSpecial, range: fullRange))
-			let fence = String(scanner.substring(in: match.range(at: 1)).prefix(3))
+			// The full run is kept so the `hasPrefix` close test above enforces
+			// CommonMark's rule that a closer is at least as long as its opener —
+			// three backticks must not close a five-backtick block.
+			let fence = String(scanner.substring(in: match.range(at: 1)))
 			return (tokens, .fencedCode(fence: fence))
 		}
 

@@ -40,8 +40,8 @@
 - [ ] Word wrap on/off — reflows correctly, with and without the gutter visible.
 - [ ] Show/hide line number gutter — gutter appears/disappears and reclaims its space.
 - [ ] Large file (>256 KB) — opens without locking up and stays responsive while typing; highlighting is off.
-- [ ] 8 MB file — opens (was refused before the 16 MB limit) and stays responsive while typing.
-- [ ] File over 16 MB — refused with Moped's own alert naming the limit and the file's size, not the system default.
+- [ ] 8 MB file (`scripts/make-size-fixtures.sh` generates `TestFiles/Sizes/8MB.txt`) — opens (was refused before the 16 MB limit) and stays responsive while typing.
+- [ ] File over 16 MB (`TestFiles/Sizes/Over16MB.txt` from the same script) — refused with Moped's own alert naming the limit and the file's size, not the system default.
 - [ ] File grows past 16 MB on disk, then Reload — refused with the same message; the open buffer is left untouched.
 - [ ] File grows past 256 KB on disk, then Reload — reloads and highlighting switches off.
 - [ ] Binary file (e.g. `cp /bin/ls ~/Desktop/probe.dat`) — refused with "Moped can only open text files", no document window opens.
@@ -54,7 +54,7 @@
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.
 - [ ] External file change → reload alert → reload — still works.
 - [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
-- [ ] MopedCLI moped --wait — unaffected.
+- [ ] moped --wait — unaffected.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
 - [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
 - [ ] On Launch = Reopen Previous — open two files, quit, relaunch: both come back at their saved frames. Close both, quit, relaunch: one untitled window. Quit, then `moped <file>`: only that file, no session restore.

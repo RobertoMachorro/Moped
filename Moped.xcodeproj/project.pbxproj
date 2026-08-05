@@ -33,20 +33,8 @@
 		E990B6F3230CC09B0010CF5D /* LanguagesUTI.plist in Resources */ = {isa = PBXBuildFile; fileRef = E990B6F2230CC09B0010CF5D /* LanguagesUTI.plist */; };
 		E9D0420D2300A9FE00382715 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D0420C2300A9FE00382715 /* AppDelegate.swift */; };
 		E9D042132300A9FE00382715 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9D042122300A9FE00382715 /* Assets.xcassets */; };
-		F0A1B2C3D4E5000000000031 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000001 /* main.swift */; };
-		F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000033 /* moped-wait */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F0A1B2C3D4E5000000000051 /* Resources/moped in Embed moped CLI */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5000000000050 /* Resources/moped */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F0A1B2C3D4E5000000000039 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E9D042012300A9FE00382715 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F0A1B2C3D4E5000000000037;
-			remoteInfo = MopedCLI;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		F0A1B2C3D4E5000000000035 /* Embed moped CLI */ = {
@@ -56,7 +44,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				F0A1B2C3D4E5000000000051 /* Resources/moped in Embed moped CLI */,
-				F0A1B2C3D4E5000000000032 /* moped-wait in Embed moped CLI */,
 			);
 			name = "Embed moped CLI";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,9 +81,6 @@
 		E9D042122300A9FE00382715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9D042172300A9FE00382715 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9D042182300A9FE00382715 /* Moped.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moped.entitlements; sourceTree = "<group>"; };
-		F0A1B2C3D4E5000000000001 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		F0A1B2C3D4E5000000000033 /* moped-wait */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "moped-wait"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MopedCLI.entitlements; sourceTree = "<group>"; };
 		F0A1B2C3D4E5000000000050 /* Resources/moped */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Resources/moped; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,13 +93,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0A1B2C3D4E5000000000034 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -123,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				E9D0420B2300A9FE00382715 /* Moped */,
-				F0A1B2C3D4E5000000000003 /* MopedCLI */,
 				E9D0420A2300A9FE00382715 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -132,7 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				E9D042092300A9FE00382715 /* Moped.app */,
-				F0A1B2C3D4E5000000000033 /* moped-wait */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,15 +149,6 @@
 			path = Moped;
 			sourceTree = "<group>";
 		};
-		F0A1B2C3D4E5000000000003 /* MopedCLI */ = {
-			isa = PBXGroup;
-			children = (
-				F0A1B2C3D4E5000000000001 /* main.swift */,
-				F0A1B2C3D4E5000000000043 /* MopedCLI.entitlements */,
-			);
-			path = MopedCLI;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -198,7 +164,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				F0A1B2C3D4E5000000000038 /* PBXTargetDependency */,
 			);
 			name = Moped;
 			packageProductDependencies = (
@@ -207,24 +172,6 @@
 			productName = Moped;
 			productReference = E9D042092300A9FE00382715 /* Moped.app */;
 			productType = "com.apple.product-type.application";
-		};
-		F0A1B2C3D4E5000000000037 /* MopedCLI */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F0A1B2C3D4E5000000000040 /* Build configuration list for PBXNativeTarget "MopedCLI" */;
-			buildPhases = (
-				F0A1B2C3D4E5000000000036 /* Sources */,
-				F0A1B2C3D4E5000000000034 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MopedCLI;
-			packageProductDependencies = (
-			);
-			productName = "moped-wait";
-			productReference = F0A1B2C3D4E5000000000033 /* moped-wait */;
-			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -244,9 +191,6 @@
 								enabled = 1;
 							};
 						};
-					};
-					F0A1B2C3D4E5000000000037 = {
-						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -279,7 +223,6 @@
 			projectRoot = "";
 			targets = (
 				E9D042082300A9FE00382715 /* Moped */,
-				F0A1B2C3D4E5000000000037 /* MopedCLI */,
 			);
 		};
 /* End PBXProject section */
@@ -327,23 +270,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0A1B2C3D4E5000000000036 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F0A1B2C3D4E5000000000031 /* main.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F0A1B2C3D4E5000000000038 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F0A1B2C3D4E5000000000037 /* MopedCLI */;
-			targetProxy = F0A1B2C3D4E5000000000039 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E9D042192300A9FE00382715 /* Debug */ = {
@@ -543,49 +470,6 @@
 			};
 			name = Release;
 		};
-		F0A1B2C3D4E5000000000041 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 50;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
-				PRODUCT_NAME = "moped-wait";
-				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_ALL_SOURCES = NO;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.9;
-			};
-			name = Debug;
-		};
-		F0A1B2C3D4E5000000000042 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = MopedCLI/MopedCLI.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				CURRENT_PROJECT_VERSION = 50;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped.MopedCLI;
-				PRODUCT_NAME = "moped-wait";
-				SKIP_INSTALL = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_INCLUDE_ALL_SOURCES = NO;
-				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.9;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -603,15 +487,6 @@
 			buildConfigurations = (
 				E9D0421C2300A9FE00382715 /* Debug */,
 				E9D0421D2300A9FE00382715 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F0A1B2C3D4E5000000000040 /* Build configuration list for PBXNativeTarget "MopedCLI" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F0A1B2C3D4E5000000000041 /* Debug */,
-				F0A1B2C3D4E5000000000042 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

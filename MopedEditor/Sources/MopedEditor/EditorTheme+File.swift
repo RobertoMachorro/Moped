@@ -27,6 +27,9 @@ public enum MopedThemeFileError: Error, CustomStringConvertible {
 	case missingKey(String)
 	case badColor(key: String, value: String)
 	case unsupportedVersion(Int)
+	/// The bytes aren't JSON in the expected shape at all — invalid syntax, or a key
+	/// holding the wrong type. `detail` names the spot when the decoder can.
+	case notAThemeFile(detail: String)
 
 	public var description: String {
 		switch self {
@@ -36,6 +39,8 @@ public enum MopedThemeFileError: Error, CustomStringConvertible {
 			return "\"\(key)\" is not a hex color: \"\(value)\""
 		case .unsupportedVersion(let version):
 			return "unsupported format version \(version)"
+		case .notAThemeFile(let detail):
+			return "not a readable theme file: \(detail)"
 		}
 	}
 }
@@ -70,7 +75,15 @@ extension MopedTheme {
 	/// own `tokens` inherits the top-level ones, which is the common "same syntax
 	/// colors, different chrome" case.
 	public init(data: Data) throws {
-		let file = try JSONDecoder().decode(MopedThemeFile.self, from: data)
+		// A decoder failure — invalid JSON, or a key of the wrong type — surfaces as
+		// a `MopedThemeFileError` like every other problem, so the person hand-editing
+		// the file always gets an error that names the spot, never a raw DecodingError.
+		let file: MopedThemeFile
+		do {
+			file = try JSONDecoder().decode(MopedThemeFile.self, from: data)
+		} catch {
+			throw MopedThemeFileError.notAThemeFile(detail: Self.decodingDetail(of: error))
+		}
 
 		guard let version = file.version else {
 			throw MopedThemeFileError.missingKey("version")
@@ -94,6 +107,30 @@ extension MopedTheme {
 			name: name, colors: dark.colors, tokens: dark.tokens ?? file.tokens, path: "dark."
 		)
 		self = light.paired(withDark: darkTheme)
+	}
+
+	/// Translates a `DecodingError` into the kind of message the rest of the file
+	/// format produces: a dotted path plus what is wrong there.
+	private static func decodingDetail(of error: Error) -> String {
+		guard let decodingError = error as? DecodingError else {
+			return error.localizedDescription
+		}
+		func path(_ codingPath: [any CodingKey]) -> String {
+			let joined = codingPath.map(\.stringValue).joined(separator: ".")
+			return joined.isEmpty ? "the top level" : "\"\(joined)\""
+		}
+		switch decodingError {
+		case .typeMismatch(_, let context):
+			return "\(path(context.codingPath)) has the wrong type"
+		case .valueNotFound(_, let context):
+			return "\(path(context.codingPath)) is null"
+		case .keyNotFound(let key, let context):
+			return "missing \(path(context.codingPath + [key]))"
+		case .dataCorrupted(let context):
+			return context.codingPath.isEmpty ? "not valid JSON" : "\(path(context.codingPath)) is corrupted"
+		@unknown default:
+			return "unreadable"
+		}
 	}
 
 	/// Builds one palette. `path` prefixes the keys in any error so `dark` failures are
@@ -168,10 +205,10 @@ extension MopedTheme {
 
 	// MARK: - Hex
 
-	/// Accepts `#RGB`, `#RRGGBB` and `#RRGGBBAA`, with or without the leading `#`, in
-	/// either case. Hex is the only accepted notation, which is also what keeps the
-	/// `Sendable` promise on `MopedTheme`: there is no spelling of a dynamic or catalog
-	/// colour a file could reach for.
+	/// Accepts `#RGB`, `#RGBA`, `#RRGGBB` and `#RRGGBBAA`, with or without the leading
+	/// `#`, in either case. Hex is the only accepted notation, which is also what keeps
+	/// the `Sendable` promise on `MopedTheme`: there is no spelling of a dynamic or
+	/// catalog colour a file could reach for.
 	private static func color(fromHex hex: String, key: String) throws -> NSColor {
 		// Newlines as well as spaces: a value that survived a copy-paste with a stray
 		// line break is visually a valid colour, and rejecting it would be baffling.
@@ -185,15 +222,17 @@ extension MopedTheme {
 		func channel(_ shift: UInt64) -> CGFloat {
 			CGFloat((value >> shift) & 0xFF) / 255
 		}
+		// Short forms expand each digit, so #F0A means #FF00AA.
+		func nibble(_ shift: UInt64) -> CGFloat {
+			let digit = (value >> shift) & 0xF
+			return CGFloat(digit << 4 | digit) / 255
+		}
 
 		switch digits.count {
 		case 3:
-			// #RGB expands each digit, so #F0A means #FF00AA.
-			func nibble(_ shift: UInt64) -> CGFloat {
-				let digit = (value >> shift) & 0xF
-				return CGFloat(digit << 4 | digit) / 255
-			}
 			return NSColor(srgbRed: nibble(8), green: nibble(4), blue: nibble(0), alpha: 1)
+		case 4:
+			return NSColor(srgbRed: nibble(12), green: nibble(8), blue: nibble(4), alpha: nibble(0))
 		case 6:
 			return NSColor(srgbRed: channel(16), green: channel(8), blue: channel(0), alpha: 1)
 		case 8:

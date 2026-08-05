@@ -37,7 +37,11 @@ extension LanguageDefinition {
 			StringRule(delimiter: "'", escape: nil)
 		],
 		prePassRules: expansionRules,
-		heredoc: HeredocRule(trigger: "<", pattern: "<<-?[\t ]*[\"']?([A-Za-z_]\\w*)[\"']?")
+		// The delimiter must start uppercase (or underscore), same as Ruby's rule:
+		// lowercase heredocs are legal but rare, while requiring uppercase keeps the
+		// arithmetic left-shift in `$(( 1 << n ))` from opening a phantom heredoc
+		// that would swallow the rest of the file as a string.
+		heredoc: HeredocRule(trigger: "<", pattern: "<<-?[\t ]*[\"']?([A-Z_][A-Za-z0-9_]*)[\"']?")
 	)
 
 	/// Parameter expansions, highlighted both in code and inside double-quoted

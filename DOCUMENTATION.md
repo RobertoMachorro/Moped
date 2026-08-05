@@ -262,7 +262,7 @@ alongside them:
 | Theme | Notes |
 |---|---|
 | **System** | No theme: macOS's own text colors. |
-| **Default** | |
+| **Default** | Moped's own light and dark palette. |
 | **Forest** | Olive and fern greens over warm paper. |
 | **Nebula** | Violet and magenta, with mint and cyan accents. |
 | **Ocean** | Cool blues and teals, with one warm accent for numbers. |
@@ -694,6 +694,7 @@ The **Help** menu links to:
 * [Get Source Code](https://github.com/RobertoMachorro/Moped) — the project on GitHub
 * [Report an Issue](https://github.com/RobertoMachorro/Moped/issues) — bugs and requests
 * Logo by BSGStudio — credit for the scooter artwork
+* **Moped Help** (⌘?) — this documentation, online
 
 Bug reports and pull requests are welcome. See *Contributing* in the [README](README.md#contributing).
 

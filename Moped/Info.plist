@@ -19,8 +19,6 @@
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.plain-text</string>
@@ -41,8 +39,6 @@
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Default</string>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.text</string>
@@ -94,8 +90,6 @@
 			<string>Viewer</string>
 			<key>LSHandlerRank</key>
 			<string>Alternate</string>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.data</string>
@@ -104,8 +98,6 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -2281,6 +2273,32 @@
 				<key>public.mime-type</key>
 				<array>
 					<string>text/jsx</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Patch File</string>
+			<key>UTTypeIconFile</key>
+			<string>AppIcon.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>public.patch-file</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>diff</string>
+					<string>patch</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/x-patch</string>
 				</array>
 			</dict>
 		</dict>

@@ -17,7 +17,7 @@ This FREE software is licensed under [GNU GPLv3 or later](https://www.gnu.org/li
 
 ## Language Translations
 
-Proudly supporting the following languages: German, English, Spanish, Finnish, French, Hebrew, Hindi, Italian, Japanese, Dutch, Portuguese, Brazilian Portuguese, and Ukranian.
+Proudly supporting the following languages: German, English, Spanish, Finnish, French, Hebrew, Hindi, Italian, Japanese, Dutch, Portuguese, Brazilian Portuguese, and Ukrainian.
 
 Want to see another language? Volunteer to translate!
 
@@ -64,7 +64,6 @@ If you scroll through the commit history you can see how the pieces fit together
 
 ## Wanted Features
 
-* [Comprehensive Help File](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/OnlineHelp/Tasks/SpecifyHelpFile.html#//apple_ref/doc/uid/20000020)
 * Code folding support
 * Prompt user for Encoding when it is not recognized automatically
 
