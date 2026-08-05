@@ -246,12 +246,29 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		if model.content.data(using: model.encoding) == nil {
 			model.encoding = .utf8
 		}
+		adoptContentTypeOnFirstSave(contentType)
 		return Snapshot(
 			content: model.content,
 			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
 			encoding: model.encoding
 		)
+	}
+
+	/// An untitled document is saved with whatever type the user picked in the Save panel,
+	/// which is the first time it has a type at all. Adopt it so the editor highlights what
+	/// was actually written instead of staying on the new-document default.
+	///
+	/// Restricted to the first save deliberately. On a document that already has a URL, a
+	/// plain Cmd-S would otherwise reset the language whenever `contentType` is derived from
+	/// the file on disk rather than from the type the status-bar picker set — which is how a
+	/// `.txt` the user is editing as Python would silently fall back to `plaintext`.
+	private func adoptContentTypeOnFirstSave(_ contentType: UTType) {
+		guard fileURL == nil, contentType.identifier != model.docTypeName else {
+			return
+		}
+		model.docTypeName = contentType.identifier
+		model.docTypeLanguage = model.getLanguageForType(typeName: contentType.identifier)
 	}
 
 	func fileWrapper(snapshot: Snapshot, configuration: WriteConfiguration) throws -> FileWrapper {

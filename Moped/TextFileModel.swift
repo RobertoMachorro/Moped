@@ -21,6 +21,7 @@
 import Combine
 import Foundation
 import MopedEditor
+import UniformTypeIdentifiers
 
 class TextFileModel: NSObject, ObservableObject {
 	@Published var content: String
@@ -128,9 +129,19 @@ extension TextFileModel {
 		return LanguageRegistry.canonicalID(for: name) ?? "plaintext"
 	}
 
+	/// Reverse of `languagesFromUTI`, and the source of the type a Save panel preselects.
+	///
+	/// Identifiers the system cannot resolve are skipped: several plist keys name types
+	/// nobody declares (`public.markdown`, `com.unknown.md`), and picking one would hand
+	/// out an identifier that is absent from `readableContentTypes` — which is built by
+	/// filtering the same keys through `UTType(_:)` — so the save panel would have nothing
+	/// to select. Markdown was the one language this actually hit.
 	private static let utiFromLanguages: [String: String] = {
 		var result: [String: String] = [:]
 		for (uti, language) in languagesFromUTI {
+			guard UTType(uti) != nil else {
+				continue
+			}
 			if let existing = result[language] {
 				if uti.hasPrefix("public.") && !existing.hasPrefix("public.") {
 					result[language] = uti

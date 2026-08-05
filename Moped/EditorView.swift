@@ -41,6 +41,12 @@ struct EditorView: View {
 						applyFileType(document.model.docTypeName)
 					}
 				}
+				// The first save of an untitled document adopts the type chosen in the Save
+				// panel, which changes the language underneath the editor. The picker and the
+				// status bar read the model directly; the text view has to be told.
+				.onChange(of: document.model.docTypeLanguage) { _, newValue in
+					editorState.applyLanguage(newValue)
+				}
 
 			HStack(spacing: 12) {
 				Text(document.model.docTypeName)
@@ -98,15 +104,34 @@ struct EditorView: View {
 		)
 	}
 
-	/// Writes the type onto *this* view's document. `currentDocument` is whichever
-	/// document is frontmost, which is not necessarily this one — during the
-	/// launch-time reopen, several documents are opened in a row while another is key.
-	private func applyFileType(_ typeName: String) {
-		guard let url = document.fileURL,
-			  let nsDocument = NSDocumentController.shared.document(for: url) else {
+	/// Writes the type onto *this* view's document, which is what the Save panel reads to
+	/// preselect its File Type popup. `currentDocument` is whichever document is frontmost,
+	/// which is not necessarily this one — during the launch-time reopen, several documents
+	/// are opened in a row while another is key.
+	private func applyFileType(_ typeName: String, attempt: Int = 0) {
+		guard let nsDocument = hostingNSDocument else {
+			// An untitled document is only reachable through its window, and `onAppear` can
+			// run before the text view has one. Same bounded retry as the initial-focus
+			// path in `TextEditorRepresentable.Coordinator`.
+			guard attempt < 10 else {
+				return
+			}
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+				applyFileType(typeName, attempt: attempt + 1)
+			}
 			return
 		}
 		nsDocument.fileType = typeName
+	}
+
+	/// By URL when there is one — exact, and independent of the view being in a window.
+	/// An untitled document has no URL, so it is found through the window hosting this
+	/// editor, which is the same pairing `AppDelegate` does in the other direction.
+	private var hostingNSDocument: NSDocument? {
+		if let url = document.fileURL {
+			return NSDocumentController.shared.document(for: url)
+		}
+		return editorState.textView?.window?.windowController?.document as? NSDocument
 	}
 
 	private var documentContentBinding: Binding<String> {
