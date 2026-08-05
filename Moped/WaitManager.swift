@@ -185,16 +185,23 @@ final class WaitManager: NSObject {
 	}
 
 	@objc private func pollOpenDocuments() {
-		// A miniaturized window reports `isVisible == false` but its document is
-		// still open, so it must keep its wait session alive.
+		// Ask the document controller rather than inspecting windows. Window
+		// visibility answers a different question than "is this document still
+		// open": a miniaturized window, and every window of a hidden app, reports
+		// `isVisible == false` while its document is very much open, which ended
+		// the session early. Testing `representedURL` on any window regardless of
+		// visibility trades that for the worse failure — a window ordered out on
+		// close can outlive the document in `NSApp.windows`, and a session that
+		// never completes hangs the caller instead of returning too soon.
+		//
+		// `NSDocumentController` is authoritative for open documents, drops them
+		// on close, and is what `AppDelegate` already trusts to save the session.
+		// It also populates earlier than windows do — a document is registered
+		// before its window controller exists — so the open-side race the script's
+		// startup delay covers gets no worse.
 		let openPaths: Set<String> = Set(
-			NSApplication.shared.windows.compactMap { window in
-				guard window.isVisible || window.isMiniaturized,
-					let url = window.representedURL else {
-					return nil
-				}
-
-				return WaitManager.canonicalPath(for: url)
+			NSDocumentController.shared.documents.compactMap { document in
+				document.fileURL.map(WaitManager.canonicalPath(for:))
 			}
 		)
 		guard !sessions.isEmpty else {

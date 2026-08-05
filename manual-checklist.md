@@ -54,7 +54,7 @@
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.
 - [ ] External file change → reload alert → reload — still works.
 - [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
-- [ ] moped --wait — unaffected.
+- [ ] moped --wait — blocks until the file's window closes. Minimize the window, and separately hide the app (Cmd-H): the command keeps waiting through both, and returns only on close or quit.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
 - [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
 - [ ] On Launch = Reopen Previous — open two files, quit, relaunch: both come back at their saved frames. Close both, quit, relaunch: one untitled window. Quit, then `moped <file>`: only that file, no session restore.

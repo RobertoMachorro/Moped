@@ -14,6 +14,10 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)/TestFiles/Sizes"
 LINE="The quick brown fox jumps over the lazy dog. Moped size-tier test line."
 
+# The folder is tracked (it holds the committed size tiers), so this is only
+# insurance against running in a tree where it was removed.
+mkdir -p "$DIR"
+
 make_file() {
 	local target="$1"
 	local bytes="$2"
