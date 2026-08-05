@@ -35,6 +35,11 @@ import UniformTypeIdentifiers
 /// mutation arrives through SwiftUI bindings on the main actor. The one field written
 /// off-main afterwards is `suppressWatchUntil`, from `fileWrapper` during a save, and it
 /// is a `Date` guarding a debounce — a stale read re-prompts a reload at worst.
+///
+/// `snapshot(contentType:)` is the other method the save can call off the main thread. It
+/// reads the model to build the snapshot, which is the handoff working as intended, and
+/// hops to the main actor for the one thing it writes back — see
+/// `adoptContentTypeOnFirstSave`.
 final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked Sendable {
 	/// Largest file Moped will open.
 	///
@@ -246,12 +251,52 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		if model.content.data(using: model.encoding) == nil {
 			model.encoding = .utf8
 		}
+		adoptContentTypeOnFirstSave(contentType)
 		return Snapshot(
 			content: model.content,
 			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
 			encoding: model.encoding
 		)
+	}
+
+	/// An untitled document is saved with whatever type the user picked in the Save panel,
+	/// which is the first time it has a type at all. Adopt it so the editor highlights what
+	/// was actually written instead of staying on the new-document default.
+	///
+	/// Restricted to the first save deliberately. On a document that already has a URL, a
+	/// plain Cmd-S would otherwise reset the language whenever `contentType` is derived from
+	/// the file on disk rather than from the type the status-bar picker set — which is how a
+	/// `.txt` the user is editing as Python would silently fall back to `plaintext`.
+	///
+	/// The decision is made here, on whatever thread the save runs on, but applied on the
+	/// main actor: `snapshot(contentType:)` carries no isolation in the protocol, and the
+	/// type and language are `@Published`. Reading the model here is what this method
+	/// already exists to do; publishing from the save's thread is not.
+	private func adoptContentTypeOnFirstSave(_ contentType: UTType) {
+		let typeName = contentType.identifier
+		let previousTypeName = model.docTypeName
+		guard fileURL == nil, typeName != previousTypeName else {
+			return
+		}
+		let language = model.getLanguageForType(typeName: typeName)
+
+		DispatchQueue.main.async { [self] in
+			MainActor.assumeIsolated {
+				adoptTypeName(typeName, language: language, ifStillAt: previousTypeName)
+			}
+		}
+	}
+
+	/// Applies the adopted type unless the picker moved while the write was in flight —
+	/// an explicit choice by the user beats one inferred from the save.
+	@MainActor
+	private func adoptTypeName(_ typeName: String, language: String, ifStillAt previousTypeName: String) {
+		guard model.docTypeName == previousTypeName else {
+			return
+		}
+		model.docTypeName = typeName
+		model.docTypeLanguage = language
 	}
 
 	func fileWrapper(snapshot: Snapshot, configuration: WriteConfiguration) throws -> FileWrapper {
