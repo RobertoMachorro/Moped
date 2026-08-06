@@ -27,6 +27,9 @@ class TextFileModel: NSObject, ObservableObject {
 	@Published var content: String
 	@Published var docTypeName: String
 	@Published var docTypeLanguage: String
+	/// Published so the status bar follows a reload, and so changing it there marks the
+	/// document edited — it changes the bytes a save will write.
+	@Published var lineEnding: LineEnding = .unix
 	var encoding: String.Encoding
 	var isLargeFile: Bool = false
 	var programmaticChangeID: Int = 0
@@ -57,10 +60,6 @@ extension TextFileModel {
 		])
 	}
 
-	static func unknownEncodingError() -> Error {
-		readError(.fileReadUnknownStringEncoding, message: String(localized: "error.file_unknown_encoding.description"))
-	}
-
 	/// Rejection for a file that is not text. Moped edits text only, and the decoders
 	/// below cannot be trusted to refuse anything — see `ContentKind`.
 	static func binaryFileError() -> Error {
@@ -82,19 +81,25 @@ extension TextFileModel {
 			// Otherwise start guessing...
 		} else if let text = String(data: data, encoding: .utf8) {
 			decoded = (text, .utf8)
+		} else if let wide = ContentKind.unmarkedWideEncoding(of: data),
+			let text = String(data: data, encoding: wide.stringEncoding) {
+			// BOM-less UTF-16. This has to be tried before Mac OS Roman, which would
+			// otherwise "succeed" and produce a NUL between every character.
+			decoded = (text, wide.stringEncoding)
 		} else if let text = String(data: data, encoding: .macOSRoman) {
+			// Mac OS Roman maps all 256 byte values, so this rung always succeeds and no
+			// "could not determine the encoding" rejection is reachable. That is exactly
+			// why `ContentKind` has to gate binary files ahead of these decoders — left to
+			// itself this rung would turn an executable into mojibake.
 			decoded = (text, .macOSRoman)
-		} else if let text = String(data: data, encoding: .ascii) {
-			decoded = (text, .ascii)
 		} else {
-			// Nothing is mutated on this path, so a failed reload leaves the open
-			// buffer exactly as it was.
-			throw Self.unknownEncodingError()
+			throw Self.binaryFileError()
 		}
 
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		content = decoded.text
+		lineEnding = LineEnding.detected(in: decoded.text)
+		content = LineEnding.normalizedToLF(decoded.text)
 		encoding = decoded.encoding
 		programmaticChangeID &+= 1
 	}
@@ -102,7 +107,7 @@ extension TextFileModel {
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		return content.data(using: encoding)
+		return lineEnding.applied(to: content).data(using: encoding)
 	}
 }
 

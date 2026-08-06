@@ -8,6 +8,8 @@ body {
 	font-family: -apple-system, "Helvetica Neue", sans-serif;
 	margin: 0;
 	background-color: #fafafa;
+	/* The `//` in a URL must not read as a line comment. */
+	background-image: url(http://example.com/paper.png);
 }
 
 .card {

@@ -11,6 +11,14 @@ fn total_value(inventory: &HashMap<String, Product>) -> u32 {
 	inventory.values().map(|p| p.price_cents).sum()
 }
 
+/* A block comment /* nested inside another */ still closes here. */
+fn separators() -> (char, char, &'static str) {
+	let quote = '"'; // a char literal holding a double quote must not open a string
+	let newline = '\n';
+	let raw = r#"a raw string with "quotes" and a \backslash"#;
+	(quote, newline, raw)
+}
+
 fn main() {
 	let mut inventory: HashMap<String, Product> = HashMap::new();
 

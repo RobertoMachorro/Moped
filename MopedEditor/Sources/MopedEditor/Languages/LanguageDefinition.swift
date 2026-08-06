@@ -130,11 +130,18 @@ struct RegexRule: @unchecked Sendable {
 struct HeredocRule: @unchecked Sendable {
 	let trigger: UInt16
 	let regex: NSRegularExpression
+	/// Whether the closing line may carry trailing expression punctuation — `SQL;`, `SQL);`,
+	/// `SQL],`. True only for PHP, where the heredoc closes as part of the statement and that
+	/// is the canonical form. Shells and Ruby terminate on a line holding the identifier and
+	/// nothing else, so allowing a suffix there would end a heredoc early on a body line that
+	/// happens to read `EOF;`.
+	let allowsTerminatorSuffix: Bool
 
-	init(trigger: Character, pattern: String) {
+	init(trigger: Character, pattern: String, allowsTerminatorSuffix: Bool = false) {
 		self.trigger = trigger.utf16.first ?? 0
 		// swiftlint:disable:next force_try
 		self.regex = try! NSRegularExpression(pattern: pattern)
+		self.allowsTerminatorSuffix = allowsTerminatorSuffix
 	}
 }
 
@@ -152,6 +159,10 @@ struct LanguageDefinition: Sendable {
 	let builtins: Set<String>
 	let caseInsensitiveKeywords: Bool
 	let lineCommentPrefixes: [String]
+	/// Require a line comment to start the line or follow whitespace, `{`, `}`, `;` or `,`.
+	/// CSS needs it: `//` is carried only for the scss/less aliases, and unguarded it turned
+	/// the `//` in `url(http://example.com/a.png)` into a comment to end of line.
+	let lineCommentNeedsBoundary: Bool
 	let blockComments: [BlockCommentRule]
 	let strings: [StringRule]
 	let capitalizedTypesHeuristic: Bool
@@ -174,6 +185,7 @@ struct LanguageDefinition: Sendable {
 		builtins: Set<String> = [],
 		caseInsensitiveKeywords: Bool = false,
 		lineCommentPrefixes: [String] = [],
+		lineCommentNeedsBoundary: Bool = false,
 		blockComments: [BlockCommentRule] = [],
 		strings: [StringRule] = [],
 		capitalizedTypesHeuristic: Bool = false,
@@ -192,6 +204,7 @@ struct LanguageDefinition: Sendable {
 		self.builtins = builtins
 		self.caseInsensitiveKeywords = caseInsensitiveKeywords
 		self.lineCommentPrefixes = lineCommentPrefixes
+		self.lineCommentNeedsBoundary = lineCommentNeedsBoundary
 		self.blockComments = blockComments
 		self.strings = strings
 		self.capitalizedTypesHeuristic = capitalizedTypesHeuristic

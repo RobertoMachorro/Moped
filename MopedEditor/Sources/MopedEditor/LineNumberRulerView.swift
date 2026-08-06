@@ -146,8 +146,7 @@ final class LineNumberRulerView: NSRulerView {
 		bounds.fill()
 
 		guard let textView = clientView as? NSTextView,
-			  let layoutManager = textView.layoutManager,
-			  let textContainer = textView.textContainer
+			  let layoutManager = textView.layoutManager
 		else {
 			return
 		}

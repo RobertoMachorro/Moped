@@ -22,6 +22,8 @@
 
 import PackageDescription
 
+let strictConcurrency: [SwiftSetting] = [.enableExperimentalFeature("StrictConcurrency")]
+
 let package = Package(
 	name: "MopedEditor",
 	platforms: [
@@ -31,7 +33,16 @@ let package = Package(
 		.library(name: "MopedEditor", targets: ["MopedEditor"])
 	],
 	targets: [
-		.target(name: "MopedEditor"),
-		.testTarget(name: "MopedEditorTests", dependencies: ["MopedEditor"])
+		// The app target builds these sources with SWIFT_STRICT_CONCURRENCY = complete, so
+		// the package has to ask for the same checking or `swift test` — the gate CI runs —
+		// would compile them under looser rules than Xcode does. It matters more than usual
+		// here because this package is meant to be extractable, and these settings are what
+		// would follow it out.
+		.target(name: "MopedEditor", swiftSettings: strictConcurrency),
+		.testTarget(
+			name: "MopedEditorTests",
+			dependencies: ["MopedEditor"],
+			swiftSettings: strictConcurrency
+		)
 	]
 )

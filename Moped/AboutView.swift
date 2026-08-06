@@ -46,9 +46,11 @@ struct AboutView: View {
 				}
 				.frame(maxWidth: .infinity)
 
+				// Decorative: the app name is already the first thing read in this pane.
 				Image("Logo")
 					.resizable()
 					.frame(width: 64, height: 64)
+					.accessibilityHidden(true)
 			}
 
 			Text("about.info_text")

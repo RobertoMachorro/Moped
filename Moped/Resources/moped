@@ -63,9 +63,9 @@ done
 #
 # `open` exits non-zero when any argument fails (e.g. a missing file) even
 # though it still opens the rest, so a failure must not abort --wait: the
-# files that did open still deserve their wait, and WaitManager completes
-# the never-opened ones on its first poll. The status is carried through
-# as the script's own exit code.
+# files that did open still deserve their wait, and WaitManager releases a
+# path that never opens once its grace period expires. The status is
+# carried through as the script's own exit code.
 open_status=0
 /usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}" || open_status=$?
 
@@ -81,10 +81,13 @@ if [ "$wait_mode" = "1" ]; then
 	cleanup() { rm -f "$session_file"; }
 	trap cleanup INT TERM EXIT
 
-	# Give Moped a moment to create document windows before posting the
-	# wait request. Without this, WaitManager's first poll (500 ms after
-	# request) could find no matching window and complete the session
-	# immediately.
+	# Give a cold-launching Moped a moment to start observing before the
+	# request is posted; a notification with no observer is dropped, and
+	# the repost below is the only other chance to be heard.
+	#
+	# This no longer guards the poll side: WaitManager will not treat a
+	# path as closed until it has actually seen it open, so a launch
+	# slower than the first poll can no longer end the session early.
 	sleep 1
 
 	# Post the CLIWaitRequest notification to WaitManager via osascript.

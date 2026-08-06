@@ -19,6 +19,7 @@
 //
 
 import Combine
+import MopedEditor
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -101,6 +102,15 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// avoids a mutable ~110-entry global.
 	static var readableContentTypes: [UTType] { allReadableContentTypes }
 
+	/// Everything readable except `.data`. `writableContentTypes` defaults to
+	/// `readableContentTypes`, which put a generic "data" row in the Save panel's File
+	/// Format popup — an entry that means nothing for a text editor and, if chosen, would
+	/// save a text document under a type Moped only accepts so it can refuse binaries.
+	static var writableContentTypes: [UTType] { allWritableContentTypes }
+
+	private static let allWritableContentTypes: [UTType] =
+		allReadableContentTypes.filter { $0 != .data }
+
 	private static let allReadableContentTypes: [UTType] = {
 		var types: [UTType] = [
 			.plainText,
@@ -131,11 +141,14 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// ever added mutable state to a `Sendable`-conforming type.
 	let model: TextFileModel
 
+	/// No `typeName`: the write uses `WriteConfiguration.contentType`, which is what the
+	/// Save panel actually chose, so a type captured at snapshot time would only ever be a
+	/// second source of truth for the same thing.
 	struct Snapshot {
 		let content: String
-		let typeName: String
 		let typeLanguage: String
 		let encoding: String.Encoding
+		let lineEnding: LineEnding
 	}
 
 	private var modelCancellable: AnyCancellable?
@@ -150,7 +163,32 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	var fileURL: URL? {
 		didSet {
 			guard oldValue != fileURL else { return }
+			adoptTypeAfterSaveAs(from: oldValue)
 			updateWatcher()
+		}
+	}
+
+	/// Save As to a different extension changes what the file *is*, so the editor has to
+	/// follow. `adoptContentTypeOnFirstSave` deliberately only covers the untitled case, and
+	/// nothing covered this one: saving `notes.txt` as `notes.py` wrote correct Python and
+	/// left the status bar and the highlighting on plain text until the document was reopened.
+	///
+	/// Keyed on the extension changing, not merely the URL changing, so that Save As under a
+	/// new name with the same extension — or a move — leaves a hand-picked language alone.
+	/// That is the case `adoptContentTypeOnFirstSave` warns about: on a `.txt` being edited as
+	/// Python, a type inferred from the file must never overrule the picker.
+	private func adoptTypeAfterSaveAs(from oldValue: URL?) {
+		guard let oldValue, let newURL = fileURL,
+			  oldValue.pathExtension.caseInsensitiveCompare(newURL.pathExtension) != .orderedSame,
+			  let type = UTType(filenameExtension: newURL.pathExtension),
+			  type.identifier != model.docTypeName
+		else {
+			return
+		}
+		let language = model.getLanguageForType(typeName: type.identifier)
+		MainActor.assumeIsolated {
+			model.docTypeName = type.identifier
+			model.docTypeLanguage = language
 		}
 	}
 
@@ -271,9 +309,9 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		adoptContentTypeOnFirstSave(contentType)
 		return Snapshot(
 			content: model.content,
-			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
-			encoding: encoding
+			encoding: encoding,
+			lineEnding: model.lineEnding
 		)
 	}
 
@@ -324,6 +362,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 			typeLanguage: snapshot.typeLanguage
 		)
 		snapshotModel.encoding = snapshot.encoding
+		snapshotModel.lineEnding = snapshot.lineEnding
 
 		guard let data = snapshotModel.data(ofType: typeName) else {
 			throw CocoaError(.fileWriteUnknown)

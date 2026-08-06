@@ -201,8 +201,10 @@ struct DefaultEditorSelectorView: View {
 
 	private var sandboxWarning: some View {
 		HStack(spacing: 8) {
+			// Decorative: the sentence beside it carries the whole message.
 			Image(systemName: "exclamationmark.triangle.fill")
 				.foregroundStyle(.yellow)
+				.accessibilityHidden(true)
 			Text("default_editor.sandbox_warning")
 				.font(.caption)
 				.foregroundStyle(.secondary)
@@ -254,6 +256,10 @@ struct DefaultEditorSelectorView: View {
 		HStack(spacing: 10) {
 			Toggle("", isOn: $model.items[idx].isSelected)
 				.labelsHidden()
+				// The row's caption is a sibling `Text`, which `Grid`/`HStack` does not
+				// associate with the control, so VoiceOver could not tell the user which
+				// file type they were about to hand over.
+				.accessibilityLabel(model.items[idx].description)
 				.disabled(model.items[idx].isMopedAlready)
 
 			VStack(alignment: .leading, spacing: 2) {
@@ -267,9 +273,11 @@ struct DefaultEditorSelectorView: View {
 
 			HStack(spacing: 6) {
 				if let icon = model.items[idx].currentAppIcon {
+					// Decorative: the current handler's name is spelled out beside it.
 					Image(nsImage: icon)
 						.resizable()
 						.frame(width: 20, height: 20)
+						.accessibilityHidden(true)
 				}
 				Text(model.items[idx].isMopedAlready
 					? String(localized: "default_editor.already_moped")

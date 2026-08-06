@@ -49,12 +49,22 @@
 - [ ] UTF‑16 file with a BOM (`printf 'a\nb\n' | iconv -f UTF-8 -t UTF-16 > f.txt`) — still opens as text.
 - [ ] UTF‑8 file with a BOM — still opens as text.
 - [ ] Save, close, reopen — content round‑trips through TextFileModel.
+- [ ] Type into a new document, then Cmd‑Q **without saving** — macOS offers to save before quitting ("Do you want to keep this new document…", with Delete/Cancel/Save). Cancel must abort the quit. Repeat with an edited, previously‑saved file. Worth keeping in the list because `AppDelegate.applicationShouldTerminate` answers `.terminateNow` unconditionally, so this is the check that proves SwiftUI still runs the review.
+- [ ] Same for Cmd‑W on an edited document — closing one window must prompt even when quitting does.
 - [ ] New document, pick `markdown` in the bottom picker, Cmd‑S — the Save panel's File Type is already Markdown and the name field gets `.md`. The status bar reads `net.daringfireball.markdown`; `public.markdown` there means the language→UTI map handed out a type nothing declares.
 - [ ] New document, leave the picker alone, Cmd‑S, choose Markdown (or Python) in the File Type popup — after saving, the picker and the highlighting switch to that language. Choosing plain text leaves it `plaintext`.
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.
-- [ ] External file change → reload alert → reload — still works.
-- [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
+- [ ] External file change → reload alert → reload — still works. The alert must say unsaved changes in the window will be lost, and after reloading, Cmd‑Q must not re‑prompt to save a document that now matches disk.
+- [ ] Open a `.txt`, **Save As** with a `.py` name — the status bar type and the highlighting switch to Python. Then Save As again under a different name but the *same* extension, on a file whose language you set by hand in the picker: the hand‑picked language must survive.
+- [ ] `TestFiles/Encodings/UTF16-LE-NoBOM.txt` — opens as readable text, not refused as binary and not mojibake.
+- [ ] Line endings — `printf 'a\r\nb\r\n' > crlf.txt`, open it: the status bar reads **CRLF**. Add a line, save, then `od -c crlf.txt` — every break is `\r\n` and none is `\r\r\n`. Repeat with a `\r`-only file (reads **CR**) and an `\n` file (reads **LF**).
+- [ ] Change the line-ending picker to LF on that CRLF file and save — `od -c` shows the whole file rewritten to `\n`, not just the new lines.
+- [ ] Print Source — plain monospace print, no headers/line numbers/coloring, in the font set in Settings ▸ Appearance (not a fixed system font).
+- [ ] In the print sheet, switch to **Landscape** and to a different **paper size**, and set **Scale** to 50% — each time, the preview re-flows to the new page instead of clipping, and the page count changes. Pagination used to be computed before the sheet opened.
+- [ ] Print a second document — the printer and paper size from the previous print are already selected, and margins are back to one inch.
 - [ ] moped --wait — blocks until the file's window closes. Minimize the window, and separately hide the app (Cmd-H): the command keeps waiting through both, and returns only on close or quit.
+- [ ] moped --wait on a **cold launch** — quit Moped, then `moped --wait somefile.txt` on a large file so the launch is slow. The command must keep waiting until you close the window, not return as soon as the app appears. This was the empty-`git commit`-message bug: a document not yet registered read as already closed.
+- [ ] `moped --wait /path/does-not-exist` — returns on its own within ~10 seconds rather than hanging the terminal forever.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
 - [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
 - [ ] On Launch = Reopen Previous — open two files, quit, relaunch: both come back at their saved frames. Close both, quit, relaunch: one untitled window. Quit, then `moped <file>`: only that file, no session restore.

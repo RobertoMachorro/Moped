@@ -26,3 +26,16 @@ playlist.tracks.each do |track|
 end
 
 puts "Total duration: #{playlist.total_duration}s"
+
+=begin
+A block comment, which Ruby anchors to the start of the line.
+=end
+# Literal forms that trip tokenizers.
+quoted = "she said \"hello\" and left"
+single = 'it\'s escaped'
+words = %w[alpha beta gamma]
+heredoc = <<~REPORT
+  spans lines, keeps "quotes" verbatim
+REPORT
+bases = [0xFF, 0b1010_1010, 0o755, 1_000_000]
+puts [quoted, single, words.length, heredoc.strip, bases.sum].inspect

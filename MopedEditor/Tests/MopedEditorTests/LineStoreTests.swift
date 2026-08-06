@@ -110,6 +110,50 @@ final class LineStoreTests: XCTestCase {
 		XCTAssertFalse(store.hasDirtyLines, "repeated passes should eventually settle")
 	}
 
+	/// The regression this guards: `dirtyCount` is only decremented for lines that were
+	/// already dirty, so a cascade rolling through *clean* lines never increments it. A pass
+	/// that stopped at `limit` used to leave the counter at zero, `hasDirtyLines` false, and
+	/// the tail of the document holding pre-edit colors forever.
+	func testTruncatedCascadeThroughCleanLinesStaysDirty() {
+		var store = makeStore()
+		let lines = (0..<50).map { "let value\($0) = \($0)" }
+		let settled = lines.joined(separator: "\n") as NSString
+		store.reset(text: settled)
+		while store.hasDirtyLines {
+			_ = store.highlightPass(text: settled)
+		}
+
+		// An unterminated `/*` on line 0 changes the carry state of every line below it, so
+		// the cascade cannot stabilize before the limit is reached.
+		var opened = lines
+		opened[0] = "/* " + lines[0]
+		let text = opened.joined(separator: "\n") as NSString
+		store.noteEdit(in: text, editedRange: NSRange(location: 0, length: 3), changeInLength: 3)
+
+		var covered = 0
+		guard let first = store.highlightPass(text: text, limit: 5) else {
+			return XCTFail("a dirty store must produce a pass result")
+		}
+		covered = NSMaxRange(first.recolored)
+		XCTAssertTrue(
+			store.hasDirtyLines,
+			"a cascade truncated by `limit` must stay dirty so the highlighter reschedules"
+		)
+
+		var guardCount = 0
+		while store.hasDirtyLines, guardCount < 100 {
+			if let result = store.highlightPass(text: text, limit: 5) {
+				covered = max(covered, NSMaxRange(result.recolored))
+			}
+			guardCount += 1
+		}
+		XCTAssertFalse(store.hasDirtyLines, "repeated passes should finish the cascade")
+		XCTAssertEqual(
+			covered, text.length,
+			"the cascade must recolor through the end of the document, not stop at the limit"
+		)
+	}
+
 	func testDisjointDirtyRegionsAreRecoloredInSeparateRuns() {
 		var store = makeStore()
 		let text = (0..<50).map { "let value\($0) = \($0)" }.joined(separator: "\n") as NSString

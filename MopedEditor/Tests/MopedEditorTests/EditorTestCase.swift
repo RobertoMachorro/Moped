@@ -22,20 +22,24 @@ import AppKit
 import XCTest
 @testable import MopedEditor
 
+/// A windowless text view has no responder chain to inherit an undo manager from, so supply
+/// one the way the document window does in the app.
+///
+/// Deliberately at file scope rather than nested in `EditorTestCase`: a type nested inside a
+/// `@MainActor` type picks up that isolation for its stored-property default values, which
+/// leaves `UndoManager()` main-actor isolated in a nonisolated initializer.
+private final class UndoProvidingDelegate: NSObject, NSTextViewDelegate {
+	let manager = UndoManager()
+
+	func undoManager(for view: NSTextView) -> UndoManager? {
+		manager
+	}
+}
+
 /// Shared harness for tests that drive a real `MopedTextView` — storage, layout
 /// manager and highlighter — the way the app does.
 @MainActor
 class EditorTestCase: XCTestCase {
-	/// A windowless text view has no responder chain to inherit an undo manager
-	/// from, so supply one the way the document window does in the app.
-	private final class UndoProvidingDelegate: NSObject, NSTextViewDelegate {
-		let manager = UndoManager()
-
-		func undoManager(for view: NSTextView) -> UndoManager? {
-			manager
-		}
-	}
-
 	private var undoDelegate: UndoProvidingDelegate?
 
 	func makeEditor(

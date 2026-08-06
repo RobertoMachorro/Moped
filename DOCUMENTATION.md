@@ -158,7 +158,7 @@ beeps rather than guessing.
 ### Zooming
 
 **Editor ▸ Increase** (⌘+), **Decrease** (⌘−), and **Reset** (⌘0) change the text size in
-the current window. Decrease stops at 2pt and beeps rather than shrinking further. Reset
+the current window. Decrease stops at 3pt and beeps rather than shrinking further. Reset
 returns to the size set in *Settings ▸ Appearance ▸ Font size*.
 
 Zoom is per window and temporary; it does not change your saved preference.
@@ -222,8 +222,9 @@ nothing useful — new untitled documents, and files with no extension. It defau
 
 Several of these share a tokenizer with a close relative — `kotlin` and `groovy` are
 colored by the Java tokenizer, `scss` and `less` by the CSS one, `objectivec` by the C++
-one, and the template formats (`erb`, `twig`, `handlebars`) by the HTML one. They are
-listed under their own names because those are the names you know your files by.
+one, `asciidoc` by the Markdown one, and the template formats (`erb`, `twig`,
+`handlebars`) by the HTML one. They are listed under their own names because those are the
+names you know your files by.
 
 **Markdown** colors headings, fenced code blocks, blockquotes, list markers, inline code,
 emphasis, and links. The contents of a fenced code block are rendered as literal text —
@@ -376,6 +377,10 @@ Every key `tokens` accepts:
 | `function.call` | `operator` | `variable` |
 | `include` | `parameter` | `variable.builtin` |
 
+`parameter` is reserved: it is accepted, and the built-in themes all set it, but no
+language colors anything with it yet. Setting it does no harm and costs nothing when it
+starts being used.
+
 Names Moped does not recognize are ignored rather than treated as errors, so a file
 written for a newer version still loads here.
 
@@ -451,9 +456,9 @@ Settings apply to open documents immediately.
 
 ### What Moped opens
 
-Moped opens plain text. It registers 87 text file types with macOS — everything from
+Moped opens plain text. It registers 88 text file types with macOS — everything from
 `.swift`, `.py`, and `.json` through `.yaml`, `.toml`, `.ini`, and `.tex` to `.ahk`,
-`.gcode`, and `.nix` — and recognizes over a hundred more type identifiers when opening a
+`.gcode`, and `.nix` — and recognizes about forty more type identifiers when opening a
 file, including Apple-specific ones such as property lists, AppleScript text, and Xcode
 shell scripts.
 
@@ -479,14 +484,30 @@ showing you a window full of garbage:
 > Moped can only open text files, and this file appears to be binary.
 
 UTF-16 and UTF-32 byte-order marks are recognized and exempted from this check, so those
-files still open as the text they are.
+files still open as the text they are. UTF-16 files with *no* byte-order mark are exempted
+too: they are recognized by the NUL byte that every ASCII character carries, which — unlike
+the scattered NULs in a real binary — always falls on the same side of each character pair.
 
 ### Text encoding
 
 Moped detects the file's encoding automatically. If macOS cannot identify it, Moped tries
-UTF-8, then Mac OS Roman, then ASCII. If none of those decode the file, it is refused:
+UTF-8, then UTF-16 for a file recognized as BOM-less UTF-16 above, and finally falls back to
+Mac OS Roman, which maps every possible byte value and so always succeeds. A text file is
+therefore never turned away for its encoding — the check that does turn files away is the
+binary check described above, which is precisely why it runs before the decoders.
 
-> Moped could not determine this file's text encoding.
+### Line endings
+
+Moped keeps a file's line endings. A Windows file stays CRLF, a classic Mac file stays CR,
+and a Unix file stays LF — including the lines you add, which is not free: the editor works
+in LF internally and converts on save, because otherwise every line you typed into a Windows
+file would end differently from the lines already in it.
+
+The status bar shows which convention the document uses, and you can change it there. The
+whole file is rewritten to your choice on the next save.
+
+A file with mixed endings is read as whichever convention is in the majority, and saving it
+makes the whole file consistent.
 
 Files are written back in the encoding they were read in, so opening and saving does not
 silently re-encode your file. The exception is when you type something the original
@@ -550,8 +571,13 @@ types means thirty confirmations.
 
 ## Printing
 
-**File ▸ Print…** (⌘P) prints the document as plain monospaced text with 72pt (one inch)
-margins on all four sides. Long lines wrap to the page width.
+**File ▸ Print…** (⌘P) prints the document in the font you edit in — the one set in
+*Settings ▸ Appearance* — with 72pt (one inch) margins on all four sides. Long lines wrap to
+the page width.
+
+Paper size, orientation and scale can be changed in the print panel and the text is laid out
+again to match. Margins stay at one inch. Your printer and paper choice carry over to the
+next document you print.
 
 The printed page is the text and nothing else: no headers, no footers, no line numbers, and
 no syntax coloring.
@@ -588,6 +614,8 @@ moped notes.txt config.yaml
 
 Relative paths are resolved before being handed to Moped, so `moped ./notes.txt` works from
 any directory.
+
+`moped -h` (or `--help`) prints the usage line above.
 
 ### `--wait`
 
@@ -659,9 +687,8 @@ mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOU
 ```
 
 **My file won't open at all.**
-Moped refuses three kinds of file, and says which applies: it is larger than 16 MB, it is
-binary rather than text, or its text encoding could not be determined. See
-[Working with files](#working-with-files).
+Moped refuses two kinds of file, and says which applies: it is larger than 16 MB, or it is
+binary rather than text. See [Working with files](#working-with-files).
 
 **The text looks like garbage — wrong accents or odd symbols.**
 The encoding was detected incorrectly. Moped has no manual encoding override yet; the

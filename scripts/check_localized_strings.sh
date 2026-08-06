@@ -6,19 +6,23 @@ if ! command -v rg >/dev/null 2>&1; then
 	exit 1
 fi
 
-swift_files=(Moped/*.swift)
+# Recursive so the check keeps covering sources if they ever move into subfolders.
+swift_files=(Moped/**/*.swift)
 
+# Each pattern captures the whole string literal, not just its first character, so the
+# allowlist below can be matched against the literal itself rather than the whole line.
 patterns=(
-	'\b(Button|CommandMenu)\("[A-Za-z]'
-	'\bText\("[A-Za-z]'
-	'\.messageText\s*=\s*"[A-Za-z]'
-	'\.informativeText\s*=\s*"[A-Za-z]'
-	'addButton\(withTitle:\s*"[A-Za-z]'
-	'\.placeholderString\s*=\s*"[A-Za-z]'
-	'\.title\s*=\s*"[A-Za-z]'
+	'\b(Button|CommandMenu|Toggle|Label|Picker)\("[A-Za-z][^"]*"'
+	'\bText\("[A-Za-z][^"]*"'
+	'\.navigationTitle\("[A-Za-z][^"]*"'
+	'\.messageText\s*=\s*"[A-Za-z][^"]*"'
+	'\.informativeText\s*=\s*"[A-Za-z][^"]*"'
+	'addButton\(withTitle:\s*"[A-Za-z][^"]*"'
+	'\.placeholderString\s*=\s*"[A-Za-z][^"]*"'
+	'\.title\s*=\s*"[A-Za-z][^"]*"'
 )
 
-allowed_prefix='(about\.|alert\.|default_editor\.|error\.|menu\.|option\.|pref\.|window\.)'
+allowed_prefix='(about\.|alert\.|default_editor\.|error\.|menu\.|option\.|pref\.|status\.|window\.)'
 violations=""
 
 for pattern in "${patterns[@]}"; do
@@ -27,16 +31,25 @@ for pattern in "${patterns[@]}"; do
 			continue
 		fi
 
-		if [[ "$line" == *'Text(document.model.docTypeName)'* ]]; then
+		# `--vimgrep -o` yields file:line:col:<matched call>, so split the location off and
+		# test the allowlist against the matched literal alone. Matching the whole source
+		# line instead would let `Button("menu.ok") { alert("Oops") }` pass on the key.
+		if [[ "$line" =~ '^([^:]+:[0-9]+:[0-9]+):(.*)$' ]]; then
+			literal="${match[2]}"
+		else
+			literal="$line"
+		fi
+
+		if [[ "$literal" == *'document.model.docTypeName'* ]]; then
 			continue
 		fi
 
-		if [[ "$line" =~ '"'${allowed_prefix} ]]; then
+		if [[ "$literal" =~ '"'${allowed_prefix} ]]; then
 			continue
 		fi
 
 		violations+="$line"$'\n'
-	done < <(rg -n "$pattern" "${swift_files[@]}" || true)
+	done < <(rg --vimgrep -o "$pattern" "${swift_files[@]}" || true)
 done
 
 if [[ -n "$violations" ]]; then

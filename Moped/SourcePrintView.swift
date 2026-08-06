@@ -23,20 +23,18 @@ import CoreText
 
 final class SourcePrintView: NSView {
 	private let framesetter: CTFramesetter
-	private let pageRanges: [CFRange]
-	private let printableSize: NSSize
+	private let textLength: Int
+	/// Recomputed in `knowsPageRange`, not fixed at init — see there for why.
+	private var pageRanges: [CFRange]
+	private var printableSize: NSSize
 
 	override var isFlipped: Bool {
 		true
 	}
 
-	init(content: String, printInfo: NSPrintInfo) {
-		let printableWidth = max(1, printInfo.paperSize.width - printInfo.leftMargin - printInfo.rightMargin)
-		let printableHeight = max(1, printInfo.paperSize.height - printInfo.topMargin - printInfo.bottomMargin)
-		printableSize = NSSize(width: printableWidth, height: printableHeight)
+	init(content: String, printInfo: NSPrintInfo, font: NSFont) {
+		printableSize = SourcePrintView.printableSize(for: printInfo)
 
-		let font = NSFont.userFixedPitchFont(ofSize: NSFont.systemFontSize)
-			?? NSFont.monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.lineBreakMode = .byCharWrapping
 		paragraphStyle.alignment = .left
@@ -48,6 +46,7 @@ final class SourcePrintView: NSView {
 		]
 		let attributed = NSAttributedString(string: content, attributes: attributes)
 		framesetter = CTFramesetterCreateWithAttributedString(attributed as CFAttributedString)
+		textLength = attributed.length
 
 		pageRanges = SourcePrintView.paginate(
 			framesetter: framesetter,
@@ -56,8 +55,11 @@ final class SourcePrintView: NSView {
 		)
 
 		let pageCount = max(pageRanges.count, 1)
-		let totalHeight = CGFloat(pageCount) * printableHeight
-		super.init(frame: NSRect(x: 0, y: 0, width: printableWidth, height: totalHeight))
+		super.init(frame: NSRect(
+			x: 0, y: 0,
+			width: printableSize.width,
+			height: CGFloat(pageCount) * printableSize.height
+		))
 	}
 
 	@available(*, unavailable)
@@ -65,9 +67,40 @@ final class SourcePrintView: NSView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	/// Paper size, orientation, margins and scale are all still editable in the print panel,
+	/// which opens *after* `init`. Paginating only at init meant choosing Landscape or A4
+	/// laid the text out for the old page and clipped it. This is the first thing the print
+	/// operation asks the view, and by then `NSPrintOperation.current` carries the settings
+	/// the user actually confirmed, so the layout is redone against those.
 	override func knowsPageRange(_ range: NSRangePointer) -> Bool {
+		if let live = NSPrintOperation.current?.printInfo {
+			let updated = SourcePrintView.printableSize(for: live)
+			if updated != printableSize {
+				printableSize = updated
+				pageRanges = SourcePrintView.paginate(
+					framesetter: framesetter,
+					textLength: textLength,
+					printableSize: updated
+				)
+				setFrameSize(NSSize(
+					width: updated.width,
+					height: CGFloat(max(pageRanges.count, 1)) * updated.height
+				))
+			}
+		}
 		range.pointee = NSRange(location: 1, length: max(pageRanges.count, 1))
 		return true
+	}
+
+	/// The area text may occupy, in the view's own coordinates. Dividing by the scaling
+	/// factor is what keeps a scaled page holding proportionally more text rather than
+	/// cropping: AppKit scales the view when imaging it, so at 50% the view has to be twice
+	/// the paper's size to cover it.
+	private static func printableSize(for printInfo: NSPrintInfo) -> NSSize {
+		let scale = printInfo.scalingFactor > 0 ? printInfo.scalingFactor : 1
+		let width = printInfo.paperSize.width - printInfo.leftMargin - printInfo.rightMargin
+		let height = printInfo.paperSize.height - printInfo.topMargin - printInfo.bottomMargin
+		return NSSize(width: max(1, width / scale), height: max(1, height / scale))
 	}
 
 	override func rectForPage(_ page: Int) -> NSRect {

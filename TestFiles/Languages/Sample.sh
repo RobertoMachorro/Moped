@@ -22,4 +22,13 @@ for file in "$LOG_DIR"/*.log; do
 	echo "$file: $lines lines"
 done
 
+# A left-shift by a named uppercase constant must not open a phantom heredoc.
+MAX_BIT=8
+LIMIT=$(( 1 << MAX_BIT ))
+
+# A real heredoc, which must still highlight as a string and close on its terminator.
+cat <<REPORT
+Scanned up to $LIMIT lines.
+REPORT
+
 echo "Run completed at $TIMESTAMP"

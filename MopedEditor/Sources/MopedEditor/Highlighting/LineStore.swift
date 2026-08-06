@@ -106,6 +106,7 @@ public struct LineStore {
 		var processed = 0
 
 		var index = dirty
+		var stabilized = false
 		var state = dirty == 0 ? tokenizer.initialState : (carryOuts[dirty - 1] ?? tokenizer.initialState)
 		while index < lineStarts.count, processed < limit {
 			let content = lineContentRange(at: index, in: text)
@@ -125,8 +126,19 @@ public struct LineStore {
 			index += 1
 			processed += 1
 			if let previous, previous == carryOut {
+				stabilized = true
 				break
 			}
+		}
+
+		// Running out of budget before the carry state stabilized leaves the cascade
+		// mid-flight. The lines walked past were already clean, so `dirtyCount` never
+		// counted them and `hasDirtyLines` would report a settled document while the tail
+		// still holds pre-edit colors. Marking the resume point dirty keeps the highlighter
+		// rescheduling until the cascade really ends.
+		if !stabilized, index < lineStarts.count, carryOuts[index] != nil {
+			carryOuts[index] = nil
+			dirtyCount += 1
 		}
 
 		guard recoloredStart < Int.max else {

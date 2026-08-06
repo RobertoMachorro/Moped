@@ -27,6 +27,8 @@ Want to see another language? Volunteer to translate!
 
 Pre-compiled versions are available directly from [GitHub](https://github.com/RobertoMachorro/Moped/releases) or the [AppStore](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12).
 
+Requires macOS 14.0 (Sonoma) or later.
+
 <img width="1483" height="698" alt="image" src="https://github.com/user-attachments/assets/d3f11bd8-b5d8-49c8-b6e6-5e486ae110de" />
 
 ## Features
@@ -71,6 +73,8 @@ If you scroll through the commit history you can see how the pieces fit together
 
 Contributions are more than welcome! Please fork the master branch and pull request when ready. Observe formatting and common coding patterns in Swift, for ideological reasons *tabs will remain tabs, not spaces*. Please understand that not all changes will be integrated, in particular they must remain in the ideals of the project.
 
+**See [CONTRIBUTING.md](CONTRIBUTING.md)** for the three checks CI runs and how to run them locally. Release notes are in [CHANGELOG.md](CHANGELOG.md); security reports go through [SECURITY.md](SECURITY.md).
+
 All Pull Requests are automatically evaluated using [GitHub Actions](https://github.com/RobertoMachorro/Moped/actions).
 
 If your document is not being identified and syntax highlighted, please send its content identifier information. It can be obtained with the following command:
@@ -82,10 +86,13 @@ mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOU
 You can check for M1 (ARM) and x86 fat binary support by running lipo:
 
 ```
-% lipo -archs ~/Library/Developer/Xcode/DerivedData/Moped-*/Build/Products/Debug/Moped.app/Contents/MacOS/Moped
+% lipo -archs ~/Library/Developer/Xcode/DerivedData/Moped-*/Build/Products/Release/Moped.app/Contents/MacOS/Moped
 
 x86_64 arm64
 ```
+
+Use a **Release** build for this. Debug sets `ONLY_ACTIVE_ARCH = YES`, so a Debug build is
+single-architecture and prints just `arm64` on Apple Silicon.
 
 Having trouble building / you are new to contributing? Check the following Issue and the video I posted: https://github.com/RobertoMachorro/Moped/issues/36
 

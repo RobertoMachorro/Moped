@@ -23,6 +23,13 @@ $cart = new Cart();
 $cart->addItem("Coffee", 4.50);
 $cart->addItem("Croissant", 3.25);
 
+// A heredoc closed the canonical way, with the terminator part of the statement.
+$receipt = <<<SQL
+    SELECT name, price FROM items WHERE cart = 'today'
+SQL;
+
+echo $receipt;
+
 printf("Total: $%.2f\n", $cart->total());
 
 if ($cart->total() > 5.0) {

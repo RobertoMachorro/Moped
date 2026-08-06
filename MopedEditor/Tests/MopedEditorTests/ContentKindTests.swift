@@ -107,11 +107,56 @@ final class ContentKindTests: XCTestCase {
 		XCTAssertEqual(ContentKind.of(justInside + Data([0x00])), .binary)
 	}
 
-	/// UTF-16 without a BOM is indistinguishable from binary by these heuristics, and
-	/// is now refused. It previously "opened" as a UTF-8 string riddled with NULs,
-	/// which a save would then write back — refusing is the better failure.
-	func testBOMlessUTF16IsTreatedAsBinary() {
-		let data = "hello\nworld\n".data(using: .utf16LittleEndian)!
-		XCTAssertEqual(ContentKind.of(data), .binary)
+	// MARK: BOM-less UTF-16
+
+	/// Previously refused as binary, which is a confusing thing to be told about an
+	/// ordinary text file. The NULs such a file contains all land on one parity of byte
+	/// offset, which is what separates it from a binary.
+	func testBOMlessUTF16IsText() {
+		let littleEndian = "hello\nworld\n".data(using: .utf16LittleEndian)!
+		XCTAssertEqual(ContentKind.of(littleEndian), .text)
+		XCTAssertEqual(ContentKind.unmarkedWideEncoding(of: littleEndian), .utf16LittleEndian)
+
+		let bigEndian = "hello\nworld\n".data(using: .utf16BigEndian)!
+		XCTAssertEqual(ContentKind.of(bigEndian), .text)
+		XCTAssertEqual(ContentKind.unmarkedWideEncoding(of: bigEndian), .utf16BigEndian)
+	}
+
+	/// The detected encoding has to be the one that actually decodes the bytes, or the
+	/// caller trades a wrong refusal for silent mojibake.
+	func testBOMlessUTF16RoundTripsThroughTheReportedEncoding() {
+		for encoding in [String.Encoding.utf16LittleEndian, .utf16BigEndian] {
+			let original = "let x = 1\nlet y = 2\n"
+			let data = original.data(using: encoding)!
+			guard let wide = ContentKind.unmarkedWideEncoding(of: data) else {
+				return XCTFail("\(encoding) was not detected")
+			}
+			XCTAssertEqual(String(data: data, encoding: wide.stringEncoding), original)
+		}
+	}
+
+	func testBinaryIsStillRefusedAfterTheWideCheck() {
+		// NULs on both parities — the shape of real binary data, not of UTF-16.
+		var mixed = Data()
+		for index in 0..<512 {
+			mixed.append(index % 3 == 0 ? 0x00 : UInt8(index % 251 + 1))
+		}
+		XCTAssertNil(ContentKind.unmarkedWideEncoding(of: mixed))
+		XCTAssertEqual(ContentKind.of(mixed), .binary)
+
+		// A NUL-padded binary whose zeros happen to share a parity but which is mostly
+		// control bytes is still not text.
+		let sparse = Data((0..<512).map { $0 % 2 == 1 ? 0x00 : UInt8(0x01) })
+		XCTAssertEqual(ContentKind.of(sparse), .binary, "control-byte heavy data is not UTF-16")
+	}
+
+	func testTooLittleDataIsNotClaimedAsWide() {
+		XCTAssertNil(ContentKind.unmarkedWideEncoding(of: Data([0x41, 0x00])))
+		// An odd byte count cannot be UTF-16.
+		XCTAssertNil(ContentKind.unmarkedWideEncoding(of: Data([0x41, 0x00, 0x42, 0x00, 0x43])))
+	}
+
+	func testASCIITextIsNotClaimedAsWide() {
+		XCTAssertNil(ContentKind.unmarkedWideEncoding(of: Data("plain ascii text\n".utf8)))
 	}
 }

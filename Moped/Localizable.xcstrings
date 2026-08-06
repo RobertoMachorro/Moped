@@ -1090,80 +1090,80 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Datei wurde von einer anderen Anwendung geändert. Möchten Sie sie neu laden?"
+            "state" : "needs_review",
+            "value" : "Diese Datei wurde von einer anderen Anwendung geändert. Möchten Sie sie neu laden? Nicht gesicherte Änderungen in diesem Fenster gehen dabei verloren."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This file was modified by another application. Would you like to reload it?"
+            "value" : "This file was modified by another application. Would you like to reload it? Any unsaved changes in this window will be lost."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este archivo fue modificado por otra aplicación. ¿Le gustaría recargarlo?"
+            "state" : "needs_review",
+            "value" : "Este archivo fue modificado por otra aplicación. ¿Le gustaría recargarlo? Se perderán los cambios no guardados de esta ventana."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toinen sovellus on muuttanut tätä tiedostoa. Haluatko ladata sen uudelleen?"
+            "state" : "needs_review",
+            "value" : "Toinen sovellus on muuttanut tätä tiedostoa. Haluatko ladata sen uudelleen? Tämän ikkunan tallentamattomat muutokset menetetään."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce fichier a été modifié par une autre application. Voulez-vous le recharger ?"
+            "state" : "needs_review",
+            "value" : "Ce fichier a été modifié par une autre application. Voulez-vous le recharger ? Les modifications non enregistrées de cette fenêtre seront perdues."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "קובץ זה שונה על ידי יישום אחר. האם ברצונך לטעון אותו מחדש?"
+            "state" : "needs_review",
+            "value" : "קובץ זה שונה על ידי יישום אחר. האם ברצונך לטעון אותו מחדש? שינויים שלא נשמרו בחלון זה יאבדו."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "इस फ़ाइल को किसी अन्य एप्लिकेशन द्वारा संशोधित किया गया था। क्या आप इसे पुनः लोड करना चाहेंगे?"
+            "state" : "needs_review",
+            "value" : "इस फ़ाइल को किसी अन्य एप्लिकेशन द्वारा संशोधित किया गया था। क्या आप इसे पुनः लोड करना चाहेंगे? इस विंडो में सहेजे न गए परिवर्तन खो जाएंगे।"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Questo file è stato modificato da un'altra applicazione. Vuoi ricaricarlo?"
+            "state" : "needs_review",
+            "value" : "Questo file è stato modificato da un'altra applicazione. Vuoi ricaricarlo? Le modifiche non salvate in questa finestra andranno perse."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "このファイルは別のアプリケーションによって変更されました。再読み込みしますか？"
+            "state" : "needs_review",
+            "value" : "このファイルは別のアプリケーションによって変更されました。再読み込みしますか？このウインドウの保存していない変更は失われます。"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dit bestand is gewijzigd door een andere applicatie. Wilt u het opnieuw laden?"
+            "state" : "needs_review",
+            "value" : "Dit bestand is gewijzigd door een andere applicatie. Wilt u het opnieuw laden? Niet-opgeslagen wijzigingen in dit venster gaan verloren."
           }
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este ficheiro foi modificado por outra aplicação. Gostaria de recarregá-lo?"
+            "state" : "needs_review",
+            "value" : "Este ficheiro foi modificado por outra aplicação. Gostaria de recarregá-lo? As alterações não guardadas nesta janela serão perdidas."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este arquivo foi modificado por outro aplicativo. Você gostaria de recarregá-lo?"
+            "state" : "needs_review",
+            "value" : "Este arquivo foi modificado por outro aplicativo. Você gostaria de recarregá-lo? As alterações não salvas nesta janela serão perdidas."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Цей файл було змінено іншою програмою. Бажаєте перезавантажити його?"
+            "state" : "needs_review",
+            "value" : "Цей файл було змінено іншою програмою. Бажаєте перезавантажити його? Незбережені зміни в цьому вікні буде втрачено."
           }
         }
       }
@@ -3325,90 +3325,6 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "Moped відкриває файли розміром до %1$@. Розмір цього файлу — %2$@."
-          }
-        }
-      }
-    },
-    "error.file_unknown_encoding.description" : {
-      "comment" : "Alert text when no text encoding can decode the file, on open or on reload.",
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped konnte die Textkodierung dieser Datei nicht bestimmen."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moped could not determine this file's text encoding."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped no pudo determinar la codificación de texto de este archivo."
-          }
-        },
-        "fi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped ei pystynyt määrittämään tämän tiedoston merkistökoodausta."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped n'a pas pu déterminer l'encodage de texte de ce fichier."
-          }
-        },
-        "he" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped לא הצליח לזהות את קידוד הטקסט של הקובץ הזה."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped इस फ़ाइल की टेक्स्ट एन्कोडिंग निर्धारित नहीं कर सका।"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped non è riuscito a determinare la codifica del testo di questo file."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Mopedはこのファイルのテキストエンコーディングを判別できませんでした。"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped kon de tekstcodering van dit bestand niet bepalen."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "O Moped não conseguiu determinar a codificação de texto deste ficheiro."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "O Moped não conseguiu determinar a codificação de texto deste arquivo."
-          }
-        },
-        "uk" : {
-          "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Moped не зміг визначити кодування тексту цього файлу."
           }
         }
       }
@@ -6577,7 +6493,6 @@
       }
     },
     "pref.language.title" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -7491,6 +7406,89 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Переносити довгі рядки"
+          }
+        }
+      }
+    },
+    "status.line_ending.label" : {
+      "comment" : "Accessibility label for the status bar control that picks the document line ending.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zeilenenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line endings"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fin de línea"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Rivinvaihdot"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fins de ligne"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "סופי שורה"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "पंक्ति अंत"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fine riga"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "改行コード"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Regeleinden"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fins de linha"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Fins de linha"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Закінчення рядків"
           }
         }
       }

@@ -19,6 +19,7 @@
 //
 
 import Cocoa
+import MopedEditor
 import SwiftUI
 
 struct EditorView: View {
@@ -58,12 +59,24 @@ struct EditorView: View {
 					.font(.system(size: 11).monospacedDigit())
 					.padding(.trailing, 8)
 
+				Picker("", selection: lineEndingBinding) {
+					ForEach(LineEnding.allCases) { ending in
+						Text(ending.displayName).tag(ending)
+					}
+				}
+				.labelsHidden()
+				.accessibilityLabel(Text("status.line_ending.label"))
+				.frame(width: 80)
+
 				Picker("", selection: languageBinding) {
 					ForEach(editorState.supportedLanguages, id: \.self) { language in
 						Text(language)
 					}
 				}
 				.labelsHidden()
+				// Without this the status bar's only control is announced as an unnamed pop
+				// up button. Reuses the Settings caption for the same choice.
+				.accessibilityLabel(Text("pref.language.title"))
 				.frame(width: 160)
 			}
 			.padding(.horizontal, 10)
@@ -89,6 +102,16 @@ struct EditorView: View {
 		} message: {
 			Text(document.reloadFailure ?? "")
 		}
+	}
+
+	/// Hand-built rather than `$document.model.lineEnding`: `model` is a `let`, so SwiftUI
+	/// cannot project a binding through it. Setting the published property is what marks the
+	/// document edited, which is correct — it changes the bytes the next save writes.
+	private var lineEndingBinding: Binding<LineEnding> {
+		Binding(
+			get: { document.model.lineEnding },
+			set: { document.model.lineEnding = $0 }
+		)
 	}
 
 	private var languageBinding: Binding<String> {
