@@ -40,6 +40,22 @@ public enum ContentKind: Sendable {
 	/// anything real text produces, so escape-sequence-heavy files still open.
 	static let maxControlByteRatio = 0.3
 
+	/// A UTF-16 file with no byte-order mark, and which of the two byte orders it is.
+	/// `TextFileModel` needs the same answer this type works out, because nothing else in
+	/// the decoding chain can tell: UTF-8 fails on these bytes and Mac OS Roman "succeeds"
+	/// by turning every other character into a NUL.
+	public enum WideEncoding: Sendable {
+		case utf16LittleEndian
+		case utf16BigEndian
+
+		public var stringEncoding: String.Encoding {
+			switch self {
+			case .utf16LittleEndian: return .utf16LittleEndian
+			case .utf16BigEndian: return .utf16BigEndian
+			}
+		}
+	}
+
 	public static func of(_ data: Data) -> ContentKind {
 		guard !data.isEmpty else {
 			return .text
@@ -52,11 +68,66 @@ public enum ContentKind: Sendable {
 			return .text
 		}
 
+		// Same problem without the mark. Such a file used to be refused as binary, which
+		// is a confusing thing to be told about a perfectly ordinary text file.
+		if unmarkedWideEncoding(of: data) != nil {
+			return .text
+		}
+
 		let window = data.prefix(inspectionWindow)
 		if window.contains(0) {
 			return .binary
 		}
 		return controlByteRatio(of: window) > maxControlByteRatio ? .binary : .text
+	}
+
+	/// Detects BOM-less UTF-16 holding mostly-ASCII text, where every character contributes
+	/// one NUL and they all land on the same parity of byte offset. Real binaries scatter
+	/// their NULs, so requiring *every* NUL in the window to share a parity — and requiring
+	/// enough of them to rule out coincidence — keeps this from claiming arbitrary data.
+	///
+	/// Returns nil for anything it is not confident about, which then falls through to the
+	/// ordinary binary scan.
+	public static func unmarkedWideEncoding(of data: Data) -> WideEncoding? {
+		let window = Array(data.prefix(inspectionWindow))
+		// Two full UTF-16 code units, and an odd length cannot be UTF-16 at all.
+		guard window.count >= 4, window.count % 2 == 0 else {
+			return nil
+		}
+
+		var zerosAtEven = 0
+		var zerosAtOdd = 0
+		for (index, byte) in window.enumerated() where byte == 0 {
+			if index % 2 == 0 {
+				zerosAtEven += 1
+			} else {
+				zerosAtOdd += 1
+			}
+		}
+		guard zerosAtEven == 0 || zerosAtOdd == 0 else {
+			return nil
+		}
+
+		// Every ASCII character in UTF-16 is one NUL plus one non-NUL, so a text file is
+		// close to a quarter NUL bytes overall. Well below half, to leave room for
+		// non-ASCII characters, which contribute no NUL at all.
+		let zeros = zerosAtEven + zerosAtOdd
+		guard Double(zeros) / Double(window.count) >= 0.2 else {
+			return nil
+		}
+
+		// Parity alone is not enough: `01 00 01 00 …` satisfies it and is not text. The
+		// bytes carrying the actual characters have to look like characters, so hold them to
+		// the same control-byte limit the plain scan uses.
+		let characterBytes = Data(window.enumerated().compactMap { index, byte in
+			(index % 2 == 0) == (zerosAtOdd > 0) ? byte : nil
+		})
+		guard controlByteRatio(of: characterBytes) <= maxControlByteRatio else {
+			return nil
+		}
+
+		// The NULs are the high bytes: at odd offsets that is little-endian.
+		return zerosAtOdd > 0 ? .utf16LittleEndian : .utf16BigEndian
 	}
 
 	/// True for a UTF-16 or UTF-32 BOM. A UTF-8 BOM is deliberately not included —

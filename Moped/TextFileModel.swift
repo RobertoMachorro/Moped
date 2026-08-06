@@ -78,6 +78,11 @@ extension TextFileModel {
 			// Otherwise start guessing...
 		} else if let text = String(data: data, encoding: .utf8) {
 			decoded = (text, .utf8)
+		} else if let wide = ContentKind.unmarkedWideEncoding(of: data),
+			let text = String(data: data, encoding: wide.stringEncoding) {
+			// BOM-less UTF-16. This has to be tried before Mac OS Roman, which would
+			// otherwise "succeed" and produce a NUL between every character.
+			decoded = (text, wide.stringEncoding)
 		} else if let text = String(data: data, encoding: .macOSRoman) {
 			// Mac OS Roman maps all 256 byte values, so this rung always succeeds and no
 			// "could not determine the encoding" rejection is reachable. That is exactly

@@ -54,7 +54,9 @@
 - [ ] New document, pick `markdown` in the bottom picker, Cmd‑S — the Save panel's File Type is already Markdown and the name field gets `.md`. The status bar reads `net.daringfireball.markdown`; `public.markdown` there means the language→UTI map handed out a type nothing declares.
 - [ ] New document, leave the picker alone, Cmd‑S, choose Markdown (or Python) in the File Type popup — after saving, the picker and the highlighting switch to that language. Choosing plain text leaves it `plaintext`.
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.
-- [ ] External file change → reload alert → reload — still works.
+- [ ] External file change → reload alert → reload — still works. The alert must say unsaved changes in the window will be lost, and after reloading, Cmd‑Q must not re‑prompt to save a document that now matches disk.
+- [ ] Open a `.txt`, **Save As** with a `.py` name — the status bar type and the highlighting switch to Python. Then Save As again under a different name but the *same* extension, on a file whose language you set by hand in the picker: the hand‑picked language must survive.
+- [ ] `TestFiles/Encodings/UTF16-LE-NoBOM.txt` — opens as readable text, not refused as binary and not mojibake.
 - [ ] Print Source — plain monospace print, no headers/line numbers/coloring, in the font set in Settings ▸ Appearance (not a fixed system font).
 - [ ] In the print sheet, switch to **Landscape** and to a different **paper size**, and set **Scale** to 50% — each time, the preview re-flows to the new page instead of clipping, and the page count changes. Pagination used to be computed before the sheet opened.
 - [ ] Print a second document — the printer and paper size from the previous print are already selected, and margins are back to one inch.

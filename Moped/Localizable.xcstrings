@@ -1090,80 +1090,80 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Diese Datei wurde von einer anderen Anwendung geändert. Möchten Sie sie neu laden?"
+            "state" : "needs_review",
+            "value" : "Diese Datei wurde von einer anderen Anwendung geändert. Möchten Sie sie neu laden? Nicht gesicherte Änderungen in diesem Fenster gehen dabei verloren."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This file was modified by another application. Would you like to reload it?"
+            "value" : "This file was modified by another application. Would you like to reload it? Any unsaved changes in this window will be lost."
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este archivo fue modificado por otra aplicación. ¿Le gustaría recargarlo?"
+            "state" : "needs_review",
+            "value" : "Este archivo fue modificado por otra aplicación. ¿Le gustaría recargarlo? Se perderán los cambios no guardados de esta ventana."
           }
         },
         "fi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toinen sovellus on muuttanut tätä tiedostoa. Haluatko ladata sen uudelleen?"
+            "state" : "needs_review",
+            "value" : "Toinen sovellus on muuttanut tätä tiedostoa. Haluatko ladata sen uudelleen? Tämän ikkunan tallentamattomat muutokset menetetään."
           }
         },
         "fr" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ce fichier a été modifié par une autre application. Voulez-vous le recharger ?"
+            "state" : "needs_review",
+            "value" : "Ce fichier a été modifié par une autre application. Voulez-vous le recharger ? Les modifications non enregistrées de cette fenêtre seront perdues."
           }
         },
         "he" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "קובץ זה שונה על ידי יישום אחר. האם ברצונך לטעון אותו מחדש?"
+            "state" : "needs_review",
+            "value" : "קובץ זה שונה על ידי יישום אחר. האם ברצונך לטעון אותו מחדש? שינויים שלא נשמרו בחלון זה יאבדו."
           }
         },
         "hi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "इस फ़ाइल को किसी अन्य एप्लिकेशन द्वारा संशोधित किया गया था। क्या आप इसे पुनः लोड करना चाहेंगे?"
+            "state" : "needs_review",
+            "value" : "इस फ़ाइल को किसी अन्य एप्लिकेशन द्वारा संशोधित किया गया था। क्या आप इसे पुनः लोड करना चाहेंगे? इस विंडो में सहेजे न गए परिवर्तन खो जाएंगे।"
           }
         },
         "it" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Questo file è stato modificato da un'altra applicazione. Vuoi ricaricarlo?"
+            "state" : "needs_review",
+            "value" : "Questo file è stato modificato da un'altra applicazione. Vuoi ricaricarlo? Le modifiche non salvate in questa finestra andranno perse."
           }
         },
         "ja" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "このファイルは別のアプリケーションによって変更されました。再読み込みしますか？"
+            "state" : "needs_review",
+            "value" : "このファイルは別のアプリケーションによって変更されました。再読み込みしますか？このウインドウの保存していない変更は失われます。"
           }
         },
         "nl" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dit bestand is gewijzigd door een andere applicatie. Wilt u het opnieuw laden?"
+            "state" : "needs_review",
+            "value" : "Dit bestand is gewijzigd door een andere applicatie. Wilt u het opnieuw laden? Niet-opgeslagen wijzigingen in dit venster gaan verloren."
           }
         },
         "pt" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este ficheiro foi modificado por outra aplicação. Gostaria de recarregá-lo?"
+            "state" : "needs_review",
+            "value" : "Este ficheiro foi modificado por outra aplicação. Gostaria de recarregá-lo? As alterações não guardadas nesta janela serão perdidas."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este arquivo foi modificado por outro aplicativo. Você gostaria de recarregá-lo?"
+            "state" : "needs_review",
+            "value" : "Este arquivo foi modificado por outro aplicativo. Você gostaria de recarregá-lo? As alterações não salvas nesta janela serão perdidas."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Цей файл було змінено іншою програмою. Бажаєте перезавантажити його?"
+            "state" : "needs_review",
+            "value" : "Цей файл було змінено іншою програмою. Бажаєте перезавантажити його? Незбережені зміни в цьому вікні буде втрачено."
           }
         }
       }

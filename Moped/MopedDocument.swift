@@ -161,7 +161,32 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	var fileURL: URL? {
 		didSet {
 			guard oldValue != fileURL else { return }
+			adoptTypeAfterSaveAs(from: oldValue)
 			updateWatcher()
+		}
+	}
+
+	/// Save As to a different extension changes what the file *is*, so the editor has to
+	/// follow. `adoptContentTypeOnFirstSave` deliberately only covers the untitled case, and
+	/// nothing covered this one: saving `notes.txt` as `notes.py` wrote correct Python and
+	/// left the status bar and the highlighting on plain text until the document was reopened.
+	///
+	/// Keyed on the extension changing, not merely the URL changing, so that Save As under a
+	/// new name with the same extension — or a move — leaves a hand-picked language alone.
+	/// That is the case `adoptContentTypeOnFirstSave` warns about: on a `.txt` being edited as
+	/// Python, a type inferred from the file must never overrule the picker.
+	private func adoptTypeAfterSaveAs(from oldValue: URL?) {
+		guard let oldValue, let newURL = fileURL,
+			  oldValue.pathExtension.caseInsensitiveCompare(newURL.pathExtension) != .orderedSame,
+			  let type = UTType(filenameExtension: newURL.pathExtension),
+			  type.identifier != model.docTypeName
+		else {
+			return
+		}
+		let language = model.getLanguageForType(typeName: type.identifier)
+		MainActor.assumeIsolated {
+			model.docTypeName = type.identifier
+			model.docTypeLanguage = language
 		}
 	}
 

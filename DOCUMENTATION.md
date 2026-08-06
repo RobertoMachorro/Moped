@@ -484,15 +484,17 @@ showing you a window full of garbage:
 > Moped can only open text files, and this file appears to be binary.
 
 UTF-16 and UTF-32 byte-order marks are recognized and exempted from this check, so those
-files still open as the text they are.
+files still open as the text they are. UTF-16 files with *no* byte-order mark are exempted
+too: they are recognized by the NUL byte that every ASCII character carries, which — unlike
+the scattered NULs in a real binary — always falls on the same side of each character pair.
 
 ### Text encoding
 
 Moped detects the file's encoding automatically. If macOS cannot identify it, Moped tries
-UTF-8 and then falls back to Mac OS Roman, which maps every possible byte value and so
-always succeeds. A text file is therefore never turned away for its encoding — the check
-that does turn files away is the binary check described above, which is precisely why it
-runs before the decoders.
+UTF-8, then UTF-16 for a file recognized as BOM-less UTF-16 above, and finally falls back to
+Mac OS Roman, which maps every possible byte value and so always succeeds. A text file is
+therefore never turned away for its encoding — the check that does turn files away is the
+binary check described above, which is precisely why it runs before the decoders.
 
 Files are written back in the encoding they were read in, so opening and saving does not
 silently re-encode your file. The exception is when you type something the original
