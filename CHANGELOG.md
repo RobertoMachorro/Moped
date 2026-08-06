@@ -15,13 +15,14 @@ dependencies, replacing Highlightr and, briefly, STTextView/Neon.
 - **Four new themes** — Ocean, Forest, Nebula and Turbo — alongside Default, Solarized,
   Xcode-like and a System theme that follows your appearance. Every theme except Turbo
   pairs a light and a dark palette and switches with the system.
-- **Custom themes.** Write a `.mopedtheme` JSON file, drop it in
-  *Application Support ▸ Moped ▸ Themes*, and it appears in the theme picker. The button in
-  *Settings ▸ Themes* reveals that folder in Finder.
+- **Custom themes.** Write a `.mopedtheme` JSON file, drop it in the themes folder, and it
+  appears in the theme picker. *Settings ▸ Appearance ▸ Reveal Themes Folder* opens that
+  folder in Finder — use it rather than typing the path, which lives inside Moped's sandbox
+  container.
 - **`moped` command-line tool** with a `--wait` mode, so it works as a `git` editor:
   `git config --global core.editor "moped --wait"`.
-- **Indentation detection** — Moped notices whether a file uses tabs, 4 spaces or
-  8 spaces and matches it.
+- **Indentation detection** — Moped notices whether a file uses tabs, 2, 4 or 8 spaces
+  and matches it.
 - **Line endings are preserved.** A Windows (CRLF) or classic Mac (CR) file keeps its
   convention, including the lines you add. The status bar shows which one the document uses
   and lets you change it.
@@ -38,7 +39,8 @@ dependencies, replacing Highlightr and, briefly, STTextView/Neon.
   switched off so typing stays responsive.
 - **The language picker only lists languages that actually highlight.** Previously it
   listed every file type Moped could open.
-- Find and Replace is a floating panel, with full regex support.
+- Find and Replace uses the system find bar, which sits above the text instead of covering
+  it, with full regex support. ⌘⌥F opens it with the replace field already showing.
 - Requires **macOS 14.0 (Sonoma) or later**.
 
 ### Upgrading from 2.x
@@ -49,7 +51,7 @@ Your settings carry over, with two translations applied automatically:
   a saved *Default Dark* or *Solarized Dark* now resolves to *Default* or *Solarized* and
   follows your system appearance. Highlightr theme names from 2.x (`monokai`, `dracula`,
   `atom-one-dark` and the rest) map onto the closest built-in; there is no longer a
-  pinned-dark built-in to point them at. Pick a new theme in *Settings ▸ Themes* if the
+  pinned-dark built-in to point them at. Pick a new theme in *Settings ▸ Appearance* if the
   automatic choice is not what you want.
 - **Default language.** A saved default of a language that has no tokenizer — `lua`,
   `haskell`, `perl` and similar — resets to *Plain Text*, because the picker no longer
