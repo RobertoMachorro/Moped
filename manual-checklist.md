@@ -57,6 +57,8 @@
 - [ ] External file change → reload alert → reload — still works. The alert must say unsaved changes in the window will be lost, and after reloading, Cmd‑Q must not re‑prompt to save a document that now matches disk.
 - [ ] Open a `.txt`, **Save As** with a `.py` name — the status bar type and the highlighting switch to Python. Then Save As again under a different name but the *same* extension, on a file whose language you set by hand in the picker: the hand‑picked language must survive.
 - [ ] `TestFiles/Encodings/UTF16-LE-NoBOM.txt` — opens as readable text, not refused as binary and not mojibake.
+- [ ] Line endings — `printf 'a\r\nb\r\n' > crlf.txt`, open it: the status bar reads **CRLF**. Add a line, save, then `od -c crlf.txt` — every break is `\r\n` and none is `\r\r\n`. Repeat with a `\r`-only file (reads **CR**) and an `\n` file (reads **LF**).
+- [ ] Change the line-ending picker to LF on that CRLF file and save — `od -c` shows the whole file rewritten to `\n`, not just the new lines.
 - [ ] Print Source — plain monospace print, no headers/line numbers/coloring, in the font set in Settings ▸ Appearance (not a fixed system font).
 - [ ] In the print sheet, switch to **Landscape** and to a different **paper size**, and set **Scale** to 50% — each time, the preview re-flows to the new page instead of clipping, and the page count changes. Pagination used to be computed before the sheet opened.
 - [ ] Print a second document — the printer and paper size from the previous print are already selected, and margins are back to one inch.

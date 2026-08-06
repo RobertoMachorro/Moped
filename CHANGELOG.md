@@ -22,6 +22,9 @@ dependencies, replacing Highlightr and, briefly, STTextView/Neon.
   `git config --global core.editor "moped --wait"`.
 - **Indentation detection** — Moped notices whether a file uses tabs, 4 spaces or
   8 spaces and matches it.
+- **Line endings are preserved.** A Windows (CRLF) or classic Mac (CR) file keeps its
+  convention, including the lines you add. The status bar shows which one the document uses
+  and lets you change it.
 - **Binary-file protection.** Moped checks the first 8 KB and refuses files that are not
   text instead of opening them as mojibake and re-encoding them on save.
 - **Alternate app icons**, session restore, and a redesigned Settings window.

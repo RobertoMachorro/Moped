@@ -27,6 +27,9 @@ class TextFileModel: NSObject, ObservableObject {
 	@Published var content: String
 	@Published var docTypeName: String
 	@Published var docTypeLanguage: String
+	/// Published so the status bar follows a reload, and so changing it there marks the
+	/// document edited — it changes the bytes a save will write.
+	@Published var lineEnding: LineEnding = .unix
 	var encoding: String.Encoding
 	var isLargeFile: Bool = false
 	var programmaticChangeID: Int = 0
@@ -95,7 +98,8 @@ extension TextFileModel {
 
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		content = decoded.text
+		lineEnding = LineEnding.detected(in: decoded.text)
+		content = LineEnding.normalizedToLF(decoded.text)
 		encoding = decoded.encoding
 		programmaticChangeID &+= 1
 	}
@@ -103,7 +107,7 @@ extension TextFileModel {
 	func data(ofType typeName: String) -> Data? {
 		docTypeName = typeName
 		docTypeLanguage = getLanguageForType(typeName: docTypeName)
-		return content.data(using: encoding)
+		return lineEnding.applied(to: content).data(using: encoding)
 	}
 }
 

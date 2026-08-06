@@ -19,6 +19,7 @@
 //
 
 import Combine
+import MopedEditor
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -147,6 +148,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		let content: String
 		let typeLanguage: String
 		let encoding: String.Encoding
+		let lineEnding: LineEnding
 	}
 
 	private var modelCancellable: AnyCancellable?
@@ -308,7 +310,8 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		return Snapshot(
 			content: model.content,
 			typeLanguage: model.docTypeLanguage,
-			encoding: encoding
+			encoding: encoding,
+			lineEnding: model.lineEnding
 		)
 	}
 
@@ -359,6 +362,7 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 			typeLanguage: snapshot.typeLanguage
 		)
 		snapshotModel.encoding = snapshot.encoding
+		snapshotModel.lineEnding = snapshot.lineEnding
 
 		guard let data = snapshotModel.data(ofType: typeName) else {
 			throw CocoaError(.fileWriteUnknown)

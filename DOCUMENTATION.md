@@ -496,6 +496,19 @@ Mac OS Roman, which maps every possible byte value and so always succeeds. A tex
 therefore never turned away for its encoding — the check that does turn files away is the
 binary check described above, which is precisely why it runs before the decoders.
 
+### Line endings
+
+Moped keeps a file's line endings. A Windows file stays CRLF, a classic Mac file stays CR,
+and a Unix file stays LF — including the lines you add, which is not free: the editor works
+in LF internally and converts on save, because otherwise every line you typed into a Windows
+file would end differently from the lines already in it.
+
+The status bar shows which convention the document uses, and you can change it there. The
+whole file is rewritten to your choice on the next save.
+
+A file with mixed endings is read as whichever convention is in the majority, and saving it
+makes the whole file consistent.
+
 Files are written back in the encoding they were read in, so opening and saving does not
 silently re-encode your file. The exception is when you type something the original
 encoding cannot represent — an emoji in an ASCII file, say. Rather than losing the
