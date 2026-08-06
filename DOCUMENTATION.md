@@ -556,8 +556,13 @@ types means thirty confirmations.
 
 ## Printing
 
-**File ▸ Print…** (⌘P) prints the document as plain monospaced text with 72pt (one inch)
-margins on all four sides. Long lines wrap to the page width.
+**File ▸ Print…** (⌘P) prints the document in the font you edit in — the one set in
+*Settings ▸ Appearance* — with 72pt (one inch) margins on all four sides. Long lines wrap to
+the page width.
+
+Paper size, orientation and scale can be changed in the print panel and the text is laid out
+again to match. Margins stay at one inch. Your printer and paper choice carry over to the
+next document you print.
 
 The printed page is the text and nothing else: no headers, no footers, no line numbers, and
 no syntax coloring.

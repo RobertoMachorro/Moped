@@ -131,7 +131,15 @@ struct MopedCommands: Commands {
 			return
 		}
 
-		let printInfo = NSPrintInfo()
+		// Copied from the shared instance rather than built fresh, so the printer, paper size
+		// and orientation the user picked last time are already selected. Installing the copy
+		// back as `shared` before running is what makes *this* run's choices stick: the print
+		// panel mutates the very object handed to the operation, and the sheet is
+		// asynchronous, so there is no "after" in which to read the settings back.
+		//
+		// Margins are deliberately re-applied every time and so do not persist; one inch is
+		// documented behaviour, not a preference.
+		let printInfo = NSPrintInfo.shared.copy() as? NSPrintInfo ?? NSPrintInfo()
 		printInfo.horizontalPagination = .automatic
 		printInfo.verticalPagination = .automatic
 		printInfo.isHorizontallyCentered = false
@@ -141,7 +149,17 @@ struct MopedCommands: Commands {
 		printInfo.topMargin = 72.0
 		printInfo.bottomMargin = 72.0
 
-		let printView = SourcePrintView(content: content, printInfo: printInfo)
+		// Print in the font the document is being edited in. A hardcoded system fixed-pitch
+		// font meant the printout could not be read back against the screen line for line.
+		let preferences = Preferences.userShared
+		let size = preferences.fontSizeFloat
+		let font = NSFont(name: preferences.font, size: size)
+			?? NSFont.userFixedPitchFont(ofSize: size)
+			?? NSFont.monospacedSystemFont(ofSize: size, weight: .regular)
+
+		NSPrintInfo.shared = printInfo
+
+		let printView = SourcePrintView(content: content, printInfo: printInfo, font: font)
 		let printOperation = NSPrintOperation(view: printView, printInfo: printInfo)
 		var exceptionReason: NSString?
 		// With a key window this means "the print sheet was presented", not "printing

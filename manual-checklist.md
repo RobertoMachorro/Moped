@@ -55,7 +55,9 @@
 - [ ] New document, leave the picker alone, Cmd‑S, choose Markdown (or Python) in the File Type popup — after saving, the picker and the highlighting switch to that language. Choosing plain text leaves it `plaintext`.
 - [ ] Open an existing `.txt`, set the picker to `python`, Cmd‑S — the picker stays `python`; a save must never reset a hand‑picked language.
 - [ ] External file change → reload alert → reload — still works.
-- [ ] Print Source — still produces a plain monospace print (SourcePrintView untouched).
+- [ ] Print Source — plain monospace print, no headers/line numbers/coloring, in the font set in Settings ▸ Appearance (not a fixed system font).
+- [ ] In the print sheet, switch to **Landscape** and to a different **paper size**, and set **Scale** to 50% — each time, the preview re-flows to the new page instead of clipping, and the page count changes. Pagination used to be computed before the sheet opened.
+- [ ] Print a second document — the printer and paper size from the previous print are already selected, and margins are back to one inch.
 - [ ] moped --wait — blocks until the file's window closes. Minimize the window, and separately hide the app (Cmd-H): the command keeps waiting through both, and returns only on close or quit.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
 - [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
