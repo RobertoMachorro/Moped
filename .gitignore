@@ -2,6 +2,11 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+## macOS
+# Not covered by anyone's global ignore but the maintainer's, so contributors
+# without one would otherwise see these as untracked noise.
+.DS_Store
+
 ## User settings
 xcuserdata/
 xcshareddata/

@@ -21,6 +21,9 @@
 import XCTest
 @testable import MopedEditor
 
+/// `indentStyle(of:whenUndetectable:)` is main-actor isolated like the rest of
+/// `MopedTextView`, so the tests driving it have to be too.
+@MainActor
 final class IndentStyleTests: XCTestCase {
 	func testDetectsTabs() {
 		let text = "func a() {\n\tlet x = 1\n\tlet y = 2\n}"

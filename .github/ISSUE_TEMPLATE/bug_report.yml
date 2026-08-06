@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in Moped doesn't work the way it should.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+      placeholder: |
+        1. Opened a .foo file
+        2. Expected it to highlight as Python
+        3. It opened as plain text
+    validations:
+      required: true
+
+  - type: input
+    id: moped-version
+    attributes:
+      label: Moped version
+      description: From **Moped ▸ About Moped**.
+      placeholder: "3.0.0 (40)"
+    validations:
+      required: true
+
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS version
+      placeholder: "14.6 (Sonoma)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-source
+    attributes:
+      label: Where did you get Moped?
+      options:
+        - App Store
+        - GitHub release
+        - Built it myself
+    validations:
+      required: true
+
+  - type: textarea
+    id: mdls
+    attributes:
+      label: File type details
+      description: |
+        **Only if the bug involves a specific file** — the wrong language, no highlighting, or
+        the file refusing to open. Run this in Terminal and paste the output. It answers most
+        "why isn't my file recognized" reports in one step.
+      placeholder: mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOURFILE
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, a sample file, or a crash report if you have one.
+    validations:
+      required: false

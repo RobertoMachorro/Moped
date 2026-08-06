@@ -8,14 +8,43 @@ on:
 
   workflow_dispatch:
 
+# Pushing again to the same branch or PR supersedes the previous run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build with scheme
     runs-on: macos-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Select Xcode
+        # Pinned for the same reason SwiftLint is: `macos-latest` rolls its default Xcode
+        # forward without notice, which changes the compiler and SDK under a commit that
+        # passed yesterday. Bump XCODE_APP deliberately, alongside the SwiftLint version.
+        #
+        # Falls back to the runner default rather than failing, because the exact app name
+        # depends on the runner image. Check the annotation in the log and set XCODE_APP to
+        # one of the listed paths to make the pin real; the versions are printed either way,
+        # so a toolchain rollover is visible in the log instead of silent.
+        env:
+          XCODE_APP: /Applications/Xcode_26.app
+        run: |
+          if [ -d "$XCODE_APP" ]; then
+            sudo xcode-select -switch "$XCODE_APP"
+          else
+            echo "::warning::$XCODE_APP not found; using the runner default Xcode."
+            ls -d /Applications/Xcode*.app || true
+          fi
+          xcodebuild -version
+          swift --version
       - name: Install ripgrep
         run: brew install ripgrep
       - name: Install SwiftLint
@@ -44,11 +73,14 @@ jobs:
         run: |
           xcodebuild -scheme Moped -derivedDataPath ./xcbuild build
           mv xcbuild/Build/Products/Debug/Moped.app .
-          zip -r -9 Moped.zip Moped.app
+          zip -r -9 Moped-debug-build-check.zip Moped.app
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Moped.zip
-          path: Moped.zip
+          # Deliberately not called Moped.zip: this is an unoptimised Debug build, ad-hoc
+          # signed and not notarized, so it is a compile check and not something to hand to
+          # a user. Release downloads are archived and notarized from Xcode by hand.
+          name: Moped-debug-build-check.zip
+          path: Moped-debug-build-check.zip
           # Duration after which the artifact expires, in days (1-90).
           retention-days: 14
