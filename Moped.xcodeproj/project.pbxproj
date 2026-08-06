@@ -23,9 +23,9 @@
 		A1B2C3D4E500000000000126 /* PrintOperationGuard.mm in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000227 /* PrintOperationGuard.mm */; };
 		A1B2C3D4E500000000000127 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000229 /* FileWatcher.swift */; };
 		ABCDEF0000000000000000B1 /* ThemeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B0 /* ThemeCatalog.swift */; };
-		ABCDEF0000000000000000D1 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000D0 /* ThemeStore.swift */; };
 		ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B2 /* LanguageCatalog.swift */; };
 		ABCDEF0000000000000000C3 /* MopedEditor in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000C2 /* MopedEditor */; };
+		ABCDEF0000000000000000D1 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000D0 /* ThemeStore.swift */; };
 		B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000902 /* Localizable.xcstrings */; };
 		B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000911 /* LanguageComments.plist */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
@@ -69,8 +69,8 @@
 		A1B2C3D4E500000000000228 /* Moped-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moped-Bridging-Header.h"; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000229 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		ABCDEF0000000000000000B0 /* ThemeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCatalog.swift; sourceTree = "<group>"; };
-		ABCDEF0000000000000000D0 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		ABCDEF0000000000000000B2 /* LanguageCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCatalog.swift; sourceTree = "<group>"; };
+		ABCDEF0000000000000000D0 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		B1C2D3E4F500000000000902 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B1C2D3E4F500000000000911 /* LanguageComments.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguageComments.plist; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
