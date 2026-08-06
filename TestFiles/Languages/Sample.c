@@ -11,6 +11,16 @@ typedef struct {
 
 static int total_people = 0;
 
+/* Literal forms that trip tokenizers: escaped quotes, char literals including the
+   quote characters themselves, and numbers in every base. */
+static const char *quoted = "she said \"hello\" and left";
+static const char *backslash = "ends with a backslash \\";
+static const char quote_char = '"';
+static const char apostrophe = '\'';
+static const char newline_char = '\n';
+static const int bases[] = {0xFF, 0755, 1000000};
+static const double scientific = 6.022e23;
+
 void greet(const Person *p) {
 	printf("Hello, %s! You are %d years old.\n", p->name, p->age);
 }

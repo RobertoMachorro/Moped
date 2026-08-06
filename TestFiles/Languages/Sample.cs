@@ -17,6 +17,18 @@ namespace Sample
 		}
 	}
 
+	public static class Literals
+	{
+		/* Literal forms that trip tokenizers: a verbatim string escapes a quote by
+		   doubling it, which is not the backslash rule used everywhere else. */
+		public const string Quoted = "she said \"hello\" and left";
+		public const string Verbatim = @"C:\path\with\no\escapes and ""doubled"" quotes";
+		public const char QuoteChar = '"';
+		public const char Apostrophe = '\'';
+		public static readonly int[] Bases = { 0xFF, 0b1010_1010, 1_000_000 };
+		public const double Scientific = 6.022e23;
+	}
+
 	public static class Program
 	{
 		public static void Main(string[] args)

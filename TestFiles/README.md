@@ -1,8 +1,14 @@
 # TestFiles
 
-Hand-testing fixtures for the checks in [manual-checklist.md](../manual-checklist.md).
-Nothing here is loaded by the automated tests — the MopedEditor package tests use
-inline fixtures — these files exist to be opened in the running app.
+Hand-testing fixtures for the checks in [manual-checklist.md](../manual-checklist.md):
+open them in the running app and look.
+
+`Languages/` is also read by `SampleFileTests` in the MopedEditor package, which checks
+that no sample leaves a tokenizer stuck mid-string or mid-heredoc at end of file. That is
+the only automated use; every other check here needs a person. Keep the samples valid for
+their language — the constructs that catch bugs are escaped quotes, raw and multi-line
+strings, heredocs, char literals holding a quote, nested block comments, and numbers in
+every base.
 
 | Folder | What it exercises |
 |---|---|

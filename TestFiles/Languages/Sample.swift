@@ -35,3 +35,16 @@ let list = TodoList()
 list.add("Write sample files", priority: Priority.high.rawValue)
 list.add("Review syntax highlighting")
 print("Pending: \(list.pendingCount)")
+
+/* A block comment /* nested inside another */ still closes here. */
+// Literal forms that trip tokenizers: escaped quotes, raw and multi-line strings, and
+// numbers in every base.
+let quoted = "she said \"hello\" and left"
+let backslash = "ends with a backslash \\"
+let raw = #"a raw string where \n is literal and "quotes" need no escape"#
+let multiline = """
+	spans lines, keeps "quotes" verbatim,
+	and ends only on the closing delimiter
+	"""
+let bases = [0xFF, 0b1010_1010, 0o755, 1_000_000]
+let scientific = 6.022e23

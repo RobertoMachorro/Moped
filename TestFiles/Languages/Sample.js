@@ -26,3 +26,11 @@ users.forEach((user) => bus.emit("greet", user));
 
 const isReady = true;
 export default isReady ? EventBus : null;
+
+// Literal forms that trip tokenizers.
+const quoted = "she said \"hello\" and left";
+const single = 'it\'s escaped';
+const division = users.length / 2 / 1;
+const pattern = /"[^"]*"/g;
+const bases = [0xff, 0b1010_1010, 0o755, 1_000_000, 9007199254740991n];
+const scientific = 6.022e23;

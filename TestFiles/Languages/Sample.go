@@ -40,3 +40,10 @@ func main() {
 
 	fmt.Println("Popped order:", strings.Join(popped, ", "))
 }
+
+// Literal forms that trip tokenizers.
+var quoted = "she said \"hello\" and left"
+var rawLiteral = `a raw string where \n is literal and "quotes" need no escape`
+var runes = []rune{'a', '\n', '\''}
+var bases = []int{0xFF, 0b1010_1010, 0o755, 1_000_000}
+var scientific = 6.022e23

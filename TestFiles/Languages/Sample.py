@@ -26,3 +26,14 @@ if __name__ == "__main__":
 
     print(f"{scaled.name} now serves {scaled.servings} people")
     print("Total servings:", total_servings([soup, scaled]))
+
+
+# Literal forms that trip tokenizers.
+QUOTED = "she said \"hello\" and left"
+SINGLE = 'it\'s escaped'
+DOCSTRING = """spans lines,
+keeps "quotes" verbatim,
+and ends on the closing delimiter"""
+RAW = r"a raw string where \n is literal"
+BASES = [0xFF, 0b1010_1010, 0o755, 1_000_000]
+SCIENTIFIC = 6.022e23
