@@ -59,6 +59,8 @@
 - [ ] In the print sheet, switch to **Landscape** and to a different **paper size**, and set **Scale** to 50% — each time, the preview re-flows to the new page instead of clipping, and the page count changes. Pagination used to be computed before the sheet opened.
 - [ ] Print a second document — the printer and paper size from the previous print are already selected, and margins are back to one inch.
 - [ ] moped --wait — blocks until the file's window closes. Minimize the window, and separately hide the app (Cmd-H): the command keeps waiting through both, and returns only on close or quit.
+- [ ] moped --wait on a **cold launch** — quit Moped, then `moped --wait somefile.txt` on a large file so the launch is slow. The command must keep waiting until you close the window, not return as soon as the app appears. This was the empty-`git commit`-message bug: a document not yet registered read as already closed.
+- [ ] `moped --wait /path/does-not-exist` — returns on its own within ~10 seconds rather than hanging the terminal forever.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.
 - [ ] On Launch = File Open Dialog, then `moped <file>` — only that file opens, no panel. Launch from Finder with no file — the open panel appears.
 - [ ] On Launch = Reopen Previous — open two files, quit, relaunch: both come back at their saved frames. Close both, quit, relaunch: one untitled window. Quit, then `moped <file>`: only that file, no session restore.

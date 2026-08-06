@@ -43,9 +43,19 @@ final class WaitManager: NSObject {
 		static let sessionFileKey = "sessionFilePath"
 	}
 
+	/// How long a requested path may stay unopened before the session is released anyway.
+	/// Long enough for a cold launch with a multi-megabyte file, short enough that an open
+	/// that failed outright does not hold the caller's terminal open indefinitely.
+	private static let openGracePeriod: TimeInterval = 10
+
 	private let distributedCenter = DistributedNotificationCenter.default()
 	private var sessions: [String: Set<String>] = [:]
 	private var sessionFiles: [String: String] = [:]
+	/// When each session's request arrived, for the grace period above.
+	private var sessionStarts: [String: Date] = [:]
+	/// Canonical paths this manager has actually observed open. A path is only treated as
+	/// closed once it appears here, which is what distinguishes "closed" from "not open yet".
+	private var seenOpenPaths: Set<String> = []
 	private var isObserving = false
 	private var pollTimer: Timer?
 
@@ -86,8 +96,11 @@ final class WaitManager: NSObject {
 			WaitManager.canonicalPath(for: URL(fileURLWithPath: $0))
 		})
 		sessions[sessionID] = standardizedPaths
+		sessionStarts[sessionID] = Date()
 
 		if standardizedPaths.isEmpty {
+			sessions.removeValue(forKey: sessionID)
+			sessionStarts.removeValue(forKey: sessionID)
 			completeSession(sessionID)
 			return
 		}
@@ -122,8 +135,16 @@ final class WaitManager: NSObject {
 
 		for sessionID in finishedSessions {
 			sessions.removeValue(forKey: sessionID)
+			sessionStarts.removeValue(forKey: sessionID)
 			completeSession(sessionID)
 		}
+
+		// Keep `seenOpenPaths` to the paths still being waited on, so a long-running app
+		// does not accumulate one entry per file ever opened through the CLI.
+		let stillPending = Set(sessions.values.flatMap { $0 }.map {
+			WaitManager.canonicalPath(for: URL(fileURLWithPath: $0))
+		})
+		seenOpenPaths.formIntersection(stillPending)
 
 		if sessions.isEmpty {
 			stopPollingIfNeeded()
@@ -207,10 +228,26 @@ final class WaitManager: NSObject {
 		}
 
 		var closedPaths: Set<String> = []
-		for paths in sessions.values {
+		for (sessionID, paths) in sessions {
+			let expired = sessionStarts[sessionID].map {
+				Date().timeIntervalSince($0) > WaitManager.openGracePeriod
+			} ?? true
+
 			for path in paths {
 				let canonical = WaitManager.canonicalPath(for: URL(fileURLWithPath: path))
-				if !openPaths.contains(canonical) {
+				if openPaths.contains(canonical) {
+					seenOpenPaths.insert(canonical)
+					continue
+				}
+				// Absent from the document controller means "closed" only once the path has
+				// actually been seen open. Otherwise a cold launch slower than the first poll
+				// completed the session before the document ever registered — as
+				// `git core.editor`, that returned an empty commit message.
+				//
+				// A path that never shows up is given `openGracePeriod` and then released
+				// anyway: if the open failed outright, hanging the caller's terminal forever
+				// is the worse of the two failures.
+				if seenOpenPaths.contains(canonical) || expired {
 					closedPaths.insert(path)
 				}
 			}
@@ -229,6 +266,9 @@ final class WaitManager: NSObject {
 			completeSession(sessionID)
 		}
 		sessions.removeAll()
+		sessionStarts.removeAll()
+		seenOpenPaths.removeAll()
+		stopPollingIfNeeded()
 	}
 
 	/// Deleting the session file *is* the completion signal — `Resources/moped` polls for
