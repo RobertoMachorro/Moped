@@ -153,11 +153,12 @@ the selection is already commented, it removes the markers; otherwise it adds th
 are inserted at the common indentation of the block rather than at column zero, so
 commented code keeps its shape.
 
-Comment Selection follows the document's *language*, so it covers 25 of the 34 languages
-listed under [Available languages](#available-languages). The nine it does not — `css`,
-`diff`, `erb`, `handlebars`, `html`, `json`, `markdown`, `twig` and `xml` — have no line
-comment at all, so there is nothing correct to insert. A file whose type Moped does not
-highlight opens as `plaintext`, which ⌘/ cannot help with either.
+Comment Selection follows the document's *language*, so it covers 25 of the 35 entries
+listed under [Available languages](#available-languages). The ten it does not — `plaintext`,
+`css`, `diff`, `erb`, `handlebars`, `html`, `json`, `markdown`, `twig` and `xml` — have
+nothing to insert: `plaintext` is what a file whose type Moped does not recognize opens as,
+so there is no language to take a marker from, and the other nine are formats with no line
+comment of their own.
 
 If the document is set to `plaintext`, or its language has no known comment marker, Moped
 beeps rather than guessing.
