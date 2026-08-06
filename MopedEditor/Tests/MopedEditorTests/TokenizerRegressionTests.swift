@@ -68,6 +68,22 @@ final class TokenizerRegressionTests: XCTestCase {
 		assertKind("42", is: .number, in: text, as: "php")
 	}
 
+	/// The trailing-punctuation allowance is PHP's alone. Shells terminate on a line holding
+	/// the identifier and nothing else, so a body line reading `EOF;` is still body — closing
+	/// there would end the heredoc early and colour the rest of the script as code.
+	func testBashHeredocDoesNotCloseOnTerminatorWithSuffix() {
+		let text = "cat <<EOF\nBEGIN;\nEOF;\nCOMMIT;\nEOF\necho after"
+		assertKind("BEGIN;", is: .string, in: text, as: "bash")
+		assertKind("COMMIT;", is: .string, in: text, as: "bash")
+		assertPlain("after", in: text, as: "bash")
+	}
+
+	func testRubyHeredocDoesNotCloseOnTerminatorWithSuffix() {
+		let text = "sql = <<~REPORT\n  REPORT;\n  still inside\nREPORT\ncount = 42\n"
+		assertKind("still inside", is: .string, in: text, as: "ruby")
+		assertKind("42", is: .number, in: text, as: "ruby")
+	}
+
 	// MARK: Rust char literals
 
 	/// Rust had no char-literal rule at all: `'a'` came out plain, and the `"` inside `'"'`

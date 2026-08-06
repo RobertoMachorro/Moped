@@ -131,17 +131,28 @@ extension GenericTokenizer {
 			tokens.append(Token(kind: .string, range: NSRange(location: 0, length: scanner.count)))
 		}
 		let trimmed = line.trimmingCharacters(in: .whitespaces)
-		return (tokens, Self.closesHeredoc(trimmed, terminator: terminator)
-			? .none
-			: .heredoc(terminator: terminator))
+		let closes = Self.closesHeredoc(
+			trimmed,
+			terminator: terminator,
+			allowingSuffix: language.heredoc?.allowsTerminatorSuffix ?? false
+		)
+		return (tokens, closes ? .none : .heredoc(terminator: terminator))
 	}
 
-	/// A heredoc body ends on a line holding nothing but the terminator — except that PHP
-	/// closes one as part of the surrounding expression (`SQL;`, `SQL);`, `SQL],`), which is
-	/// its canonical form. Tolerating trailing expression punctuation everywhere keeps that
-	/// working; the alternative is carrying `.string` to the end of the file. The terminator
-	/// still has to start the line, so `EOFX` does not close an `EOF` heredoc.
-	static func closesHeredoc(_ trimmed: String, terminator: String) -> Bool {
+	/// A heredoc body ends on a line holding nothing but the terminator.
+	///
+	/// `allowingSuffix` relaxes that for PHP, which closes a heredoc as part of the
+	/// surrounding statement — `SQL;`, `SQL);`, `SQL],` — and where insisting on an exact
+	/// match carried `.string` to the end of the file. It stays off for shells and Ruby,
+	/// which really do require the identifier alone: there, a body line reading `EOF;` must
+	/// not end the heredoc. Either way the terminator has to start the line, so `EOFX` never
+	/// closes an `EOF` heredoc.
+	static func closesHeredoc(
+		_ trimmed: String, terminator: String, allowingSuffix: Bool
+	) -> Bool {
+		guard allowingSuffix else {
+			return trimmed == terminator
+		}
 		guard trimmed.hasPrefix(terminator) else {
 			return false
 		}

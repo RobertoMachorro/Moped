@@ -59,7 +59,11 @@ extension LanguageDefinition {
 		prePassRules: variableRules + [
 			RegexRule(trigger: "@", pattern: "@\\w+", kind: .punctuationSpecial)
 		],
-		heredoc: HeredocRule(trigger: "<", pattern: "<<<[\"']?(\\w+)[\"']?"),
+		// `allowsTerminatorSuffix` because PHP closes a heredoc inside the statement — `SQL;`,
+		// `SQL);` — which is its canonical form and not how shells or Ruby end one.
+		heredoc: HeredocRule(
+			trigger: "<", pattern: "<<<[\"']?(\\w+)[\"']?", allowsTerminatorSuffix: true
+		),
 		rawBoundaries: true
 	)
 

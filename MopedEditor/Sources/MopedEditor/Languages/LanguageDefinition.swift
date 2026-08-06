@@ -130,11 +130,18 @@ struct RegexRule: @unchecked Sendable {
 struct HeredocRule: @unchecked Sendable {
 	let trigger: UInt16
 	let regex: NSRegularExpression
+	/// Whether the closing line may carry trailing expression punctuation — `SQL;`, `SQL);`,
+	/// `SQL],`. True only for PHP, where the heredoc closes as part of the statement and that
+	/// is the canonical form. Shells and Ruby terminate on a line holding the identifier and
+	/// nothing else, so allowing a suffix there would end a heredoc early on a body line that
+	/// happens to read `EOF;`.
+	let allowsTerminatorSuffix: Bool
 
-	init(trigger: Character, pattern: String) {
+	init(trigger: Character, pattern: String, allowsTerminatorSuffix: Bool = false) {
 		self.trigger = trigger.utf16.first ?? 0
 		// swiftlint:disable:next force_try
 		self.regex = try! NSRegularExpression(pattern: pattern)
+		self.allowsTerminatorSuffix = allowsTerminatorSuffix
 	}
 }
 
