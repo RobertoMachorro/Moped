@@ -57,10 +57,6 @@ extension TextFileModel {
 		])
 	}
 
-	static func unknownEncodingError() -> Error {
-		readError(.fileReadUnknownStringEncoding, message: String(localized: "error.file_unknown_encoding.description"))
-	}
-
 	/// Rejection for a file that is not text. Moped edits text only, and the decoders
 	/// below cannot be trusted to refuse anything — see `ContentKind`.
 	static func binaryFileError() -> Error {
@@ -83,13 +79,13 @@ extension TextFileModel {
 		} else if let text = String(data: data, encoding: .utf8) {
 			decoded = (text, .utf8)
 		} else if let text = String(data: data, encoding: .macOSRoman) {
+			// Mac OS Roman maps all 256 byte values, so this rung always succeeds and no
+			// "could not determine the encoding" rejection is reachable. That is exactly
+			// why `ContentKind` has to gate binary files ahead of these decoders — left to
+			// itself this rung would turn an executable into mojibake.
 			decoded = (text, .macOSRoman)
-		} else if let text = String(data: data, encoding: .ascii) {
-			decoded = (text, .ascii)
 		} else {
-			// Nothing is mutated on this path, so a failed reload leaves the open
-			// buffer exactly as it was.
-			throw Self.unknownEncodingError()
+			throw Self.binaryFileError()
 		}
 
 		docTypeName = typeName

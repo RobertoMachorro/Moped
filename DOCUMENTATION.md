@@ -158,7 +158,7 @@ beeps rather than guessing.
 ### Zooming
 
 **Editor ▸ Increase** (⌘+), **Decrease** (⌘−), and **Reset** (⌘0) change the text size in
-the current window. Decrease stops at 2pt and beeps rather than shrinking further. Reset
+the current window. Decrease stops at 3pt and beeps rather than shrinking further. Reset
 returns to the size set in *Settings ▸ Appearance ▸ Font size*.
 
 Zoom is per window and temporary; it does not change your saved preference.
@@ -222,8 +222,9 @@ nothing useful — new untitled documents, and files with no extension. It defau
 
 Several of these share a tokenizer with a close relative — `kotlin` and `groovy` are
 colored by the Java tokenizer, `scss` and `less` by the CSS one, `objectivec` by the C++
-one, and the template formats (`erb`, `twig`, `handlebars`) by the HTML one. They are
-listed under their own names because those are the names you know your files by.
+one, `asciidoc` by the Markdown one, and the template formats (`erb`, `twig`,
+`handlebars`) by the HTML one. They are listed under their own names because those are the
+names you know your files by.
 
 **Markdown** colors headings, fenced code blocks, blockquotes, list markers, inline code,
 emphasis, and links. The contents of a fenced code block are rendered as literal text —
@@ -451,9 +452,9 @@ Settings apply to open documents immediately.
 
 ### What Moped opens
 
-Moped opens plain text. It registers 87 text file types with macOS — everything from
+Moped opens plain text. It registers 88 text file types with macOS — everything from
 `.swift`, `.py`, and `.json` through `.yaml`, `.toml`, `.ini`, and `.tex` to `.ahk`,
-`.gcode`, and `.nix` — and recognizes over a hundred more type identifiers when opening a
+`.gcode`, and `.nix` — and recognizes about forty more type identifiers when opening a
 file, including Apple-specific ones such as property lists, AppleScript text, and Xcode
 shell scripts.
 
@@ -484,9 +485,10 @@ files still open as the text they are.
 ### Text encoding
 
 Moped detects the file's encoding automatically. If macOS cannot identify it, Moped tries
-UTF-8, then Mac OS Roman, then ASCII. If none of those decode the file, it is refused:
-
-> Moped could not determine this file's text encoding.
+UTF-8 and then falls back to Mac OS Roman, which maps every possible byte value and so
+always succeeds. A text file is therefore never turned away for its encoding — the check
+that does turn files away is the binary check described above, which is precisely why it
+runs before the decoders.
 
 Files are written back in the encoding they were read in, so opening and saving does not
 silently re-encode your file. The exception is when you type something the original
@@ -589,6 +591,8 @@ moped notes.txt config.yaml
 Relative paths are resolved before being handed to Moped, so `moped ./notes.txt` works from
 any directory.
 
+`moped -h` (or `--help`) prints the usage line above.
+
 ### `--wait`
 
 With `--wait`, the command opens the files and then **blocks until you close them**, which
@@ -659,9 +663,8 @@ mdls -name kMDItemContentType -name kMDItemContentTypeTree -name kMDItemKind YOU
 ```
 
 **My file won't open at all.**
-Moped refuses three kinds of file, and says which applies: it is larger than 16 MB, it is
-binary rather than text, or its text encoding could not be determined. See
-[Working with files](#working-with-files).
+Moped refuses two kinds of file, and says which applies: it is larger than 16 MB, or it is
+binary rather than text. See [Working with files](#working-with-files).
 
 **The text looks like garbage — wrong accents or odd symbols.**
 The encoding was detected incorrectly. Moped has no manual encoding override yet; the

@@ -27,6 +27,8 @@ Want to see another language? Volunteer to translate!
 
 Pre-compiled versions are available directly from [GitHub](https://github.com/RobertoMachorro/Moped/releases) or the [AppStore](https://apps.apple.com/us/app/moped-text-editor/id1477419086?mt=12).
 
+Requires macOS 14.0 (Sonoma) or later.
+
 <img width="1483" height="698" alt="image" src="https://github.com/user-attachments/assets/d3f11bd8-b5d8-49c8-b6e6-5e486ae110de" />
 
 ## Features
