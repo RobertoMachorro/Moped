@@ -162,11 +162,11 @@ struct PreferencesView: View {
 		settingsGrid {
 			GridRow {
 				label("pref.launch_behavior.title")
-				picker(binding(\.launchBehavior), options: launchBehaviorOptions)
+				picker(binding(\.launchBehavior), options: launchBehaviorOptions, titled: "pref.launch_behavior.title")
 			}
 			GridRow {
 				label("pref.active_icon.title")
-				picker(binding(\.appIcon), options: appIconOptions)
+				picker(binding(\.appIcon), options: appIconOptions, titled: "pref.active_icon.title")
 			}
 		}
 	}
@@ -175,7 +175,7 @@ struct PreferencesView: View {
 		settingsGrid {
 			GridRow {
 				label("pref.theme.title")
-				picker(binding(\.theme), options: themes)
+				picker(binding(\.theme), options: themes, titled: "pref.theme.title")
 			}
 			GridRow {
 				emptyLabel
@@ -185,7 +185,7 @@ struct PreferencesView: View {
 			}
 			GridRow {
 				label("pref.font.title")
-				picker(binding(\.font), options: fontOptions)
+				picker(binding(\.font), options: fontOptions, titled: "pref.font.title")
 			}
 			GridRow {
 				emptyLabel
@@ -193,7 +193,7 @@ struct PreferencesView: View {
 			}
 			GridRow {
 				label("pref.font_size.title")
-				picker(binding(\.fontSize), options: fontSizes)
+				picker(binding(\.fontSize), options: fontSizes, titled: "pref.font_size.title")
 					.fixedSize()
 			}
 		}
@@ -227,7 +227,7 @@ struct PreferencesView: View {
 		settingsGrid {
 			GridRow {
 				label("pref.language.title")
-				picker(binding(\.language), options: languages)
+				picker(binding(\.language), options: languages, titled: "pref.language.title")
 			}
 			GridRow {
 				emptyLabel
@@ -239,7 +239,7 @@ struct PreferencesView: View {
 			}
 			GridRow {
 				label("pref.default_indentation.title")
-				picker(binding(\.defaultIndentation), options: defaultIndentationOptions)
+				picker(binding(\.defaultIndentation), options: defaultIndentationOptions, titled: "pref.default_indentation.title")
 			}
 		}
 	}
@@ -278,7 +278,12 @@ struct PreferencesView: View {
 			.gridCellUnsizedAxes([.horizontal, .vertical])
 	}
 
-	private func picker(_ selection: Binding<String>, options: [PreferenceOption]) -> some View {
+	/// `titled` is the same key the row's visible `label` uses. `labelsHidden()` keeps the
+	/// caption in the label column, but it also strips the control's accessible name, so
+	/// VoiceOver would otherwise announce every picker here as just "pop up button".
+	private func picker(
+		_ selection: Binding<String>, options: [PreferenceOption], titled title: LocalizedStringKey
+	) -> some View {
 		Picker("", selection: selection) {
 			ForEach(options, id: \.value) { option in
 				Text(option.label)
@@ -286,6 +291,7 @@ struct PreferencesView: View {
 			}
 		}
 		.labelsHidden()
+		.accessibilityLabel(Text(title))
 		.frame(maxWidth: .infinity, alignment: .leading)
 	}
 

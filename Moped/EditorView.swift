@@ -64,6 +64,9 @@ struct EditorView: View {
 					}
 				}
 				.labelsHidden()
+				// Without this the status bar's only control is announced as an unnamed pop
+				// up button. Reuses the Settings caption for the same choice.
+				.accessibilityLabel(Text("pref.language.title"))
 				.frame(width: 160)
 			}
 			.padding(.horizontal, 10)
