@@ -10,6 +10,8 @@
 	<string>--</string>
 	<key>arduino</key>
 	<string>//</string>
+	<key>asciidoc</key>
+	<string>//</string>
 	<key>autohotkey</key>
 	<string>;</string>
 	<key>autoit</key>

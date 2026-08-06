@@ -38,6 +38,12 @@ before bumping it. The localization script needs [ripgrep](https://github.com/Bu
 and the package tests are not wired into it. Run `swift test --package-path MopedEditor`
 instead; that is what CI does. Don't read a green ⌘U as a passing test run.
 
+Hand-editing `Moped.xcscheme` to add a `TestableReference` for `MopedEditorTests` with
+`ReferencedContainer = "container:MopedEditor"` does *not* work: `xcodebuild test -scheme
+Moped` ignores it and fails with "There are no test bundles available to test." Wiring this
+up needs Xcode's own scheme editor (Product ▸ Scheme ▸ Edit Scheme ▸ Test ▸ +), which
+registers the package target properly. Tried and reverted — don't spend the afternoon on it.
+
 ## Localization
 
 Every user-facing string needs a key in `Moped/Localizable.xcstrings`, translated into all

@@ -91,6 +91,7 @@ is no selection, so it never competes with highlighted text.
 |---|---|
 | Left | The document's type identifier, as macOS understands it. |
 | Right | The cursor's position as `line:column`, in monospaced digits so it does not jitter as you move around. |
+| Right of that | A line-ending picker — `LF`, `CRLF` or `CR`. See [Line endings](#line-endings). |
 | Far right | A language picker. |
 
 The **language picker** is the quickest way to fix a file whose type Moped guessed wrong,
@@ -145,12 +146,19 @@ Indenting or outdenting a block is a single undo step, not one per line.
 
 **Editor ▸ Comment Selection** (⌘/) comments or uncomments the selected lines using the
 right marker for the document's language — `//` for Swift and C, `#` for Python and shell,
-`--` for SQL, and so on, for over 80 languages.
+`--` for SQL, and so on.
 
 It decides which way to go by looking at what is already there: if every non-blank line in
 the selection is already commented, it removes the markers; otherwise it adds them. Markers
 are inserted at the common indentation of the block rather than at column zero, so
 commented code keeps its shape.
+
+Comment Selection follows the document's *language*, so it covers 25 of the 35 entries
+listed under [Available languages](#available-languages). The ten it does not — `plaintext`,
+`css`, `diff`, `erb`, `handlebars`, `html`, `json`, `markdown`, `twig` and `xml` — have
+nothing to insert: `plaintext` is what a file whose type Moped does not recognize opens as,
+so there is no language to take a marker from, and the other nine are formats with no line
+comment of their own.
 
 If the document is set to `plaintext`, or its language has no known comment marker, Moped
 beeps rather than guessing.
@@ -361,9 +369,10 @@ Inside `colors`:
 | `selection` | yes | Selection highlight. Also tints the current line, at reduced opacity. |
 | `caret` | no | The insertion point. Defaults to the inverse of `background`. |
 
-Colors are hexadecimal and nothing else: `#RGB`, `#RRGGBB`, or `#RRGGBBAA` for
-transparency. The `#` is optional and case does not matter, so `#81A1C1`, `81a1c1`, and
-`#81A1C1FF` are the same color.
+Colors are hexadecimal and nothing else: `#RGB`, `#RGBA`, `#RRGGBB`, or `#RRGGBBAA` — the
+four-digit forms add transparency, and the three- and four-digit forms expand each digit, so
+`#F0A` means `#FF00AA`. The `#` is optional and case does not matter, so `#81A1C1`,
+`81a1c1`, and `#81A1C1FF` are the same color.
 
 Every key `tokens` accepts:
 
@@ -524,7 +533,8 @@ Moped watches every open document on disk. If another application writes to, ext
 renames, or replaces the file, you are asked what to do:
 
 > **File Changed on Disk**
-> This file was modified by another application. Would you like to reload it?
+> This file was modified by another application. Would you like to reload it? Any unsaved
+> changes in this window will be lost.
 > **Reload** · **Keep Mine**
 
 **Reload** discards your in-memory copy and re-reads the file. **Keep Mine** leaves your
@@ -598,7 +608,10 @@ If it cannot write there — commonly because `/usr/local/bin` does not exist or
 writable by your account — it tells you and gives you the exact command to run yourself:
 
 > **Unable to install moped.**
-> Try running: sudo ln -sf /Applications/Moped.app/Contents/Resources/moped /usr/local/bin/moped
+> Try running: sudo ln -sf '/Applications/Moped.app/Contents/Resources/moped' '/usr/local/bin/moped'
+
+The paths are quoted so the command can be pasted as-is even if Moped lives somewhere with a
+space in its path.
 
 ### Usage
 
