@@ -84,6 +84,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 		savePreviousDocuments()
 	}
 
+	/// Safe despite appearances. In a plain AppKit document app, answering `.terminateNow`
+	/// here is the documented way to *skip* `NSDocumentController`'s unsaved-document review,
+	/// which would silently discard edits on Cmd-Q. SwiftUI's `DocumentGroup` does not route
+	/// the review through this delegate hook: verified by typing into an untitled document
+	/// and pressing Cmd-Q, which still presents the standard "Do you want to keep this new
+	/// document?" sheet and leaves the app running when cancelled. `manual-checklist.md`
+	/// carries that case so a future SwiftUI change cannot quietly turn this into data loss.
 	func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
 		.terminateNow
 	}

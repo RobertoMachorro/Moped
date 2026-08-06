@@ -49,7 +49,7 @@
 - [ ] UTF‑16 file with a BOM (`printf 'a\nb\n' | iconv -f UTF-8 -t UTF-16 > f.txt`) — still opens as text.
 - [ ] UTF‑8 file with a BOM — still opens as text.
 - [ ] Save, close, reopen — content round‑trips through TextFileModel.
-- [ ] Type into a new document, then Cmd‑Q **without saving** — macOS must offer to save before quitting. `AppDelegate.applicationShouldTerminate` answers `.terminateNow` unconditionally, which is the documented way to *skip* `NSDocumentController`'s unsaved‑document review; if no prompt appears, that method is discarding edits and should be removed. Repeat with an edited, previously‑saved file.
+- [ ] Type into a new document, then Cmd‑Q **without saving** — macOS offers to save before quitting ("Do you want to keep this new document…", with Delete/Cancel/Save). Cancel must abort the quit. Repeat with an edited, previously‑saved file. Worth keeping in the list because `AppDelegate.applicationShouldTerminate` answers `.terminateNow` unconditionally, so this is the check that proves SwiftUI still runs the review.
 - [ ] Same for Cmd‑W on an edited document — closing one window must prompt even when quitting does.
 - [ ] New document, pick `markdown` in the bottom picker, Cmd‑S — the Save panel's File Type is already Markdown and the name field gets `.md`. The status bar reads `net.daringfireball.markdown`; `public.markdown` there means the language→UTI map handed out a type nothing declares.
 - [ ] New document, leave the picker alone, Cmd‑S, choose Markdown (or Python) in the File Type popup — after saving, the picker and the highlighting switch to that language. Choosing plain text leaves it `plaintext`.
