@@ -377,6 +377,10 @@ Every key `tokens` accepts:
 | `function.call` | `operator` | `variable` |
 | `include` | `parameter` | `variable.builtin` |
 
+`parameter` is reserved: it is accepted, and the built-in themes all set it, but no
+language colors anything with it yet. Setting it does no harm and costs nothing when it
+starts being used.
+
 Names Moped does not recognize are ignored rather than treated as errors, so a file
 written for a newer version still loads here.
 

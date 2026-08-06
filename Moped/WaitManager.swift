@@ -38,9 +38,6 @@ final class WaitManager: NSObject {
 		static let requestNotification = Notification.Name(
 			"net.machorro.roberto.Moped.CLIWaitRequest"
 		)
-		static let completionNotification = Notification.Name(
-			"net.machorro.roberto.Moped.CLIWaitComplete"
-		)
 		static let sessionIDKey = "sessionID"
 		static let filesKey = "files"
 		static let sessionFileKey = "sessionFilePath"
@@ -224,35 +221,25 @@ final class WaitManager: NSObject {
 		}
 	}
 
-	private func notifyCompletion(for sessionID: String) {
-		let userInfo: [String: Any] = [
-			CLIConstants.sessionIDKey: sessionID
-		]
-
-		distributedCenter.post(
-			name: CLIConstants.completionNotification,
-			object: nil,
-			userInfo: userInfo
-		)
-	}
-
 	@objc private func appWillTerminate(_ notification: Notification) {
-		// Runs inline on purpose. Deferring this to another queue — as it once did —
-		// loses the race with process exit, so waiting `moped --wait` clients never see
-		// their completion notification and fall back to polling.
+		// Runs inline on purpose. Deferring this to another queue — as it once did — loses
+		// the race with process exit, and deleting the session file is the only thing that
+		// releases a waiting `moped --wait`.
 		for sessionID in sessions.keys {
 			completeSession(sessionID)
 		}
 		sessions.removeAll()
 	}
 
+	/// Deleting the session file *is* the completion signal — `Resources/moped` polls for
+	/// the file's disappearance. There is deliberately no notification to go with it: the
+	/// script never listened for one, and a sandboxed app's distributed-notification
+	/// `userInfo` is dropped in transit anyway, so a listener would learn nothing.
 	private func completeSession(_ sessionID: String) {
 		if let sessionFilePath = sessionFiles.removeValue(forKey: sessionID) {
 			try? FileManager.default.removeItem(
 				at: URL(fileURLWithPath: sessionFilePath)
 			)
 		}
-
-		notifyCompletion(for: sessionID)
 	}
 }

@@ -38,6 +38,11 @@ public enum TokenKind: String, CaseIterable, Sendable {
 	case method
 	case number
 	case `operator`
+	/// Reserved. No tokenizer emits this yet — distinguishing a function's parameters from
+	/// other identifiers needs more than the line-at-a-time context the tokenizers have. It
+	/// stays in the vocabulary, and in every built-in palette, so that adding it later is not
+	/// a breaking change to the `.mopedtheme` format; a theme that sets it is simply unused
+	/// for now rather than rejected.
 	case parameter
 	case punctuationSpecial = "punctuation.special"
 	case string

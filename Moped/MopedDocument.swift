@@ -101,6 +101,15 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// avoids a mutable ~110-entry global.
 	static var readableContentTypes: [UTType] { allReadableContentTypes }
 
+	/// Everything readable except `.data`. `writableContentTypes` defaults to
+	/// `readableContentTypes`, which put a generic "data" row in the Save panel's File
+	/// Format popup — an entry that means nothing for a text editor and, if chosen, would
+	/// save a text document under a type Moped only accepts so it can refuse binaries.
+	static var writableContentTypes: [UTType] { allWritableContentTypes }
+
+	private static let allWritableContentTypes: [UTType] =
+		allReadableContentTypes.filter { $0 != .data }
+
 	private static let allReadableContentTypes: [UTType] = {
 		var types: [UTType] = [
 			.plainText,
@@ -131,9 +140,11 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 	/// ever added mutable state to a `Sendable`-conforming type.
 	let model: TextFileModel
 
+	/// No `typeName`: the write uses `WriteConfiguration.contentType`, which is what the
+	/// Save panel actually chose, so a type captured at snapshot time would only ever be a
+	/// second source of truth for the same thing.
 	struct Snapshot {
 		let content: String
-		let typeName: String
 		let typeLanguage: String
 		let encoding: String.Encoding
 	}
@@ -271,7 +282,6 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		adoptContentTypeOnFirstSave(contentType)
 		return Snapshot(
 			content: model.content,
-			typeName: contentType.identifier,
 			typeLanguage: model.docTypeLanguage,
 			encoding: encoding
 		)
