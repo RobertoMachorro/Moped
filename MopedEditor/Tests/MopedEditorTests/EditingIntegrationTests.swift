@@ -248,6 +248,22 @@ final class EditingIntegrationTests: EditorTestCase {
 		XCTAssertFalse(scrollView.rulersVisible)
 	}
 
+	/// The flag the draw path actually reads lives on the layout manager, not on the text
+	/// view, so a setter that forgot to push it down would leave the setting inert.
+	func testWhitespaceMarkerToggle() throws {
+		let (_, textView) = makeEditor()
+		let layoutManager = try XCTUnwrap(textView.layoutManager as? WhitespaceLayoutManager)
+
+		XCTAssertFalse(textView.showsWhitespaceMarkers, "whitespace markers are off by default")
+		XCTAssertFalse(layoutManager.showsWhitespaceMarkers)
+
+		textView.showsWhitespaceMarkers = true
+		XCTAssertTrue(layoutManager.showsWhitespaceMarkers, "the toggle has to reach the layout manager")
+
+		textView.showsWhitespaceMarkers = false
+		XCTAssertFalse(layoutManager.showsWhitespaceMarkers)
+	}
+
 	/// The gutter splices its offset array from the storage notification rather than
 	/// rebuilding it. These go through the real editor so a mistake in the wiring — a
 	/// missed notification, a stale array — shows up as a wrong line count.

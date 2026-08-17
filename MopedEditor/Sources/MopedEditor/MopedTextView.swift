@@ -33,8 +33,14 @@ public enum EditorIndentation: Sendable {
 /// it needs is set through its own properties — it knows nothing about the app.
 public final class MopedTextView: NSTextView {
 	private let highlighter: SyntaxHighlighter
+	private let whitespaceLayoutManager: WhitespaceLayoutManager
 	private var lineNumberRuler: LineNumberRulerView?
 	var cachedIndentStyle: IndentStyle?
+
+	/// How far back the whitespace markers are faded from the palette's own foreground.
+	/// The same 30% the gutter separator uses — markers have to read as chrome, not as
+	/// text, in every theme and in both appearances.
+	private static let markerAlpha: CGFloat = 0.3
 
 	/// Band painted behind the caret's line on the last draw, so a caret move can
 	/// invalidate just the line it left. See `MopedTextView+CurrentLine`.
@@ -94,6 +100,12 @@ public final class MopedTextView: NSTextView {
 		didSet { applyContainerSizing() }
 	}
 
+	/// Draws `·` for every space and `»` for every tab, anywhere in the line — not only
+	/// in the indentation. Line endings are not marked.
+	public var showsWhitespaceMarkers: Bool = false {
+		didSet { applyWhitespaceMarkers() }
+	}
+
 	/// The editor font. Applied to existing text, typing attributes, and the gutter.
 	public var editorFont: NSFont {
 		didSet { applyFont() }
@@ -142,8 +154,15 @@ public final class MopedTextView: NSTextView {
 
 		// Explicit TextKit 1 stack: temporary attributes (used for token colors) and
 		// the NSRulerView gutter both depend on NSLayoutManager.
+		//
+		// Seeded from the unresolved theme so the very first paint is never a stock system
+		// color; `scrollableEditor` calls `refreshResolvedTheme()` right after, which is
+		// what settles it for a paired theme.
 		let textStorage = NSTextStorage()
-		let layoutManager = NSLayoutManager()
+		let layoutManager = WhitespaceLayoutManager(
+			font: font, color: theme.foreground.withAlphaComponent(Self.markerAlpha)
+		)
+		self.whitespaceLayoutManager = layoutManager
 		let textContainer = NSTextContainer(size: CGSize(width: 0, height: CGFloat.greatestFiniteMagnitude))
 		textStorage.addLayoutManager(layoutManager)
 		layoutManager.addTextContainer(textContainer)
@@ -265,6 +284,7 @@ public final class MopedTextView: NSTextView {
 			range: NSRange(location: 0, length: textStorage?.length ?? 0)
 		)
 		lineNumberRuler?.theme = resolvedTheme
+		whitespaceLayoutManager.markerColor = resolvedTheme.foreground.withAlphaComponent(Self.markerAlpha)
 		needsDisplay = true
 	}
 
@@ -278,6 +298,14 @@ public final class MopedTextView: NSTextView {
 		}
 		lineNumberRuler?.numberFont = Self.gutterFont(matching: editorFont)
 		lineNumberRuler?.invalidateLineNumbers()
+		whitespaceLayoutManager.markerFont = editorFont
+	}
+
+	private func applyWhitespaceMarkers() {
+		whitespaceLayoutManager.showsWhitespaceMarkers = showsWhitespaceMarkers
+		// Every visible line changes at once, so unlike the caret band there is no smaller
+		// region worth invalidating.
+		needsDisplay = true
 	}
 
 	private func baseAttributes() -> [NSAttributedString.Key: Any] {

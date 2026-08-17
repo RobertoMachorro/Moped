@@ -189,6 +189,15 @@ final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 		}
 	}
 
+	@objc dynamic var showWhitespaceMarkers: String {
+		get {
+			getStringValue(forKey: "showWhitespaceMarkers", otherwiseUse: "No")
+		}
+		set {
+			setStringValue(forKey: "showWhitespaceMarkers", to: newValue)
+		}
+	}
+
 	@objc dynamic var launchBehavior: String {
 		get {
 			getStringValue(forKey: "launchBehavior", otherwiseUse: "FileOpenDialog")
@@ -253,6 +262,10 @@ final class Preferences: NSObject, ObservableObject, @unchecked Sendable {
 
 	var doShowLineNumberRuler: Bool {
 		return showLineNumberRuler == "Yes"
+	}
+
+	var doShowWhitespaceMarkers: Bool {
+		return showWhitespaceMarkers == "Yes"
 	}
 
 	var showsMonospacedFontsOnly: Bool {
