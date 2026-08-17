@@ -2,7 +2,7 @@
 
 All notable changes to Moped. Versions follow the app's marketing version.
 
-## Unreleased
+## 3.0.1
 
 ### Added
 
