@@ -111,6 +111,7 @@ final class EditorState: NSObject, ObservableObject {
 			textView.isHighlightingEnabled = !model.isLargeFile
 			textView.wrapsLines = preferences.doLineWrap
 			textView.showsLineNumberGutter = preferences.doShowLineNumberRuler
+			textView.showsWhitespaceMarkers = preferences.doShowWhitespaceMarkers
 			textView.setPlainText(model.content)
 			applyLanguageToEditor(activeLanguage, on: textView)
 
@@ -171,6 +172,7 @@ final class EditorState: NSObject, ObservableObject {
 		textView.defaultIndentation = preferences.selectedDefaultIndentation.editorIndentation
 		textView.wrapsLines = preferences.doLineWrap
 		textView.showsLineNumberGutter = preferences.doShowLineNumberRuler
+		textView.showsWhitespaceMarkers = preferences.doShowWhitespaceMarkers
 	}
 
 	private func preferredFont(at size: CGFloat) -> NSFont {

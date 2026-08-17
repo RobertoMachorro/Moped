@@ -28,6 +28,9 @@
 - [ ] Settings in a non‑English locale (German is the longest) — no label truncation and the control column stays aligned.
 - [ ] "Show only monospaced fonts" — checking it shrinks the font list to fixed‑pitch faces; with a proportional font already selected (e.g. Helvetica) the picker still shows it rather than going blank, and the stored font is not rewritten.
 - [ ] Wrap long lines / Show line numbers are checkboxes, not Yes/No pickers, and still drive the editor.
+- [ ] Show whitespace is off on a fresh install, and the Editing pane still fits the window without a scroller (check German and pt‑BR, the widest locales).
+- [ ] Show whitespace on, with a file that mixes tabs and spaces mid‑line — a `·` in every space and one `»` at the start of every tab's advance, including inside comments and string literals, and nothing at all on line endings. It reaches the already‑open document without reopening it.
+- [ ] Whitespace markers stay visible inside a selection, on the caret line, and under a find‑bar match; they survive a theme switch and a Light/Dark flip (Turbo is the contrast stress case); they scale with ⌘+/⌘−; a wrapped line marks whitespace on every visual row; scrolling a large file with them on stays smooth; printing shows none.
 - [ ] Advanced → Manage… renders as a button (not a popup) and opens Default File Associations.
 - [ ] Cmd‑+, Cmd‑−, Cmd‑0 — increase/decrease/reset font size.
 - [ ] Tab key with no selection: hard‑tab file inserts \t; 2‑space file inserts 2 spaces aligned to column.

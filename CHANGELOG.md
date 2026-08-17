@@ -2,6 +2,14 @@
 
 All notable changes to Moped. Versions follow the app's marketing version.
 
+## Unreleased
+
+### Added
+
+- **Show whitespace.** *Settings ▸ Editing ▸ Show whitespace* marks a middle dot for every
+  space and a chevron for every tab, anywhere in the line — so a file that mixes the two
+  gives itself away. Off by default, and display only: nothing is written to your file.
+
 ## 3.0.0
 
 Moped's editor is now its own code. The syntax highlighting, line numbering, indentation

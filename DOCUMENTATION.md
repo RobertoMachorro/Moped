@@ -177,6 +177,18 @@ Zoom is per window and temporary; it does not change your saved preference.
 the window. Turn it off and long lines run off the edge, with a horizontal scroll bar to
 follow them. Wrapping is a display choice only — no line breaks are ever added to your file.
 
+### Whitespace
+
+*Settings ▸ Editing ▸ Show whitespace* (off by default) marks the whitespace in the
+document: a middle dot `·` for every space and a chevron `»` for every tab. Both are marked
+anywhere they appear, not only in the indentation — a run of spaces inside a comment or
+between words is marked too, which is what makes a file that mixes tabs and spaces obvious
+at a glance. Line endings are not marked.
+
+The markers are drawn in the theme's own text colour, faded well back so they read as
+chrome rather than competing with the code. Like wrapping, this is display only: nothing is
+added to your file, and turning it on does not mark the document as edited.
+
 ---
 
 ## Finding and navigating
@@ -449,6 +461,7 @@ Open with **Moped ▸ Settings…** (⌘,). The window has four sections.
 | Syntax language | Any of the 35 supported languages | plaintext |
 | Wrap long lines | Checkbox | On |
 | Show line numbers | Checkbox | On |
+| Show whitespace | Checkbox | Off |
 | Indentation | Tab · 2 Spaces · 4 Spaces | Tab |
 
 ### Advanced
@@ -589,8 +602,8 @@ Paper size, orientation and scale can be changed in the print panel and the text
 again to match. Margins stay at one inch. Your printer and paper choice carry over to the
 next document you print.
 
-The printed page is the text and nothing else: no headers, no footers, no line numbers, and
-no syntax coloring.
+The printed page is the text and nothing else: no headers, no footers, no line numbers, no
+whitespace markers, and no syntax coloring.
 
 ---
 

@@ -238,6 +238,10 @@ struct PreferencesView: View {
 				checkbox("pref.line_numbers.title", yesNo(\.showLineNumberRuler))
 			}
 			GridRow {
+				emptyLabel
+				checkbox("pref.whitespace.title", yesNo(\.showWhitespaceMarkers))
+			}
+			GridRow {
 				label("pref.default_indentation.title")
 				picker(binding(\.defaultIndentation), options: defaultIndentationOptions, titled: "pref.default_indentation.title")
 			}
