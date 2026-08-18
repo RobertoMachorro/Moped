@@ -15,7 +15,7 @@ Bias the review toward **invariants that are load-bearing but invisible** — th
 have each already caused a real bug here. Ordinary style nits are handled by
 `swiftlint --strict`; do not spend the review on them.
 
-## The three gates
+## The four gates
 
 CI (`.github/workflows/build.yaml`) runs all of these on every PR, in this order:
 
