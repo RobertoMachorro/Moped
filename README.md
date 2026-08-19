@@ -29,7 +29,10 @@ Pre-compiled versions are available directly from [GitHub](https://github.com/Ro
 
 Requires macOS 14.0 (Sonoma) or later.
 
+<img width="900" height="563" alt="hero" src="https://github.com/user-attachments/assets/2405567b-bb57-4704-a2c6-f33717426f76" />
+<!--
 <img width="1483" height="698" alt="image" src="https://github.com/user-attachments/assets/d3f11bd8-b5d8-49c8-b6e6-5e486ae110de" />
+-->
 
 ## Features
 
