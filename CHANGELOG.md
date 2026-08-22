@@ -10,6 +10,14 @@ All notable changes to Moped. Versions follow the app's marketing version.
   space and a chevron for every tab, anywhere in the line — so a file that mixes the two
   gives itself away. Off by default, and display only: nothing is written to your file.
 
+### Fixed
+
+- **The find bar over a dark theme.** AppKit draws the find bar on the editor's own
+  background and dresses its controls for the system appearance, so with a dark theme in
+  Light mode the Done button, the ‹ › arrows and the whole replace row were dark on dark —
+  invisible against a black background. The bar now follows the theme's lightness rather
+  than the system's, and the scrollbar knob does too.
+
 ## 3.0.0
 
 Moped's editor is now its own code. The syntax highlighting, line numbering, indentation

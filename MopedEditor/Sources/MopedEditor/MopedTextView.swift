@@ -123,7 +123,7 @@ public final class MopedTextView: NSTextView {
 			?? NSFont.userFixedPitchFont(ofSize: 13.0)
 			?? NSFont.monospacedSystemFont(ofSize: 13.0, weight: .regular)
 
-		let scrollView = NSScrollView()
+		let scrollView = EditorScrollView()
 		scrollView.borderType = .noBorder
 		scrollView.hasVerticalScroller = true
 		scrollView.hasHorizontalScroller = false
@@ -278,6 +278,7 @@ public final class MopedTextView: NSTextView {
 		selectedTextAttributes = [.backgroundColor: resolvedTheme.selection]
 		typingAttributes = baseAttributes()
 		enclosingScrollView?.backgroundColor = resolvedTheme.background
+		applyChromeAppearance()
 		textStorage?.addAttribute(
 			.foregroundColor,
 			value: resolvedTheme.foreground,
@@ -286,6 +287,17 @@ public final class MopedTextView: NSTextView {
 		lineNumberRuler?.theme = resolvedTheme
 		whitespaceLayoutManager.markerColor = resolvedTheme.foreground.withAlphaComponent(Self.markerAlpha)
 		needsDisplay = true
+	}
+
+	/// Dresses the AppKit chrome drawn over the theme's background — the find bar and the
+	/// scroller knob — to match the palette instead of the system appearance. Both
+	/// directions are set: a light theme under a Dark system is the same problem mirrored,
+	/// and `.default` knob style would leave it there.
+	private func applyChromeAppearance() {
+		let prefersDark = resolvedTheme.prefersDarkChrome
+		(enclosingScrollView as? EditorScrollView)?.findBarAppearance =
+			NSAppearance(named: prefersDark ? .darkAqua : .aqua)
+		enclosingScrollView?.scrollerKnobStyle = prefersDark ? .light : .dark
 	}
 
 	private func applyFont() {

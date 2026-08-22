@@ -204,6 +204,9 @@ floating over it, so it never covers the line you are looking at. It searches as
 and its options menu gives you the usual controls — ignore case, whole words, wrap around,
 and full **regular expression** matching. Press **Esc** to dismiss it.
 
+The bar takes its light or dark styling from the theme's background rather than from the
+system appearance, so a dark theme keeps a readable find bar while macOS is set to Light.
+
 ⌘⌥F opens the bar with the replace field already showing, even from a cold start, so
 replacing does not take two keystrokes.
 

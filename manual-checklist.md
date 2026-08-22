@@ -39,7 +39,7 @@
 - [ ] Toggle Line Comment menu item — comments/uncomments using the correct marker for the document language.
 - [ ] Auto‑indent on Return — new line preserves leading whitespace from previous line.
 - [ ] Undo after heavy typing, theme switches, and comment toggles — undoes only text edits; colors are never "undone" and switching theme never becomes an undo step.
-- [ ] Cmd‑F / Cmd‑Option‑F / Esc / Cmd‑L — find bar appears above the content, replace row shows from a cold start, Esc dismisses, jump‑to‑line works.
+- [ ] Cmd‑F / Cmd‑Option‑F / Esc / Cmd‑L — find bar appears above the content, replace row shows from a cold start, Esc dismisses, jump‑to‑line works. With Turbo (or any dark theme) while macOS is in Light mode, the Done button, ‹ › arrows, options menu and replace row stay legible against the theme's background, and the scrollbar knob is visible.
 - [ ] Word wrap on/off — reflows correctly, with and without the gutter visible.
 - [ ] Show/hide line number gutter — gutter appears/disappears and reclaims its space.
 - [ ] Large file (>256 KB) — opens without locking up and stays responsive while typing; highlighting is off.
