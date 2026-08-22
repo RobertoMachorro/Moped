@@ -196,6 +196,41 @@ final class ThemeTests: XCTestCase {
 		XCTAssertEqual(caret?.blueComponent ?? 1, 0, accuracy: 0.001)
 	}
 
+	/// The chrome AppKit draws over the palette — the find bar above the text, the
+	/// scroller knob — is dressed from this. Getting it backwards is not cosmetic: the
+	/// bar's controls blend into the background they are drawn over and vanish entirely,
+	/// which is what issue #101 reported for a black background.
+	func testChromePreferenceFollowsTheBackground() {
+		for theme in MopedTheme.allBuiltIn where theme.name != "Turbo" {
+			XCTAssertFalse(theme.prefersDarkChrome, "\(theme.name)'s light palette wants light chrome")
+			XCTAssertEqual(
+				theme.darkVariant?.prefersDarkChrome, true, "\(theme.name)'s dark palette wants dark chrome"
+			)
+		}
+		// Turbo has no light half, so its DOS blue answers for both appearances.
+		XCTAssertTrue(MopedTheme.turbo.prefersDarkChrome)
+	}
+
+	/// Pure black is the theme from issue #101; pure white is the same bug mirrored, which
+	/// is what a custom light theme hits under a Dark system.
+	func testChromePreferenceAtTheExtremes() {
+		XCTAssertTrue(palette(background: NSColor(srgbRed: 0, green: 0, blue: 0, alpha: 1)).prefersDarkChrome)
+		XCTAssertFalse(palette(background: NSColor(srgbRed: 1, green: 1, blue: 1, alpha: 1)).prefersDarkChrome)
+	}
+
+	/// Only `background` matters here, so the rest is filler.
+	private func palette(background: NSColor) -> MopedTheme {
+		MopedTheme(
+			name: "Test",
+			background: background,
+			foreground: .textColor,
+			gutterBackground: background,
+			gutterForeground: .textColor,
+			selection: .selectedTextBackgroundColor,
+			tokenColors: [:]
+		)
+	}
+
 	private func brightness(of color: NSColor) throws -> CGFloat {
 		try XCTUnwrap(color.usingColorSpace(.sRGB)).brightnessComponent
 	}

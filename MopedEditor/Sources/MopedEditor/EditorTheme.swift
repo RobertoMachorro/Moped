@@ -117,6 +117,30 @@ public struct MopedTheme: Sendable {
 		tokenColors[kind.rawValue] ?? foreground
 	}
 
+	/// Whether AppKit chrome drawn over this palette — the find bar, the scroller knob —
+	/// should use the dark appearance.
+	///
+	/// The find bar lives inside the editor's scroll view, so this background is what its
+	/// controls are drawn against. Left to the window's appearance they blend toward that
+	/// backdrop and disappear into it: a Light-appearance find bar over a black theme
+	/// composites to black. Rec. 601 luma against mid grey is all the precision needed —
+	/// the question is only which of two control tints stays legible.
+	public var prefersDarkChrome: Bool {
+		let resolved = background.usingColorSpace(.sRGB)
+			?? background.usingColorSpace(.deviceRGB)
+			?? background.usingColorSpace(.genericRGB)
+
+		guard let rgb = resolved else {
+			return false
+		}
+		var red: CGFloat = 1
+		var green: CGFloat = 1
+		var blue: CGFloat = 1
+		var alpha: CGFloat = 1
+		rgb.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+		return 0.299 * red + 0.587 * green + 0.114 * blue < 0.5
+	}
+
 	/// The same palette under a different name, unpaired.
 	func renamed(_ name: String) -> MopedTheme {
 		MopedTheme(
