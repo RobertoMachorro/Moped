@@ -13,7 +13,6 @@
 		A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000113 /* PreferencesView.swift */; };
 		A1B2C3D4E500000000000014 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000114 /* AboutView.swift */; };
 		A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */; };
-		ABCDEF0000000000000000E1 /* CLIFileTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000E0 /* CLIFileTags.swift */; };
 		A1B2C3D4E500000000000017 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000117 /* AppActions.swift */; };
 		A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000220 /* MopedApp.swift */; };
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
@@ -26,6 +25,7 @@
 		ABCDEF0000000000000000B3 /* LanguageCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000B2 /* LanguageCatalog.swift */; };
 		ABCDEF0000000000000000C3 /* MopedEditor in Frameworks */ = {isa = PBXBuildFile; productRef = ABCDEF0000000000000000C2 /* MopedEditor */; };
 		ABCDEF0000000000000000D1 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000D0 /* ThemeStore.swift */; };
+		ABCDEF0000000000000000E1 /* CLIFileTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000E0 /* CLIFileTags.swift */; };
 		B1C2D3E4F500000000000901 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000902 /* Localizable.xcstrings */; };
 		B1C2D3E4F500000000000910 /* LanguageComments.plist in Resources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F500000000000911 /* LanguageComments.plist */; };
 		E94A91AA23106CC900BE978A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94A91A923106CC900BE978A /* Preferences.swift */; };
@@ -57,7 +57,6 @@
 		A1B2C3D4E500000000000113 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000114 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEditorSelectorView.swift; sourceTree = "<group>"; };
-		ABCDEF0000000000000000E0 /* CLIFileTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLIFileTags.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000117 /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000220 /* MopedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
@@ -71,6 +70,7 @@
 		ABCDEF0000000000000000B0 /* ThemeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCatalog.swift; sourceTree = "<group>"; };
 		ABCDEF0000000000000000B2 /* LanguageCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCatalog.swift; sourceTree = "<group>"; };
 		ABCDEF0000000000000000D0 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		ABCDEF0000000000000000E0 /* CLIFileTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLIFileTags.swift; sourceTree = "<group>"; };
 		B1C2D3E4F500000000000902 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B1C2D3E4F500000000000911 /* LanguageComments.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = LanguageComments.plist; sourceTree = "<group>"; };
 		E94A91A923106CC900BE978A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -414,7 +414,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -427,7 +427,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
@@ -448,7 +448,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -461,7 +461,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 3.0.1;
+				MARKETING_VERSION = 3.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = net.machorro.roberto.Moped;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Moped/Moped-Bridging-Header.h";
