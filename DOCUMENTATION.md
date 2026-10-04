@@ -644,6 +644,12 @@ moped notes.txt config.yaml
 Relative paths are resolved before being handed to Moped, so `moped ./notes.txt` works from
 any directory.
 
+A file that does not exist yet is created empty and opened, so `moped todo.txt` is a quick
+way to start a new file, and ⌘S saves straight to it. If you close it, or quit Moped, while
+it is still empty, Moped deletes it again, so changing your mind leaves nothing behind. If
+the file cannot be created — its folder does not exist, for example — the command reports
+it as missing.
+
 `moped -h` (or `--help`) prints the usage line above.
 
 ### `--wait`

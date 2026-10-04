@@ -78,6 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
 		WaitManager.shared.startObserving()
+		PlaceholderFiles.shared.startObserving()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {

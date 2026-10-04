@@ -10,6 +10,12 @@ All notable changes to Moped. Versions follow the app's marketing version.
   space and a chevron for every tab, anywhere in the line — so a file that mixes the two
   gives itself away. Off by default, and display only: nothing is written to your file.
 
+### Changed
+
+- **`moped` creates files that do not exist.** `moped new.txt` used to stop with "does not
+  exist"; it now creates the file empty and opens it, and ⌘S saves to it. Close it, or
+  quit, while it is still empty and Moped deletes it again.
+
 ### Fixed
 
 - **The find bar over a dark theme.** AppKit draws the find bar on the editor's own

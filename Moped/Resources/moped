@@ -27,6 +27,7 @@ set -e
 
 BUNDLE_ID="net.machorro.roberto.Moped"
 NOTIFICATION_NAME="net.machorro.roberto.Moped.CLIWaitRequest"
+PLACEHOLDER_XATTR="net.machorro.roberto.Moped.placeholder"
 
 usage() {
 	printf 'Usage: moped [--wait] <file>...\n' >&2
@@ -48,12 +49,24 @@ done
 # Convert each file path to absolute form. WaitManager canonicalizes paths on
 # the receiving side (resolvingSymlinksInPath + standardizedFileURL), so we
 # only need absoluteness here — we don't have to chase symlinks ourselves.
+#
+# A path that does not exist yet is created empty first, so `moped new.txt`
+# opens a blank document that saves back to that name. The sandboxed app could
+# not create it on save by itself: it may only write where it was handed a file.
+# The PLACEHOLDER_XATTR tag asks Moped to delete the file again if it is still
+# empty when its window closes (PlaceholderFiles.swift); a filesystem without
+# extended attributes only loses that cleanup. If the file cannot be created
+# (its directory is missing, say), `open` below reports it as missing instead.
 abs_files=()
 for f in "${files[@]}"; do
 	case "$f" in
-		/*) abs_files+=("$f") ;;
-		*)  abs_files+=("$PWD/$f") ;;
+		/*) abs="$f" ;;
+		*)  abs="$PWD/$f" ;;
 	esac
+	if [ ! -e "$abs" ] && touch "$abs" 2>/dev/null; then
+		xattr -w "$PLACEHOLDER_XATTR" 1 "$abs" 2>/dev/null || true
+	fi
+	abs_files+=("$abs")
 done
 
 # Hand the files to Moped via Launch Services. Because this script runs
