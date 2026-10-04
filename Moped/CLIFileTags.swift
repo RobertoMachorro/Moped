@@ -31,10 +31,16 @@ import Cocoa
 ///   not create it on first save by itself, since it may only write where it was handed a
 ///   file. If it is still empty when its window closes, or the app quits, it is deleted
 ///   again, so opening a new name and changing your mind leaves nothing behind.
-/// - `wait`: `moped --wait` polls until this is gone. The script sets it to `pending`, this
-///   type changes it to `open` once the document is on screen, and removes it when the
-///   window closes or the app quits. One still `pending` after a few seconds tells the
-///   script the open failed, so it stops waiting rather than hang the caller's terminal.
+/// - `wait.<uuid>`: `moped --wait` polls until this is gone, one per invocation so waits on
+///   the same file stay independent. The script sets it to `pending`, this type changes it
+///   to `open` once the document is on screen, and removes it when the window closes or the
+///   app quits. One still `pending` after a few seconds tells the script the open failed,
+///   so it stops waiting rather than hang the caller's terminal.
+///
+/// "On screen" is reported twice: when a document first shows its file (`MopedApp`), and
+/// whenever an open document's attributes change (`MopedDocument`'s file watcher). The
+/// second is the only sign of `moped --wait` on a file that is already open — `open` then
+/// just brings its window forward, which posts nothing if it was already the key window.
 ///
 /// The closing hooks run after any save has happened: the window closes only once the
 /// document agreed to, and the unsaved-changes review precedes termination.
@@ -44,7 +50,7 @@ final class CLIFileTags: NSObject {
 
 	/// Each must match its counterpart in `Resources/moped`.
 	private static let placeholderAttribute = "net.machorro.roberto.Moped.placeholder"
-	private static let waitAttribute = "net.machorro.roberto.Moped.wait"
+	private static let waitAttributePrefix = "net.machorro.roberto.Moped.wait."
 
 	private var isObserving = false
 
@@ -54,13 +60,6 @@ final class CLIFileTags: NSObject {
 		}
 
 		isObserving = true
-
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(windowDidBecomeKey(_:)),
-			name: NSWindow.didBecomeKeyNotification,
-			object: nil
-		)
 
 		NotificationCenter.default.addObserver(
 			self,
@@ -77,18 +76,10 @@ final class CLIFileTags: NSObject {
 		)
 	}
 
-	/// Tells a waiting `moped --wait` that the file at `url` is on screen.
+	/// Tells each waiting `moped --wait` that the file at `url` is on screen.
 	func documentShown(_ url: URL) {
-		if Self.value(of: Self.waitAttribute, at: url) == "pending" {
-			Self.setValue("open", of: Self.waitAttribute, at: url)
-		}
-	}
-
-	/// Asking `moped --wait` for a file that is already open only brings its window forward —
-	/// no new document appears to call `documentShown` — so every key change rechecks them all.
-	@objc private func windowDidBecomeKey(_ notification: Notification) {
-		for url in NSDocumentController.shared.documents.compactMap(\.fileURL) {
-			documentShown(url)
+		for name in Self.waitAttributes(at: url) where Self.value(of: name, at: url) == "pending" {
+			Self.setValue("open", of: name, at: url)
 		}
 	}
 
@@ -107,11 +98,14 @@ final class CLIFileTags: NSObject {
 		}
 	}
 
-	/// Releases any `moped --wait` on `url`, and deletes the file if `moped` created it and it
-	/// is still empty. Once it has content it is the user's file, so the placeholder tag comes
-	/// off instead and it is never considered again.
-	private func documentClosed(_ url: URL) {
-		Self.removeValue(of: Self.waitAttribute, at: url)
+	/// Releases every `moped --wait` on `url`, and deletes the file if `moped` created it and
+	/// it is still empty. Once it has content it is the user's file, so the placeholder tag
+	/// comes off instead and it is never considered again. Also called for the URL a document
+	/// leaves on Save As.
+	func documentClosed(_ url: URL) {
+		for name in Self.waitAttributes(at: url) {
+			Self.removeValue(of: name, at: url)
+		}
 
 		guard Self.value(of: Self.placeholderAttribute, at: url) != nil else {
 			return
@@ -121,6 +115,26 @@ final class CLIFileTags: NSObject {
 			try? FileManager.default.removeItem(at: url)
 		} else {
 			Self.removeValue(of: Self.placeholderAttribute, at: url)
+		}
+	}
+
+	private static func waitAttributes(at url: URL) -> [String] {
+		url.withUnsafeFileSystemRepresentation { path -> [String] in
+			guard let path else {
+				return []
+			}
+			let length = listxattr(path, nil, 0, 0)
+			guard length > 0 else {
+				return []
+			}
+			var names = [CChar](repeating: 0, count: length)
+			guard listxattr(path, &names, length, 0) == length else {
+				return []
+			}
+			// A run of NUL-terminated names.
+			return names.split(separator: 0)
+				.compactMap { String(bytes: $0.map(UInt8.init(bitPattern:)), encoding: .utf8) }
+				.filter { $0.hasPrefix(waitAttributePrefix) }
 		}
 	}
 

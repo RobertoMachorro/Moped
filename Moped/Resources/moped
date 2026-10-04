@@ -26,13 +26,15 @@
 # - PLACEHOLDER_XATTR marks a file this script created because it did not exist.
 # - WAIT_XATTR is what --wait polls. The script sets it to `pending`, the app
 #   changes it to `open` once the document is on screen and removes it when the
-#   window closes or the app quits.
+#   window closes or the app quits. Its name ends in a per-invocation UUID, so
+#   two --wait calls on the same file each keep their own tag: one finishing or
+#   being interrupted cannot release the other.
 
 set -e
 
 BUNDLE_ID="net.machorro.roberto.Moped"
 PLACEHOLDER_XATTR="net.machorro.roberto.Moped.placeholder"
-WAIT_XATTR="net.machorro.roberto.Moped.wait"
+WAIT_XATTR="net.machorro.roberto.Moped.wait.$(uuidgen)"
 
 usage() {
 	printf 'Usage: moped [--wait] <file>...\n' >&2
@@ -59,15 +61,18 @@ done
 # not create it on save by itself: it may only write where it was handed a file.
 # The PLACEHOLDER_XATTR tag asks Moped to delete the file again if it is still
 # empty when its window closes (CLIFileTags.swift); a filesystem without
-# extended attributes only loses that cleanup. If the file cannot be created
-# (its directory is missing, say), `open` below reports it as missing instead.
+# extended attributes only loses that cleanup. The file is created with
+# noclobber (`set -C`), which fails if anything exists at the path, so a file
+# that appears between the check and the creation is never mistaken for one of
+# ours. If the file cannot be created (its directory is missing, say), `open`
+# below reports it as missing instead.
 abs_files=()
 for f in "${files[@]}"; do
 	case "$f" in
 		/*) abs="$f" ;;
 		*)  abs="$PWD/$f" ;;
 	esac
-	if [ ! -e "$abs" ] && touch "$abs" 2>/dev/null; then
+	if (set -C; : > "$abs") 2>/dev/null; then
 		xattr -w "$PLACEHOLDER_XATTR" 1 "$abs" 2>/dev/null || true
 	fi
 	abs_files+=("$abs")

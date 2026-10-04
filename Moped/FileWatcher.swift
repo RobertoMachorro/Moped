@@ -49,9 +49,11 @@ final class FileWatcher {
 
 	private let box = SourceBox()
 	private var watchedURL: URL?
-	private var changeHandler: (() -> Void)?
+	private var changeHandler: ((DispatchSource.FileSystemEvent) -> Void)?
 
-	func start(url: URL, onChange: @escaping () -> Void) {
+	/// `onChange` receives what happened. `.attrib` alone is metadata only — permissions,
+	/// timestamps, extended attributes — and leaves the contents as they were.
+	func start(url: URL, onChange: @escaping (DispatchSource.FileSystemEvent) -> Void) {
 		stop()
 		watchedURL = url
 		changeHandler = onChange
@@ -78,14 +80,14 @@ final class FileWatcher {
 		guard openedFd != -1 else { return }
 		let src = DispatchSource.makeFileSystemObjectSource(
 			fileDescriptor: openedFd,
-			eventMask: [.write, .extend, .delete, .rename],
+			eventMask: [.write, .extend, .delete, .rename, .attrib],
 			queue: .main)
 		src.setEventHandler { [weak self, box] in
 			// Delivered on `.main` per the queue above, so the isolation is real.
 			MainActor.assumeIsolated {
 				guard let self, let current = box.current else { return }
 				let events = current.data
-				self.changeHandler?()
+				self.changeHandler?(events)
 				if events.contains(.delete) || events.contains(.rename) {
 					self.rewatch()
 				}

@@ -72,6 +72,9 @@
 - [ ] `moped --wait /no/such/folder/file.txt` — returns at once with `open`'s "does not exist" error rather than hanging the terminal.
 - [ ] `moped --wait` on a file Moped refuses (`cp /bin/ls probe.dat`) — returns on its own after ~10 seconds, and `xattr probe.dat` shows no `net.machorro.roberto.Moped.wait` left behind.
 - [ ] `moped --wait` on a file that is already open — keeps waiting until that window closes, rather than giving up after ~10 seconds.
+- [ ] Same, but with Moped frontmost and that file's window already key when the command runs (e.g. `open -a Moped f.txt; sleep 2; moped --wait f.txt` from a script) — still waits. Nothing changes key here, so only the file watcher noticing the tag catches it.
+- [ ] Two `moped --wait` on the same file at once — Ctrl-C one, and the other keeps waiting until the window closes.
+- [ ] `moped --wait new.txt`, then **File ▸ Save As…** to another name — the command returns, and the empty `new.txt` is removed.
 - [ ] `git commit` with `core.editor` set to `moped --wait`, from Terminal on macOS 15 or later — no "Operation not permitted", and the commit uses the message once the window closes. The old session file lived in Moped's container, which macOS no longer lets other apps write to.
 - [ ] `moped new.txt` for a file that does not exist — an empty window opens and ⌘S saves to `new.txt` with no Save panel. Separately: close it untouched and `new.txt` is gone; reopen, type, close, and it stays with the text; reopen untouched and quit, and it is gone. A file that already existed is never removed, even if empty.
 - [ ] `moped --wait new.txt` for a file that does not exist — waits until the window closes, the same as for an existing file.
