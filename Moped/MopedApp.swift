@@ -31,6 +31,9 @@ struct MopedApp: App {
 				EditorView(document: file.document)
 					.onChange(of: file.fileURL, initial: true) { _, newURL in
 						file.document.fileURL = newURL
+						if let newURL {
+							CLIFileTags.shared.documentShown(newURL)
+						}
 					}
 			}
 		)

@@ -69,7 +69,10 @@
 - [ ] Cmd‑L with the alert open — the pre‑filled line-number field already has keyboard focus, so a number can be typed without clicking into it first. `MopedCommands.jumpToLine` does not set `initialFirstResponder`, so this rests on AppKit's own behaviour.
 - [ ] moped --wait — blocks until the file's window closes. Minimize the window, and separately hide the app (Cmd-H): the command keeps waiting through both, and returns only on close or quit.
 - [ ] moped --wait on a **cold launch** — quit Moped, then `moped --wait somefile.txt` on a large file so the launch is slow. The command must keep waiting until you close the window, not return as soon as the app appears. This was the empty-`git commit`-message bug: a document not yet registered read as already closed.
-- [ ] `moped --wait /no/such/folder/file.txt` — returns on its own within ~10 seconds rather than hanging the terminal forever. (A missing file in a folder that *does* exist is now created, so it no longer exercises this.)
+- [ ] `moped --wait /no/such/folder/file.txt` — returns at once with `open`'s "does not exist" error rather than hanging the terminal.
+- [ ] `moped --wait` on a file Moped refuses (`cp /bin/ls probe.dat`) — returns on its own after ~10 seconds, and `xattr probe.dat` shows no `net.machorro.roberto.Moped.wait` left behind.
+- [ ] `moped --wait` on a file that is already open — keeps waiting until that window closes, rather than giving up after ~10 seconds.
+- [ ] `git commit` with `core.editor` set to `moped --wait`, from Terminal on macOS 15 or later — no "Operation not permitted", and the commit uses the message once the window closes. The old session file lived in Moped's container, which macOS no longer lets other apps write to.
 - [ ] `moped new.txt` for a file that does not exist — an empty window opens and ⌘S saves to `new.txt` with no Save panel. Separately: close it untouched and `new.txt` is gone; reopen, type, close, and it stays with the text; reopen untouched and quit, and it is gone. A file that already existed is never removed, even if empty.
 - [ ] `moped --wait new.txt` for a file that does not exist — waits until the window closes, the same as for an existing file.
 - [ ] On Launch = Empty Editor, then `moped <file>` — only that file opens; no extra untitled window appears on top of it. Launch from Finder with no file — one untitled window.

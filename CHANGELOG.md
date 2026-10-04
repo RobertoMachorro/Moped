@@ -18,6 +18,10 @@ All notable changes to Moped. Versions follow the app's marketing version.
 
 ### Fixed
 
+- **`moped --wait` failing with "Operation not permitted".** It kept its session file in
+  Moped's sandbox container, which current macOS no longer lets other apps write to, so
+  `git commit` gave up with "there was a problem with the editor". It now tags the files
+  being edited instead, and no longer needs the container at all.
 - **The find bar over a dark theme.** AppKit draws the find bar on the editor's own
   background and dresses its controls for the system appearance, so with a dark theme in
   Light mode the Done button, the ‹ › arrows and the whole replace row were dark on dark —

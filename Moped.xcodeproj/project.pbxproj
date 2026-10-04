@@ -13,8 +13,7 @@
 		A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000113 /* PreferencesView.swift */; };
 		A1B2C3D4E500000000000014 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000114 /* AboutView.swift */; };
 		A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */; };
-		A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000116 /* WaitManager.swift */; };
-		ABCDEF0000000000000000E1 /* PlaceholderFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000E0 /* PlaceholderFiles.swift */; };
+		ABCDEF0000000000000000E1 /* CLIFileTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF0000000000000000E0 /* CLIFileTags.swift */; };
 		A1B2C3D4E500000000000017 /* AppActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000117 /* AppActions.swift */; };
 		A1B2C3D4E500000000000120 /* MopedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000220 /* MopedApp.swift */; };
 		A1B2C3D4E500000000000121 /* MopedDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E500000000000221 /* MopedDocument.swift */; };
@@ -58,8 +57,7 @@
 		A1B2C3D4E500000000000113 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000114 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEditorSelectorView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E500000000000116 /* WaitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitManager.swift; sourceTree = "<group>"; };
-		ABCDEF0000000000000000E0 /* PlaceholderFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderFiles.swift; sourceTree = "<group>"; };
+		ABCDEF0000000000000000E0 /* CLIFileTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLIFileTags.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000117 /* AppActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActions.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000220 /* MopedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E500000000000221 /* MopedDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MopedDocument.swift; sourceTree = "<group>"; };
@@ -136,8 +134,7 @@
 				A1B2C3D4E500000000000110 /* EditorState.swift */,
 				A1B2C3D4E500000000000111 /* TextEditorRepresentable.swift */,
 				A1B2C3D4E500000000000115 /* DefaultEditorSelectorView.swift */,
-				A1B2C3D4E500000000000116 /* WaitManager.swift */,
-				ABCDEF0000000000000000E0 /* PlaceholderFiles.swift */,
+				ABCDEF0000000000000000E0 /* CLIFileTags.swift */,
 				E990B6F0230A38930010CF5D /* TextFileModel.swift */,
 				A1B2C3D4E500000000000113 /* PreferencesView.swift */,
 				E94A91A923106CC900BE978A /* Preferences.swift */,
@@ -255,8 +252,7 @@
 				A1B2C3D4E500000000000011 /* TextEditorRepresentable.swift in Sources */,
 				A1B2C3D4E500000000000013 /* PreferencesView.swift in Sources */,
 				A1B2C3D4E500000000000015 /* DefaultEditorSelectorView.swift in Sources */,
-				A1B2C3D4E500000000000016 /* WaitManager.swift in Sources */,
-				ABCDEF0000000000000000E1 /* PlaceholderFiles.swift in Sources */,
+				ABCDEF0000000000000000E1 /* CLIFileTags.swift in Sources */,
 				A1B2C3D4E500000000000017 /* AppActions.swift in Sources */,
 				ABCDEF0000000000000000B1 /* ThemeCatalog.swift in Sources */,
 				ABCDEF0000000000000000D1 /* ThemeStore.swift in Sources */,
