@@ -644,13 +644,24 @@ moped notes.txt config.yaml
 Relative paths are resolved before being handed to Moped, so `moped ./notes.txt` works from
 any directory.
 
+A file that does not exist yet is created empty and opened, so `moped todo.txt` is a quick
+way to start a new file, and ⌘S saves straight to it. If you close it, or quit Moped, while
+it is still empty, Moped deletes it again, so changing your mind leaves nothing behind. If
+the file cannot be created — its folder does not exist, for example — the command reports
+it as missing.
+
 `moped -h` (or `--help`) prints the usage line above.
 
 ### `--wait`
 
 With `--wait`, the command opens the files and then **blocks until you close them**, which
 is what tools like `git` need from an editor. It returns as soon as every file you opened
-is closed, or immediately if you quit Moped.
+is closed, or immediately if you quit Moped. If Moped refuses a file — a binary, say — the
+command gives up on it after about ten seconds rather than waiting forever.
+
+`--wait` keeps track of each file by tagging it with an extended attribute, which Moped
+removes when the window closes, so it can only wait for files you are allowed to change. For
+any other file it prints `moped: cannot wait for …` and carries on without waiting for it.
 
 Use Moped as your Git commit editor:
 

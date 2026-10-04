@@ -17,16 +17,24 @@
 # that same unsandboxed context, so the resulting kAEOpenDocuments AppleEvent
 # crosses into Moped.app the normal way (with a proper powerbox grant).
 #
-# --wait mode: the script posts a DistributedNotification to WaitManager via
-# osascript (unsandboxed, so DNC posting works), creates a session file inside
-# the app's sandbox container, and polls for its deletion. WaitManager deletes
-# the session file when all tracked documents close. A sandboxed Mach-O binary
-# cannot post distributed notifications — that's why --wait lives here too.
+# Talking back to the app: the script and the sandboxed app share no channel but
+# the files themselves. macOS's app data protection stops the user's shell from
+# writing into the app's container, and the app can always write to a document
+# it has open, so both directions use extended attributes on the opened files
+# (CLIFileTags.swift holds the app's side):
+#
+# - PLACEHOLDER_XATTR marks a file this script created because it did not exist.
+# - WAIT_XATTR is what --wait polls. The script sets it to `pending`, the app
+#   changes it to `open` once the document is on screen and removes it when the
+#   window closes or the app quits. Its name ends in a per-invocation UUID, so
+#   two --wait calls on the same file each keep their own tag: one finishing or
+#   being interrupted cannot release the other.
 
 set -e
 
 BUNDLE_ID="net.machorro.roberto.Moped"
-NOTIFICATION_NAME="net.machorro.roberto.Moped.CLIWaitRequest"
+PLACEHOLDER_XATTR="net.machorro.roberto.Moped.placeholder"
+WAIT_XATTR="net.machorro.roberto.Moped.wait.$(uuidgen)"
 
 usage() {
 	printf 'Usage: moped [--wait] <file>...\n' >&2
@@ -45,16 +53,54 @@ done
 
 [ ${#files[@]} -eq 0 ] && usage
 
-# Convert each file path to absolute form. WaitManager canonicalizes paths on
-# the receiving side (resolvingSymlinksInPath + standardizedFileURL), so we
-# only need absoluteness here — we don't have to chase symlinks ourselves.
+# Convert each file path to absolute form, so `open` and `xattr` agree on it
+# whatever the app's working directory.
+#
+# A path that does not exist yet is created empty first, so `moped new.txt`
+# opens a blank document that saves back to that name. The sandboxed app could
+# not create it on save by itself: it may only write where it was handed a file.
+# The PLACEHOLDER_XATTR tag asks Moped to delete the file again if it is still
+# empty when its window closes (CLIFileTags.swift); a filesystem without
+# extended attributes only loses that cleanup. The file is created with
+# noclobber (`set -C`), which fails if anything exists at the path, so a file
+# that appears between the check and the creation is never mistaken for one of
+# ours. If the file cannot be created (its directory is missing, say), `open`
+# below reports it as missing instead.
 abs_files=()
 for f in "${files[@]}"; do
 	case "$f" in
-		/*) abs_files+=("$f") ;;
-		*)  abs_files+=("$PWD/$f") ;;
+		/*) abs="$f" ;;
+		*)  abs="$PWD/$f" ;;
 	esac
+	if (set -C; : > "$abs") 2>/dev/null; then
+		xattr -w "$PLACEHOLDER_XATTR" 1 "$abs" 2>/dev/null || true
+	fi
+	abs_files+=("$abs")
 done
+
+# Tag the files to wait for before `open`, so the tag is already there however
+# fast the app is: a missing tag can only ever mean "closed". A file that cannot
+# be tagged — one you cannot write to — cannot be waited for; a missing one is
+# left for `open` to report.
+tagged=()
+if [ "$wait_mode" = "1" ]; then
+	for f in "${abs_files[@]}"; do
+		if xattr -w "$WAIT_XATTR" pending "$f" 2>/dev/null; then
+			tagged+=("$f")
+		elif [ -e "$f" ]; then
+			printf 'moped: cannot wait for %s\n' "$f" >&2
+		fi
+	done
+
+	# On Ctrl-C, or a file given up on below, take the tags back off so
+	# nothing is left behind on the user's files.
+	cleanup() {
+		for f in "${tagged[@]}"; do
+			xattr -d "$WAIT_XATTR" "$f" 2>/dev/null || true
+		done
+	}
+	trap cleanup INT TERM EXIT
+fi
 
 # Hand the files to Moped via Launch Services. Because this script runs
 # unsandboxed under the user's shell, /usr/bin/open is also unsandboxed,
@@ -63,86 +109,36 @@ done
 #
 # `open` exits non-zero when any argument fails (e.g. a missing file) even
 # though it still opens the rest, so a failure must not abort --wait: the
-# files that did open still deserve their wait, and WaitManager releases a
-# path that never opens once its grace period expires. The status is
-# carried through as the script's own exit code.
+# files that did open still deserve their wait. The status is carried
+# through as the script's own exit code.
 open_status=0
 /usr/bin/open -b "$BUNDLE_ID" "${abs_files[@]}" || open_status=$?
 
-if [ "$wait_mode" = "1" ]; then
-	session_id="$(uuidgen)"
-	container_dir="$HOME/Library/Containers/$BUNDLE_ID/Data/Library/Application Support/MopedCLI"
-	session_file="$container_dir/$session_id.wait"
-
-	mkdir -p "$container_dir"
-	touch "$session_file"
-
-	# Clean up session file on interrupt / termination.
-	cleanup() { rm -f "$session_file"; }
-	trap cleanup INT TERM EXIT
-
-	# Give a cold-launching Moped a moment to start observing before the
-	# request is posted; a notification with no observer is dropped, and
-	# the repost below is the only other chance to be heard.
-	#
-	# This no longer guards the poll side: WaitManager will not treat a
-	# path as closed until it has actually seen it open, so a launch
-	# slower than the first poll can no longer end the session early.
-	sleep 1
-
-	# Post the CLIWaitRequest notification to WaitManager via osascript.
-	# osascript runs unsandboxed so DistributedNotificationCenter posting
-	# is allowed. We pass data through environment variables to avoid
-	# shell-escaping headaches with file paths.
-	export MOPED_SESSION_ID="$session_id"
-	export MOPED_SESSION_FILE="$session_file"
-	export MOPED_NOTIFICATION="$NOTIFICATION_NAME"
-	export MOPED_FILES="$(printf '%s\n' "${abs_files[@]}")"
-
-	post_wait_request() {
-		osascript -l JavaScript -e '
-		ObjC.import("Foundation");
-		var env = $.NSProcessInfo.processInfo.environment;
-		var sessionId   = env.objectForKey($("MOPED_SESSION_ID")).js;
-		var sessionFile = env.objectForKey($("MOPED_SESSION_FILE")).js;
-		var notifName   = env.objectForKey($("MOPED_NOTIFICATION")).js;
-		var filesStr    = env.objectForKey($("MOPED_FILES")).js;
-		var filesArr    = filesStr.split("\n").filter(function(s) { return s.length > 0; });
-
-		var center  = $.NSDistributedNotificationCenter.defaultCenter;
-		var nsFiles = $.NSMutableArray.alloc.init;
-		for (var i = 0; i < filesArr.length; i++) {
-			nsFiles.addObject($(filesArr[i]));
-		}
-		var userInfo = $.NSMutableDictionary.alloc.init;
-		userInfo.setObjectForKey($(sessionId),   $("sessionID"));
-		userInfo.setObjectForKey(nsFiles,        $("files"));
-		userInfo.setObjectForKey($(sessionFile), $("sessionFilePath"));
-
-		center.postNotificationNameObjectUserInfoOptions(
-			$(notifName), $.nil, userInfo, 0
-		);
-		'
-	}
-
-	post_wait_request
-
-	# Block until WaitManager deletes the session file (documents closed)
-	# or the app quits entirely. A notification posted before WaitManager
-	# starts observing (a cold launch slower than the sleep above) is
-	# dropped silently, so repost once after ~5 s of waiting — receiving
-	# the same session twice just re-registers the same file set.
-	ticks=0
-	while [ -f "$session_file" ]; do
-		if ! pgrep -qx Moped 2>/dev/null; then
-			break
+# Wait until every tag is gone. A tag still `pending` after ~10 s belongs to a
+# file Moped never showed — refused as binary or too large — and is given up
+# on, so a failed open cannot hang the caller's terminal. A crash leaves `open`
+# tags behind, so the wait also ends once Moped is no longer running; that is
+# only checked after the first couple of seconds, while a cold launch may not
+# have a process yet.
+waiting=("${tagged[@]}")
+ticks=0
+while [ ${#waiting[@]} -gt 0 ]; do
+	remaining=()
+	for f in "${waiting[@]}"; do
+		state="$(xattr -p "$WAIT_XATTR" "$f" 2>/dev/null)" || continue
+		if [ "$state" = "pending" ] && [ "$ticks" -ge 20 ]; then
+			continue
 		fi
-		ticks=$((ticks + 1))
-		if [ "$ticks" -eq 10 ]; then
-			post_wait_request
-		fi
-		sleep 0.5
+		remaining+=("$f")
 	done
-fi
+	waiting=("${remaining[@]}")
+	[ ${#waiting[@]} -eq 0 ] && break
+
+	if [ "$ticks" -ge 4 ] && ! pgrep -qx Moped 2>/dev/null; then
+		break
+	fi
+	ticks=$((ticks + 1))
+	sleep 0.5
+done
 
 exit "$open_status"

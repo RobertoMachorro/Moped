@@ -77,7 +77,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillFinishLaunching(_ notification: Notification) {
-		WaitManager.shared.startObserving()
+		CLIFileTags.shared.startObserving()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {

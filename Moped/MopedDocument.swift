@@ -209,8 +209,14 @@ final class MopedDocument: ReferenceFileDocument, ObservableObject, @unchecked S
 		fileWatcher?.stop()
 		guard let url = fileURL else { return }
 		fileWatcher = FileWatcher()
-		fileWatcher?.start(url: url) { [weak self] in
-			guard let self, Date() > self.suppressWatchUntil else { return }
+		fileWatcher?.start(url: url) { [weak self] events in
+			// `moped --wait` on a file that is already open tags it rather than opening
+			// anything new, so the tag itself is the only sign; see `CLIFileTags`.
+			if events.contains(.attrib) {
+				CLIFileTags.shared.documentShown(url)
+			}
+			guard let self, !events.subtracting(.attrib).isEmpty,
+				Date() > self.suppressWatchUntil else { return }
 			self.hasExternalChange = true
 		}
 	}

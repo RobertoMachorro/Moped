@@ -29,8 +29,16 @@ struct MopedApp: App {
 			newDocument: { MopedDocument() },
 			editor: { file in
 				EditorView(document: file.document)
-					.onChange(of: file.fileURL, initial: true) { _, newURL in
+					.onChange(of: file.fileURL, initial: true) { oldURL, newURL in
 						file.document.fileURL = newURL
+						// Save As leaves the file `moped` handed over behind, so it is
+						// released as though its window had closed.
+						if let oldURL, oldURL != newURL {
+							CLIFileTags.shared.documentClosed(oldURL)
+						}
+						if let newURL {
+							CLIFileTags.shared.documentShown(newURL)
+						}
 					}
 			}
 		)

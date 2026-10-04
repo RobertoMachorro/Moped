@@ -10,8 +10,18 @@ All notable changes to Moped. Versions follow the app's marketing version.
   space and a chevron for every tab, anywhere in the line — so a file that mixes the two
   gives itself away. Off by default, and display only: nothing is written to your file.
 
+### Changed
+
+- **`moped` creates files that do not exist.** `moped new.txt` used to stop with "does not
+  exist"; it now creates the file empty and opens it, and ⌘S saves to it. Close it, or
+  quit, while it is still empty and Moped deletes it again.
+
 ### Fixed
 
+- **`moped --wait` failing with "Operation not permitted".** It kept its session file in
+  Moped's sandbox container, which current macOS no longer lets other apps write to, so
+  `git commit` gave up with "there was a problem with the editor". It now tags the files
+  being edited instead, and no longer needs the container at all.
 - **The find bar over a dark theme.** AppKit draws the find bar on the editor's own
   background and dresses its controls for the system appearance, so with a dark theme in
   Light mode the Done button, the ‹ › arrows and the whole replace row were dark on dark —
