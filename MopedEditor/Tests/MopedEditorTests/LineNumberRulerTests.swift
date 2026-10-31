@@ -138,6 +138,44 @@ final class LineNumberRulerTests: EditorTestCase {
 		)
 	}
 
+	// MARK: - Layout stays out of the draw
+
+	/// Where the typesetter is allowed to run. The draw path reads
+	/// `laidOutLineNumbers(for:)`, which must lay nothing out: running the typesetter
+	/// inside the ruler's draw grows the text view underneath the display pass that is
+	/// committing, which is where the launch hangs in #102 and #106 sat. `viewWillDraw()`
+	/// lays the band out instead, before anything draws.
+	///
+	/// "Laid nothing out" is read off the layout manager itself: its non-forcing answer
+	/// for one fixed rect has to be the same before and after the draw path runs, and
+	/// different after `viewWillDraw()`, which proves the band really was cold.
+	func testLayoutHappensBeforeTheDrawAndNotInsideIt() throws {
+		let (scrollView, textView) = makeEditor()
+		textView.setPlainText(longDocument(lines: 2000))
+		// Deliberately no drainHighlightPasses(): leave layout as cold as possible.
+		let layoutManager = try XCTUnwrap(textView.layoutManager)
+		let textContainer = try XCTUnwrap(textView.textContainer)
+		let gutter = try ruler(of: textView)
+		let cold = scroll(scrollView, toY: 20000)
+		let query = cold.offsetBy(dx: 0, dy: -textView.textContainerInset.height)
+		func laidOutGlyphs() -> NSRange {
+			layoutManager.glyphRange(forBoundingRectWithoutAdditionalLayout: query, in: textContainer)
+		}
+
+		let before = laidOutGlyphs()
+		_ = gutter.laidOutLineNumbers(for: cold)
+		XCTAssertEqual(laidOutGlyphs(), before, "the draw path must not lay anything out")
+
+		gutter.viewWillDraw()
+		XCTAssertNotEqual(laidOutGlyphs(), before, "viewWillDraw() is what lays the band out")
+
+		let visible = scrollView.contentView.bounds
+		let warm = gutter.laidOutLineNumbers(for: visible)
+		XCTAssertEqual(warm, gutter.visibleLineNumbers(for: visible))
+		let lineHeight = layoutManager.defaultLineHeight(for: textView.editorFont)
+		XCTAssertGreaterThanOrEqual(warm.count, Int((visible.height / lineHeight).rounded(.down)))
+	}
+
 	func testUnscrolledGutterStartsAtTheFirstLine() throws {
 		let (scrollView, textView) = makeEditor()
 		textView.setPlainText(longDocument())

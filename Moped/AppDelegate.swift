@@ -67,8 +67,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 		let prefs = Preferences.userShared
 		if prefs.reopenPreviousOnLaunch {
-			// An exhausted or fully stale session falls back to an empty editor.
-			if !reopenPreviousDocuments() {
+			// Shift held at launch skips the reopen, the escape macOS offers for its own
+			// window restoration. Without it, a document that hangs on open (#106) hangs
+			// every launch, and a sandboxed app's settings cannot be changed from Terminal.
+			// An exhausted or fully stale session also falls back to an empty editor.
+			if NSEvent.modifierFlags.contains(.shift) || !reopenPreviousDocuments() {
 				NSDocumentController.shared.newDocument(nil)
 			}
 		} else if prefs.openEmptyOnLaunch {
