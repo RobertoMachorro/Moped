@@ -106,9 +106,26 @@ final class LineNumberRulerView: NSRulerView {
 
 	/// Call after any programmatic text replacement, which doesn't post
 	/// `NSText.didChangeNotification`.
+	///
+	/// Also sizes the gutter now rather than after its first draw. The gutter's width is
+	/// taken from the text view's, and with wrapping on, a width change throws away the
+	/// text's layout: resizing a turn after the first draw typeset everything twice, and
+	/// on a file with a multi-megabyte line, the second time took seconds (#106). No
+	/// caller is drawing or processing an edit, so re-tiling here is safe.
 	func invalidateLineNumbers() {
 		lineStartsAreStale = true
 		needsDisplay = true
+		guard scrollView?.rulersVisible == true,
+			  let content = (clientView as? NSTextView)?.string as NSString?
+		else {
+			return
+		}
+		lineStarts = LineIndex.lineStarts(of: content)
+		lineStartsAreStale = false
+		let thickness = fittedThickness(forLineCount: lineStarts.count)
+		if abs(thickness - ruleThickness) > 0.5 {
+			ruleThickness = thickness
+		}
 	}
 
 	/// Splices the offset array instead of rebuilding it, so an edit costs work
@@ -156,14 +173,22 @@ final class LineNumberRulerView: NSRulerView {
 	/// happened to lay out was tried and dropped: with non-contiguous layout, a band not
 	/// yet laid out can hold fragments at estimated positions, so the gutter numbered the
 	/// wrong lines, and TextKit sends no delegate callback when it fills those in.
+	///
+	/// Laying out can also move the clip view (a text view that shrinks to its real
+	/// height clamps the scroll offset), and the draw reads the bounds afresh, so this
+	/// lays out again until they hold still. A couple of passes is all that takes.
 	override func viewWillDraw() {
 		if let textView = clientView as? NSTextView,
 		   let layoutManager = textView.layoutManager,
 		   let textContainer = textView.textContainer,
-		   let visibleRect = scrollView?.contentView.bounds {
-			layoutManager.ensureLayout(
-				forBoundingRect: Self.queryRect(for: visibleRect, in: textView), in: textContainer
-			)
+		   let clipView = scrollView?.contentView {
+			var laidOut = NSRect.null
+			for _ in 0..<3 where clipView.bounds != laidOut {
+				laidOut = clipView.bounds
+				layoutManager.ensureLayout(
+					forBoundingRect: textView.containerRect(forViewRect: laidOut), in: textContainer
+				)
+			}
 		}
 		super.viewWillDraw()
 	}
@@ -214,7 +239,7 @@ final class LineNumberRulerView: NSRulerView {
 			return 0..<0
 		}
 		layoutManager.ensureLayout(
-			forBoundingRect: Self.queryRect(for: visibleRect, in: textView), in: textContainer
+			forBoundingRect: textView.containerRect(forViewRect: visibleRect), in: textContainer
 		)
 		return laidOutLineNumbers(for: visibleRect)
 	}
@@ -230,7 +255,7 @@ final class LineNumberRulerView: NSRulerView {
 			return 0..<0
 		}
 
-		let queryRect = Self.queryRect(for: visibleRect, in: textView)
+		let queryRect = textView.containerRect(forViewRect: visibleRect)
 		let visibleGlyphs = layoutManager.glyphRange(
 			forBoundingRectWithoutAdditionalLayout: queryRect, in: textContainer
 		)
@@ -247,14 +272,6 @@ final class LineNumberRulerView: NSRulerView {
 			last += 1
 		}
 		return first..<last
-	}
-
-	/// A clip view rect translated into the text container's coordinates. The clip view's
-	/// coordinates are the text view's; the container's are inset by `textContainerInset`.
-	/// Placing the numbers already accounts for that, so every query about which glyphs
-	/// are in view has to as well, or it asks about a band 4pt off from the one it draws.
-	private static func queryRect(for visibleRect: NSRect, in textView: NSTextView) -> NSRect {
-		visibleRect.offsetBy(dx: 0, dy: -textView.textContainerInset.height)
 	}
 
 	private func draw(number: Int, atY originY: CGFloat, height: CGFloat, isCaretLine: Bool) {
@@ -306,8 +323,7 @@ final class LineNumberRulerView: NSRulerView {
 	///
 	/// Deferring is the same move `SyntaxHighlighter` makes for the same reason.
 	private func updateThickness(forLineCount count: Int) {
-		let widest = NSAttributedString(string: "\(max(count, 1))", attributes: [.font: numberFont])
-		let thickness = max(28.0, widest.size().width + Self.horizontalPadding * 2.0)
+		let thickness = fittedThickness(forLineCount: count)
 		guard abs(thickness - ruleThickness) > 0.5 else {
 			return
 		}
@@ -318,5 +334,11 @@ final class LineNumberRulerView: NSRulerView {
 			self.ruleThickness = thickness
 			self.needsDisplay = true
 		}
+	}
+
+	/// Width that fits the largest line number with padding on both sides.
+	private func fittedThickness(forLineCount count: Int) -> CGFloat {
+		let widest = NSAttributedString(string: "\(max(count, 1))", attributes: [.font: numberFont])
+		return max(28.0, widest.size().width + Self.horizontalPadding * 2.0)
 	}
 }

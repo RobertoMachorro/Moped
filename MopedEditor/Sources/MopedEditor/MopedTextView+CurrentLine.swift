@@ -26,18 +26,18 @@ extension MopedTextView {
 	/// Band to paint behind the caret's line, or nil when a non-empty selection means
 	/// no current-line highlight applies, or when none of the line is inside `area`.
 	///
-	/// Measured from layout that already exists. Only `layOut` lets it lay out `area`
-	/// first, and only the draw passes it, for the rect the text view is about to lay
-	/// out and draw anyway. The layout manager lays out a whole paragraph at a time, so
-	/// measuring the caret's line typeset all of it, and in a file that is one long line
-	/// (minified JSON, a log) that is the whole file. That ran on every caret move, and
-	/// at launch inside `setPlainText(_:)` before the view had its final width, so the
-	/// work was thrown away and done again (#106).
+	/// Measured from layout that already exists; this never lays text out. The layout
+	/// manager lays out a whole paragraph at a time, so measuring the caret's line
+	/// typeset all of it, and in a file that is one long line (minified JSON, a log) that
+	/// is the whole file. That ran on every caret move, and at launch inside
+	/// `setPlainText(_:)` before the view had its final width, so the work was thrown
+	/// away and done again (#106). `drawBackground(in:)` lays out what it is about to
+	/// draw before asking.
 	///
 	/// Where the line carries on past `area`, the band runs to the view's edge on that
 	/// side. Painting is clipped to the dirty rect, so that changes nothing drawn, and a
 	/// caret move invalidating the band still covers every part of the line.
-	func caretLineRect(within area: NSRect, layOut: Bool = false) -> NSRect? {
+	func caretLineRect(within area: NSRect) -> NSRect? {
 		let selection = selectedRange()
 		guard selection.length == 0,
 			  !area.isEmpty,
@@ -49,11 +49,9 @@ extension MopedTextView {
 		}
 		let caret = min(selection.location, content.length)
 		let lineRange = content.lineRange(for: NSRange(location: caret, length: 0))
-		let queryRect = area.offsetBy(dx: 0, dy: -textContainerInset.height)
-		if layOut {
-			layoutManager.ensureLayout(forBoundingRect: queryRect, in: textContainer)
-		}
-		let areaGlyphs = layoutManager.glyphRange(forBoundingRectWithoutAdditionalLayout: queryRect, in: textContainer)
+		let areaGlyphs = layoutManager.glyphRange(
+			forBoundingRectWithoutAdditionalLayout: containerRect(forViewRect: area), in: textContainer
+		)
 		let areaCharacters = layoutManager.characterRange(forGlyphRange: areaGlyphs, actualGlyphRange: nil)
 		let shownRange: NSRange
 		var lineRect: NSRect
@@ -94,9 +92,18 @@ extension MopedTextView {
 	public override func drawBackground(in rect: NSRect) {
 		super.drawBackground(in: rect)
 		// The visible rect as well as `rect`: a partial repaint must not make the band
-		// look cut off, or the next caret move would invalidate the whole view. AppKit
-		// calls this before laying out what it draws, hence `layOut`.
-		guard let lineRect = caretLineRect(within: visibleRect.union(rect), layOut: true) else {
+		// look cut off, or the next caret move would invalidate the whole view. Only when
+		// they touch, though: a rect far from it (a printed page, overdraw) would stretch
+		// the union over everything in between.
+		let area = rect.intersects(visibleRect) ? visibleRect.union(rect) : rect
+		// AppKit calls this before laying out what it draws, so lay that out first. It is
+		// the layout this draw does anyway.
+		if selectedRange().length == 0, let layoutManager, let textContainer {
+			layoutManager.ensureLayout(
+				forBoundingRect: containerRect(forViewRect: area), in: textContainer
+			)
+		}
+		guard let lineRect = caretLineRect(within: area) else {
 			return
 		}
 		highlightedCaretLineRect = lineRect
@@ -114,6 +121,10 @@ extension MopedTextView {
 	) {
 		let previous = highlightedCaretLineRect
 		super.setSelectedRanges(ranges, affinity: affinity, stillSelecting: stillSelecting)
+		// Measured without laying out. Where the arriving line's layout is out of date
+		// (an edit, a width change), this can be nil or off, but layout is only
+		// invalidated together with display, so that line is repainted anyway and
+		// `drawBackground` stores its real band.
 		let current = caretLineRect(within: visibleRect)
 		highlightedCaretLineRect = current
 

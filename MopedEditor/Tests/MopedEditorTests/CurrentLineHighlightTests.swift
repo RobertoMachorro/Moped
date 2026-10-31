@@ -24,7 +24,7 @@ import XCTest
 /// The caret-line band used to be measured over the caret's whole line, which in a file
 /// that is one long line meant typesetting the whole file on every caret move (#106). It
 /// is now measured from layout the draw has already done; these pin that it still looks
-/// the same, and that moving the caret lays nothing out.
+/// the same, that a caret move still finds the new line, and that it lays nothing out.
 final class CurrentLineHighlightTests: EditorTestCase {
 	/// The band as it was measured before: over the caret's whole line.
 	private func wholeLineBand(in textView: MopedTextView) throws -> NSRect {
@@ -105,7 +105,26 @@ final class CurrentLineHighlightTests: EditorTestCase {
 		let text = (1...500).map { "line \($0)" }.joined(separator: "\n")
 		textView.setPlainText(text)
 		textView.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
+		try draw(textView)
 
-		XCTAssertNil(textView.caretLineRect(within: textView.visibleRect, layOut: true))
+		XCTAssertNil(textView.caretLineRect(within: textView.visibleRect))
+	}
+
+	/// A caret move measures the band of the line it arrives on from the layout the last
+	/// draw left, without waiting for another draw. That band is what it invalidates, so
+	/// a wrong one would leave the new line unhighlighted.
+	func testACaretMoveMeasuresTheLineItArrivesOn() throws {
+		let (_, textView) = makeEditor()
+		let text = (1...20).map { "line \($0)" }.joined(separator: "\n")
+		textView.setPlainText(text)
+		try draw(textView)
+		let before = try XCTUnwrap(textView.highlightedCaretLineRect)
+
+		let fifthLine = (text as NSString).range(of: "line 5")
+		textView.setSelectedRange(NSRange(location: fifthLine.location + 2, length: 0))
+		let arrived = try XCTUnwrap(textView.highlightedCaretLineRect, "no band measured for the new line")
+
+		XCTAssertEqual(arrived, try wholeLineBand(in: textView))
+		XCTAssertNotEqual(arrived, before)
 	}
 }

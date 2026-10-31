@@ -204,18 +204,38 @@ final class LineNumberRulerTests: EditorTestCase {
 	/// is not.
 	func testDrawingDoesNotChangeRuleThickness() throws {
 		let (scrollView, textView) = makeEditor()
-		// A one-digit document, so the thickness this *wants* (28) is far from the 40 it
-		// starts at — a document whose measured width lands near 40 would pass this test
-		// without exercising anything.
+		textView.showsLineNumberGutter = true
 		textView.setPlainText(longDocument(lines: 5))
 
+		// `setPlainText` sizes the gutter itself, so make the draw path want a different
+		// width: a much larger number font leaves the line count stale and the fitted
+		// width far from the current one. A change that lands near it would pass this
+		// test without exercising anything.
 		let gutter = try ruler(of: textView)
+		gutter.numberFont = NSFont.monospacedDigitSystemFont(ofSize: 40, weight: .regular)
 		let before = gutter.ruleThickness
 		_ = gutter.visibleLineNumbers(for: scrollView.contentView.bounds)
 		XCTAssertEqual(
 			gutter.ruleThickness, before, accuracy: 0.001,
 			"measuring the gutter during a draw is fine; resizing it there re-tiles the "
 				+ "scroll view underneath the draw"
+		)
+	}
+
+	/// The gutter is sized when the text is set, not after its first draw. Sizing it a
+	/// turn later changed the text view's width once more, which with wrapping on threw
+	/// away the layout of every line, a multi-megabyte one included (#106).
+	func testSettingTextSizesTheGutterRightAway() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		let initial = gutter.ruleThickness
+
+		textView.setPlainText(longDocument(lines: 12_000))
+
+		XCTAssertGreaterThan(
+			gutter.ruleThickness, initial + 0.5,
+			"a five-digit document should widen the gutter without waiting for a draw"
 		)
 	}
 

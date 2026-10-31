@@ -15,6 +15,9 @@ All notable changes to Moped. Versions follow the app's marketing version.
 - **Line numbers no longer lay out text while drawing.** The gutter ran the text layout
   engine from inside its own drawing, the spot where the launch hangs reported in #106 and
   #102 were stuck. That layout now happens before drawing instead, where AppKit allows it.
+  The gutter is also sized to fit the line count as soon as a file loads, rather than
+  after its first draw, so a wrapped file is no longer laid out once at the old width and
+  again at the new one.
 - **The current-line highlight no longer lays out text when the caret moves.** It measured
   the caret's whole line, and AppKit lays a line out in one piece, so in a file that is one
   long line (minified JSON, a log) every caret move typeset the whole file again, and so
