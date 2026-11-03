@@ -107,21 +107,27 @@ final class LineNumberRulerView: NSRulerView {
 	/// Call after any programmatic text replacement, which doesn't post
 	/// `NSText.didChangeNotification`.
 	///
-	/// Also sizes the gutter now rather than after its first draw. The gutter's width is
-	/// taken from the text view's, and with wrapping on, a width change throws away the
-	/// text's layout: resizing a turn after the first draw typeset everything twice, and
-	/// on a file with a multi-megabyte line, the second time took seconds (#106). No
-	/// caller is drawing or processing an edit, so re-tiling here is safe.
+	/// Before the editor is in a window, this also sizes the gutter right away rather
+	/// than after its first draw. The gutter's width is taken from the text view's, and
+	/// with wrapping on, a width change throws away the text's layout: resizing a turn
+	/// after the first draw typeset everything twice, and on a file with a
+	/// multi-megabyte line, the second time took seconds (#106). Out of a window nothing
+	/// has captured the scroll view's geometry, so re-tiling here is safe. In one (a
+	/// reload during a SwiftUI view update), sizing waits a turn like any other.
 	func invalidateLineNumbers() {
 		lineStartsAreStale = true
 		needsDisplay = true
 		guard scrollView?.rulersVisible == true,
-			  let content = (clientView as? NSTextView)?.string as NSString?
+			  let textView = clientView as? NSTextView
 		else {
 			return
 		}
-		lineStarts = LineIndex.lineStarts(of: content)
+		lineStarts = LineIndex.lineStarts(of: textView.string as NSString)
 		lineStartsAreStale = false
+		guard textView.window == nil else {
+			updateThickness(forLineCount: lineStarts.count)
+			return
+		}
 		let thickness = fittedThickness(forLineCount: lineStarts.count)
 		if abs(thickness - ruleThickness) > 0.5 {
 			ruleThickness = thickness
@@ -322,13 +328,21 @@ final class LineNumberRulerView: NSRulerView {
 	/// a gutter that did not match `NSRulerView`'s own light background.
 	///
 	/// Deferring is the same move `SyntaxHighlighter` makes for the same reason.
+	///
+	/// The width is measured again when the turn comes rather than carried over: by then
+	/// `invalidateLineNumbers()` may have sized the gutter for different text, and the
+	/// width measured now would put the old document's back.
 	private func updateThickness(forLineCount count: Int) {
-		let thickness = fittedThickness(forLineCount: count)
-		guard abs(thickness - ruleThickness) > 0.5 else {
+		guard abs(fittedThickness(forLineCount: count) - ruleThickness) > 0.5 else {
 			return
 		}
 		DispatchQueue.main.async { [weak self] in
-			guard let self, abs(thickness - self.ruleThickness) > 0.5 else {
+			// A stale count is rebuilt, and this queued again, by the next draw.
+			guard let self, !self.lineStartsAreStale else {
+				return
+			}
+			let thickness = self.fittedThickness(forLineCount: self.lineStarts.count)
+			guard abs(thickness - self.ruleThickness) > 0.5 else {
 				return
 			}
 			self.ruleThickness = thickness

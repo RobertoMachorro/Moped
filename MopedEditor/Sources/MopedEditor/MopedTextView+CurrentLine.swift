@@ -93,9 +93,11 @@ extension MopedTextView {
 		super.drawBackground(in: rect)
 		// The visible rect as well as `rect`: a partial repaint must not make the band
 		// look cut off, or the next caret move would invalidate the whole view. Only when
-		// they touch, though: a rect far from it (a printed page, overdraw) would stretch
-		// the union over everything in between.
-		let area = rect.intersects(visibleRect) ? visibleRect.union(rect) : rect
+		// they overlap or share an edge (an overdraw strip right below the screen), though:
+		// a rect far from it, such as a printed page, would stretch the union over
+		// everything in between. `intersects` alone is false for rects that only touch.
+		let touchesVisible = rect.intersects(visibleRect.insetBy(dx: -1, dy: -1))
+		let area = touchesVisible ? visibleRect.union(rect) : rect
 		// AppKit calls this before laying out what it draws, so lay that out first. It is
 		// the layout this draw does anyway.
 		if selectedRange().length == 0, let layoutManager, let textContainer {
@@ -122,9 +124,10 @@ extension MopedTextView {
 		let previous = highlightedCaretLineRect
 		super.setSelectedRanges(ranges, affinity: affinity, stillSelecting: stillSelecting)
 		// Measured without laying out. Where the arriving line's layout is out of date
-		// (an edit, a width change), this can be nil or off, but layout is only
-		// invalidated together with display, so that line is repainted anyway and
-		// `drawBackground` stores its real band.
+		// (an edit, a width change), this can be nil or off. That is assumed harmless,
+		// not verified: the edits and width changes that invalidate layout also mark that
+		// text for display, so the line should be repainted anyway and `drawBackground`
+		// store its real band. Windowless tests cannot observe dirty rects to prove it.
 		let current = caretLineRect(within: visibleRect)
 		highlightedCaretLineRect = current
 

@@ -22,10 +22,10 @@ import AppKit
 
 extension NSTextView {
 	/// A rect in this view's coordinates, translated into its text container's. The
-	/// container is inset by `textContainerInset`, so every query about which glyphs a
-	/// view rect holds has to translate it, or it asks about a band 4pt off from the one
-	/// drawn there.
+	/// container sits at `textContainerOrigin` (the inset, on both axes), so every query
+	/// about which glyphs a view rect holds has to translate it, or it asks about a band
+	/// 4pt off from the one drawn there.
 	func containerRect(forViewRect rect: NSRect) -> NSRect {
-		rect.offsetBy(dx: 0, dy: -textContainerInset.height)
+		rect.offsetBy(dx: -textContainerOrigin.x, dy: -textContainerOrigin.y)
 	}
 }

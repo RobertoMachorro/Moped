@@ -239,6 +239,43 @@ final class LineNumberRulerTests: EditorTestCase {
 		)
 	}
 
+	/// A resize an edit queued must not undo a newer size. Typing the 100th line queues a
+	/// widening; a reload to a short file before that turn comes sizes the gutter for the
+	/// new text, and the queued resize used to put the old width back afterwards.
+	func testAQueuedResizeDoesNotUndoANewerSize() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		textView.setPlainText((1...99).map { "\($0)" }.joined(separator: "\n"))
+		let twoDigits = gutter.ruleThickness
+
+		let storage = try XCTUnwrap(textView.textStorage)
+		storage.replaceCharacters(in: NSRange(location: storage.length, length: 0), with: "\n100")
+		textView.setPlainText("one\ntwo")
+		drainHighlightPasses()
+
+		XCTAssertEqual(
+			gutter.ruleThickness, twoDigits, accuracy: 0.5,
+			"the resize queued for 100 lines widened the gutter of a two-line file"
+		)
+	}
+
+	/// A font change sizes the gutter right away too, through the path the app takes.
+	func testAFontChangeSizesTheGutterRightAway() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		textView.setPlainText(longDocument(lines: 5))
+		let before = gutter.ruleThickness
+
+		textView.editorFont = NSFont.monospacedSystemFont(ofSize: 40, weight: .regular)
+
+		XCTAssertGreaterThan(
+			gutter.ruleThickness, before + 0.5,
+			"a much larger font should widen the gutter without waiting for a draw"
+		)
+	}
+
 	/// The gutter still has to widen for a document whose line count needs more digits —
 	/// just on a later runloop turn rather than mid-draw, which is what the drain is for.
 	func testGutterWidensForMoreDigits() throws {
