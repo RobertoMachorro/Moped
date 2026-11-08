@@ -110,6 +110,46 @@ final class CurrentLineHighlightTests: EditorTestCase {
 		XCTAssertNil(textView.caretLineRect(within: textView.visibleRect))
 	}
 
+	/// With wrapping off, a line wider than the view is still one row, however it is
+	/// clipped sideways. If the glyph query ever clipped by x, a line cut off at the
+	/// screen's edge would look like one carrying on below or above it, and the band
+	/// would stretch across the rows around it; scrolled right past a short line, that
+	/// line would get no band at all.
+	func testAnUnwrappedLineKeepsAOneRowBand() throws {
+		struct Check {
+			let name: String
+			let scrollX: CGFloat
+			let caret: Int
+			let row: CGFloat
+		}
+		let (scrollView, textView) = makeEditor()
+		textView.wrapsLines = false
+		let long = String(repeating: "x", count: 3_000)
+		let text = "first\n\(long)\nlast\nafter"
+		textView.setPlainText(text)
+		let lineHeight = try XCTUnwrap(textView.layoutManager?.defaultLineHeight(for: textView.editorFont))
+		let longLine = (text as NSString).range(of: long)
+		let rowTop = { (row: CGFloat) in textView.textContainerInset.height + row * lineHeight }
+
+		let cases = [
+			Check(name: "caret at the long line's clipped end", scrollX: 0, caret: NSMaxRange(longLine), row: 1),
+			Check(
+				name: "scrolled right, caret on the long line", scrollX: 5_000,
+				caret: longLine.location + 2_000, row: 1
+			),
+			Check(name: "scrolled right past a short line", scrollX: 5_000, caret: 2, row: 0)
+		]
+		for check in cases {
+			textView.setSelectedRange(NSRange(location: check.caret, length: 0))
+			scrollView.contentView.setBoundsOrigin(NSPoint(x: check.scrollX, y: 0))
+			scrollView.reflectScrolledClipView(scrollView.contentView)
+			try draw(textView)
+			let band = try XCTUnwrap(textView.caretLineRect(within: textView.visibleRect), check.name)
+			XCTAssertEqual(band.minY, rowTop(check.row), accuracy: 0.5, check.name)
+			XCTAssertEqual(band.height, lineHeight, accuracy: 0.5, check.name)
+		}
+	}
+
 	/// A caret move measures the band of the line it arrives on from the layout the last
 	/// draw left, without waiting for another draw. That band is what it invalidates, so
 	/// a wrong one would leave the new line unhighlighted.

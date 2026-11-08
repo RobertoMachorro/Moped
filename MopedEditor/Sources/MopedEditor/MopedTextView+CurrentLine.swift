@@ -49,6 +49,10 @@ extension MopedTextView {
 		}
 		let caret = min(selection.location, content.length)
 		let lineRange = content.lineRange(for: NSRange(location: caret, length: 0))
+		// Whole line fragments, whatever the rect's x and width: with wrapping off and the
+		// view scrolled sideways, a line is still all here, so `shownRange` only ever
+		// falls short of the line vertically and the extensions below never fire for a
+		// single row. `testAnUnwrappedLineKeepsAOneRowBand` pins that.
 		let areaGlyphs = layoutManager.glyphRange(
 			forBoundingRectWithoutAdditionalLayout: containerRect(forViewRect: area), in: textContainer
 		)
