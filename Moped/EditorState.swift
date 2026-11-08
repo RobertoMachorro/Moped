@@ -184,20 +184,20 @@ final class EditorState: NSObject, ObservableObject {
 	// MARK: Status bar
 
 	func updateCursorPosition(for textView: NSTextView) {
+		guard !isPerformingViewUpdate else {
+			// Re-read after the view pass, and only then count: replacing the storage
+			// moves the selection to the end before `setPlainText` restores it.
+			// Publishing that intermediate value would flash the wrong line:column in
+			// the status bar, and counting up to it scans the whole file (#106).
+			scheduleCursorPositionUpdate(for: textView)
+			return
+		}
 		let nsText = textView.string as NSString
 		let location = min(textView.selectedRange().location, nsText.length)
 		let (line, column) = Self.lineAndColumn(upTo: location, in: nsText)
 		let position = "\(line):\(column)"
 
 		guard position != cursorPosition else {
-			return
-		}
-		guard !isPerformingViewUpdate else {
-			// Re-read after the view pass rather than replaying `position`: replacing
-			// the storage moves the selection to the end before `setPlainText`
-			// restores it, and publishing that intermediate value would flash the
-			// wrong line:column in the status bar.
-			scheduleCursorPositionUpdate(for: textView)
 			return
 		}
 		cursorPosition = position

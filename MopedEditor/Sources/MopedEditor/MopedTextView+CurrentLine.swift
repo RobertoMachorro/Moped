@@ -24,10 +24,23 @@ import AppKit
 /// point, drawn only when there is no selection.
 extension MopedTextView {
 	/// Band to paint behind the caret's line, or nil when a non-empty selection means
-	/// no current-line highlight applies.
-	private func caretLineRect() -> NSRect? {
+	/// no current-line highlight applies, or when none of the line is inside `area`.
+	///
+	/// Measured from layout that already exists; this never lays text out. The layout
+	/// manager lays out a whole paragraph at a time, so measuring the caret's line
+	/// typeset all of it, and in a file that is one long line (minified JSON, a log) that
+	/// is the whole file. That ran on every caret move, and at launch inside
+	/// `setPlainText(_:)` before the view had its final width, so the work was thrown
+	/// away and done again (#106). `drawBackground(in:)` lays out what it is about to
+	/// draw before asking.
+	///
+	/// Where the line carries on past `area`, the band runs to the view's edge on that
+	/// side. Painting is clipped to the dirty rect, so that changes nothing drawn, and a
+	/// caret move invalidating the band still covers every part of the line.
+	func caretLineRect(within area: NSRect) -> NSRect? {
 		let selection = selectedRange()
 		guard selection.length == 0,
+			  !area.isEmpty,
 			  let layoutManager,
 			  let textContainer,
 			  let content = textStorage?.string as NSString?
@@ -36,17 +49,67 @@ extension MopedTextView {
 		}
 		let caret = min(selection.location, content.length)
 		let lineRange = content.lineRange(for: NSRange(location: caret, length: 0))
-		let glyphRange = layoutManager.glyphRange(forCharacterRange: lineRange, actualCharacterRange: nil)
-		var lineRect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+		// Whole line fragments, whatever the rect's x and width: with wrapping off and the
+		// view scrolled sideways, a line is still all here, so `shownRange` only ever
+		// falls short of the line vertically and the extensions below never fire for a
+		// single row. `testAnUnwrappedLineKeepsAOneRowBand` pins that.
+		let areaGlyphs = layoutManager.glyphRange(
+			forBoundingRectWithoutAdditionalLayout: containerRect(forViewRect: area), in: textContainer
+		)
+		let areaCharacters = layoutManager.characterRange(forGlyphRange: areaGlyphs, actualGlyphRange: nil)
+		let shownRange: NSRange
+		var lineRect: NSRect
+		if lineRange.length == 0 {
+			// The empty line after a trailing newline, drawn as the extra line fragment.
+			guard NSMaxRange(areaCharacters) == content.length else {
+				return nil
+			}
+			shownRange = lineRange
+			lineRect = layoutManager.extraLineFragmentRect
+		} else {
+			shownRange = NSIntersectionRange(lineRange, areaCharacters)
+			let glyphs = layoutManager.glyphRange(forCharacterRange: shownRange, actualCharacterRange: nil)
+			guard glyphs.length > 0 else {
+				return nil
+			}
+			// Line fragments rather than `boundingRect(forGlyphRange:)`, which lays out.
+			let first = layoutManager.lineFragmentRect(
+				forGlyphAt: glyphs.location, effectiveRange: nil, withoutAdditionalLayout: true
+			)
+			let last = layoutManager.lineFragmentRect(
+				forGlyphAt: NSMaxRange(glyphs) - 1, effectiveRange: nil, withoutAdditionalLayout: true
+			)
+			lineRect = first.union(last)
+		}
 		lineRect.origin.x = 0
 		lineRect.size.width = bounds.width
 		lineRect.origin.y += textContainerInset.height
+		if lineRange.location < shownRange.location {
+			lineRect = NSRect(x: 0, y: bounds.minY, width: bounds.width, height: lineRect.maxY - bounds.minY)
+		}
+		if NSMaxRange(lineRange) > NSMaxRange(shownRange) {
+			lineRect.size.height = bounds.maxY - lineRect.minY
+		}
 		return lineRect
 	}
 
 	public override func drawBackground(in rect: NSRect) {
 		super.drawBackground(in: rect)
-		guard let lineRect = caretLineRect() else {
+		// The visible rect as well as `rect`: a partial repaint must not make the band
+		// look cut off, or the next caret move would invalidate the whole view. Only when
+		// they overlap or share an edge (an overdraw strip right below the screen), though:
+		// a rect far from it, such as a printed page, would stretch the union over
+		// everything in between. `intersects` alone is false for rects that only touch.
+		let touchesVisible = rect.intersects(visibleRect.insetBy(dx: -1, dy: -1))
+		let area = touchesVisible ? visibleRect.union(rect) : rect
+		// AppKit calls this before laying out what it draws, so lay that out first. It is
+		// the layout this draw does anyway.
+		if selectedRange().length == 0, let layoutManager, let textContainer {
+			layoutManager.ensureLayout(
+				forBoundingRect: containerRect(forViewRect: area), in: textContainer
+			)
+		}
+		guard let lineRect = caretLineRect(within: area) else {
 			return
 		}
 		highlightedCaretLineRect = lineRect
@@ -64,7 +127,12 @@ extension MopedTextView {
 	) {
 		let previous = highlightedCaretLineRect
 		super.setSelectedRanges(ranges, affinity: affinity, stillSelecting: stillSelecting)
-		let current = caretLineRect()
+		// Measured without laying out. Where the arriving line's layout is out of date
+		// (an edit, a width change), this can be nil or off. That is assumed harmless,
+		// not verified: the edits and width changes that invalidate layout also mark that
+		// text for display, so the line should be repainted anyway and `drawBackground`
+		// store its real band. Windowless tests cannot observe dirty rects to prove it.
+		let current = caretLineRect(within: visibleRect)
 		highlightedCaretLineRect = current
 
 		// Only the line the caret left and the line it arrived on change appearance.

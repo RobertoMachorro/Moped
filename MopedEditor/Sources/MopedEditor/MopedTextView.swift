@@ -92,8 +92,15 @@ public final class MopedTextView: NSTextView {
 		set { highlighter.isEnabled = newValue }
 	}
 
+	/// Hosts re-assign this on every preference change, so an unchanged value is skipped:
+	/// applying it recounts the document's lines.
 	public var showsLineNumberGutter: Bool = false {
-		didSet { applyRulerVisibility() }
+		didSet {
+			guard showsLineNumberGutter != oldValue else {
+				return
+			}
+			applyRulerVisibility()
+		}
 	}
 
 	public var wrapsLines: Bool = true {
@@ -107,8 +114,15 @@ public final class MopedTextView: NSTextView {
 	}
 
 	/// The editor font. Applied to existing text, typing attributes, and the gutter.
+	/// Hosts re-assign this on every preference change, so an unchanged font is skipped:
+	/// applying it re-attributes the whole document and recounts its lines.
 	public var editorFont: NSFont {
-		didSet { applyFont() }
+		didSet {
+			guard editorFont != oldValue else {
+				return
+			}
+			applyFont()
+		}
 	}
 
 	// MARK: Construction

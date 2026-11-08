@@ -1,0 +1,170 @@
+//
+//  CurrentLineHighlightTests.swift
+//
+//  MopedEditor - The homegrown text editor core and syntax highlighter used by Moped.
+//  Copyright © 2019-2026 Roberto Machorro. All rights reserved.
+//
+//	This program is free software: you can redistribute it and/or modify
+//	it under the terms of the GNU General Public License as published by
+//	the Free Software Foundation, either version 3 of the License, or
+//	(at your option) any later version.
+//
+//	This program is distributed in the hope that it will be useful,
+//	but WITHOUT ANY WARRANTY; without even the implied warranty of
+//	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//	GNU General Public License for more details.
+//
+//	You should have received a copy of the GNU General Public License
+//	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+import XCTest
+@testable import MopedEditor
+
+/// The caret-line band used to be measured over the caret's whole line, which in a file
+/// that is one long line meant typesetting the whole file on every caret move (#106). It
+/// is now measured from layout the draw has already done; these pin that it still looks
+/// the same, that a caret move still finds the new line, and that it lays nothing out.
+final class CurrentLineHighlightTests: EditorTestCase {
+	/// The band as it was measured before: over the caret's whole line.
+	private func wholeLineBand(in textView: MopedTextView) throws -> NSRect {
+		let layoutManager = try XCTUnwrap(textView.layoutManager)
+		let textContainer = try XCTUnwrap(textView.textContainer)
+		let content = textView.string as NSString
+		let lineRange = content.lineRange(for: NSRange(location: textView.selectedRange().location, length: 0))
+		let glyphs = layoutManager.glyphRange(forCharacterRange: lineRange, actualCharacterRange: nil)
+		var band = layoutManager.boundingRect(forGlyphRange: glyphs, in: textContainer)
+		band.origin.x = 0
+		band.size.width = textView.bounds.width
+		band.origin.y += textView.textContainerInset.height
+		return band
+	}
+
+	/// Draws the visible rect the way a window would, which is what lays text out.
+	private func draw(_ textView: MopedTextView) throws {
+		let rep = try XCTUnwrap(textView.bitmapImageRepForCachingDisplay(in: textView.visibleRect))
+		textView.cacheDisplay(in: textView.visibleRect, to: rep)
+	}
+
+	/// A line wholly on screen, wrapped or not, and the empty line after a trailing
+	/// newline, get the band they had before. The one difference is the last line of a
+	/// file that ends in a newline: the old band also took in the empty line below it.
+	func testDrawnBandMatchesTheWholeLine() throws {
+		let (_, textView) = makeEditor()
+		let wrapped = String(repeating: "wrap me ", count: 60)
+		let text = "first\n\(wrapped)\nlast\n"
+		textView.setPlainText(text)
+		let length = (text as NSString).length
+		let lineHeight = try XCTUnwrap(textView.layoutManager?.defaultLineHeight(for: textView.editorFont))
+
+		for caret in [0, 10, length] {
+			textView.setSelectedRange(NSRange(location: caret, length: 0))
+			try draw(textView)
+			let band = try XCTUnwrap(textView.highlightedCaretLineRect, "caret at \(caret)")
+			XCTAssertEqual(band, try wholeLineBand(in: textView), "caret at \(caret)")
+			if caret == 10 {
+				XCTAssertGreaterThan(band.height, lineHeight * 2, "the long line should wrap onto several rows")
+			}
+		}
+
+		textView.setSelectedRange(NSRange(location: length - 2, length: 0))
+		try draw(textView)
+		let band = try XCTUnwrap(textView.highlightedCaretLineRect)
+		let wholeLine = try wholeLineBand(in: textView)
+		XCTAssertEqual(band.minY, wholeLine.minY)
+		XCTAssertEqual(band.height, lineHeight, "the last line's band should cover that line only")
+	}
+
+	/// The #106 case: a file that is one long line, with the caret at its end, which is
+	/// where inserting the text leaves it. Neither loading it nor moving the caret may
+	/// lay it out; drawing does, and the band then runs on to the bottom of the view,
+	/// where the line does.
+	func testMovingTheCaretLaysNothingOut() throws {
+		let (_, textView) = makeEditor()
+		let layoutManager = try XCTUnwrap(textView.layoutManager)
+		let text = String(repeating: "abc,def:ghi ", count: 50_000)
+		let length = (text as NSString).length
+
+		textView.setPlainText(text)
+		textView.setSelectedRange(NSRange(location: length, length: 0))
+		XCTAssertEqual(
+			layoutManager.firstUnlaidCharacterIndex(), 0,
+			"loading the text or moving the caret laid the line out"
+		)
+
+		try draw(textView)
+		let band = try XCTUnwrap(textView.highlightedCaretLineRect)
+		XCTAssertEqual(band.minY, textView.textContainerInset.height)
+		XCTAssertEqual(band.maxY, textView.bounds.maxY)
+	}
+
+	/// A caret whose line is nowhere on screen gets no band, rather than one that would
+	/// need the document laid out down to it.
+	func testALineOffScreenHasNoBand() throws {
+		let (_, textView) = makeEditor()
+		let text = (1...500).map { "line \($0)" }.joined(separator: "\n")
+		textView.setPlainText(text)
+		textView.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
+		try draw(textView)
+
+		XCTAssertNil(textView.caretLineRect(within: textView.visibleRect))
+	}
+
+	/// With wrapping off, a line wider than the view is still one row, however it is
+	/// clipped sideways. If the glyph query ever clipped by x, a line cut off at the
+	/// screen's edge would look like one carrying on below or above it, and the band
+	/// would stretch across the rows around it; scrolled right past a short line, that
+	/// line would get no band at all.
+	func testAnUnwrappedLineKeepsAOneRowBand() throws {
+		struct Check {
+			let name: String
+			let scrollX: CGFloat
+			let caret: Int
+			let row: CGFloat
+		}
+		let (scrollView, textView) = makeEditor()
+		textView.wrapsLines = false
+		let long = String(repeating: "x", count: 3_000)
+		let text = "first\n\(long)\nlast\nafter"
+		textView.setPlainText(text)
+		let lineHeight = try XCTUnwrap(textView.layoutManager?.defaultLineHeight(for: textView.editorFont))
+		let longLine = (text as NSString).range(of: long)
+		let rowTop = { (row: CGFloat) in textView.textContainerInset.height + row * lineHeight }
+
+		let cases = [
+			Check(name: "caret at the long line's clipped end", scrollX: 0, caret: NSMaxRange(longLine), row: 1),
+			Check(
+				name: "scrolled right, caret on the long line", scrollX: 5_000,
+				caret: longLine.location + 2_000, row: 1
+			),
+			Check(name: "scrolled right past a short line", scrollX: 5_000, caret: 2, row: 0)
+		]
+		for check in cases {
+			textView.setSelectedRange(NSRange(location: check.caret, length: 0))
+			scrollView.contentView.setBoundsOrigin(NSPoint(x: check.scrollX, y: 0))
+			scrollView.reflectScrolledClipView(scrollView.contentView)
+			try draw(textView)
+			let band = try XCTUnwrap(textView.caretLineRect(within: textView.visibleRect), check.name)
+			XCTAssertEqual(band.minY, rowTop(check.row), accuracy: 0.5, check.name)
+			XCTAssertEqual(band.height, lineHeight, accuracy: 0.5, check.name)
+		}
+	}
+
+	/// A caret move measures the band of the line it arrives on from the layout the last
+	/// draw left, without waiting for another draw. That band is what it invalidates, so
+	/// a wrong one would leave the new line unhighlighted.
+	func testACaretMoveMeasuresTheLineItArrivesOn() throws {
+		let (_, textView) = makeEditor()
+		let text = (1...20).map { "line \($0)" }.joined(separator: "\n")
+		textView.setPlainText(text)
+		try draw(textView)
+		let before = try XCTUnwrap(textView.highlightedCaretLineRect)
+
+		let fifthLine = (text as NSString).range(of: "line 5")
+		textView.setSelectedRange(NSRange(location: fifthLine.location + 2, length: 0))
+		let arrived = try XCTUnwrap(textView.highlightedCaretLineRect, "no band measured for the new line")
+
+		XCTAssertEqual(arrived, try wholeLineBand(in: textView))
+		XCTAssertNotEqual(arrived, before)
+	}
+}

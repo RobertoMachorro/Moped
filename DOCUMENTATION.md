@@ -65,6 +65,11 @@ otherwise macOS places it normally. If none of the previous documents can be reo
 they were deleted, renamed, or you closed them all before quitting — Moped opens a single
 untitled window instead.
 
+Hold **Shift** while Moped launches to skip reopening and start with a single untitled
+window, the same way macOS lets you skip restoring an app's windows. Use it if a
+previously open document keeps Moped from launching. The skipped documents are not
+remembered: the next quit saves whatever is open then.
+
 ---
 
 ## The editor window

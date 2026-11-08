@@ -2,6 +2,31 @@
 
 All notable changes to Moped. Versions follow the app's marketing version.
 
+## Unreleased
+
+### Added
+
+- **Shift skips Reopen Previous.** Hold Shift while Moped launches to start with an empty
+  editor instead of reopening the documents from last time, a way out when one of them
+  keeps Moped from launching.
+
+### Fixed
+
+- **Line numbers no longer lay out text while drawing.** The gutter ran the text layout
+  engine from inside its own drawing, the spot where the launch hangs reported in #106 and
+  #102 were stuck. That layout now happens before drawing instead, where AppKit allows it.
+  The gutter is also sized to fit the line count as soon as a file loads, rather than
+  after its first draw, so a wrapped file is no longer laid out once at the old width and
+  again at the new one.
+- **The current-line highlight no longer lays out text when the caret moves.** It measured
+  the caret's whole line, and AppKit lays a line out in one piece, so in a file that is one
+  long line (minified JSON, a log) every caret move typeset the whole file again, and so
+  did loading it. It now measures what drawing has already laid out. On the last line of a
+  file that ends in a newline, the highlight no longer spills onto the empty line below.
+- **The status bar no longer counts through a file while it loads.** Loading briefly leaves
+  the caret at the end of the text, and the line:column count scanned the whole file up to
+  there before throwing the result away.
+
 ## 3.0.1
 
 ### Added

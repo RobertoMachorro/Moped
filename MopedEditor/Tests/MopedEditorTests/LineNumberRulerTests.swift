@@ -138,6 +138,44 @@ final class LineNumberRulerTests: EditorTestCase {
 		)
 	}
 
+	// MARK: - Layout stays out of the draw
+
+	/// Where the typesetter is allowed to run. The draw path reads
+	/// `laidOutLineNumbers(for:)`, which must lay nothing out: running the typesetter
+	/// inside the ruler's draw grows the text view underneath the display pass that is
+	/// committing, which is where the launch hangs in #102 and #106 sat. `viewWillDraw()`
+	/// lays the band out instead, before anything draws.
+	///
+	/// "Laid nothing out" is read off the layout manager itself: its non-forcing answer
+	/// for one fixed rect has to be the same before and after the draw path runs, and
+	/// different after `viewWillDraw()`, which proves the band really was cold.
+	func testLayoutHappensBeforeTheDrawAndNotInsideIt() throws {
+		let (scrollView, textView) = makeEditor()
+		textView.setPlainText(longDocument(lines: 2000))
+		// Deliberately no drainHighlightPasses(): leave layout as cold as possible.
+		let layoutManager = try XCTUnwrap(textView.layoutManager)
+		let textContainer = try XCTUnwrap(textView.textContainer)
+		let gutter = try ruler(of: textView)
+		let cold = scroll(scrollView, toY: 20000)
+		let query = cold.offsetBy(dx: 0, dy: -textView.textContainerInset.height)
+		func laidOutGlyphs() -> NSRange {
+			layoutManager.glyphRange(forBoundingRectWithoutAdditionalLayout: query, in: textContainer)
+		}
+
+		let before = laidOutGlyphs()
+		_ = gutter.laidOutLineNumbers(for: cold)
+		XCTAssertEqual(laidOutGlyphs(), before, "the draw path must not lay anything out")
+
+		gutter.viewWillDraw()
+		XCTAssertNotEqual(laidOutGlyphs(), before, "viewWillDraw() is what lays the band out")
+
+		let visible = scrollView.contentView.bounds
+		let warm = gutter.laidOutLineNumbers(for: visible)
+		XCTAssertEqual(warm, gutter.visibleLineNumbers(for: visible))
+		let lineHeight = layoutManager.defaultLineHeight(for: textView.editorFont)
+		XCTAssertGreaterThanOrEqual(warm.count, Int((visible.height / lineHeight).rounded(.down)))
+	}
+
 	func testUnscrolledGutterStartsAtTheFirstLine() throws {
 		let (scrollView, textView) = makeEditor()
 		textView.setPlainText(longDocument())
@@ -166,18 +204,75 @@ final class LineNumberRulerTests: EditorTestCase {
 	/// is not.
 	func testDrawingDoesNotChangeRuleThickness() throws {
 		let (scrollView, textView) = makeEditor()
-		// A one-digit document, so the thickness this *wants* (28) is far from the 40 it
-		// starts at — a document whose measured width lands near 40 would pass this test
-		// without exercising anything.
+		textView.showsLineNumberGutter = true
 		textView.setPlainText(longDocument(lines: 5))
 
+		// `setPlainText` sizes the gutter itself, so make the draw path want a different
+		// width: a much larger number font leaves the line count stale and the fitted
+		// width far from the current one. A change that lands near it would pass this
+		// test without exercising anything.
 		let gutter = try ruler(of: textView)
+		gutter.numberFont = NSFont.monospacedDigitSystemFont(ofSize: 40, weight: .regular)
 		let before = gutter.ruleThickness
 		_ = gutter.visibleLineNumbers(for: scrollView.contentView.bounds)
 		XCTAssertEqual(
 			gutter.ruleThickness, before, accuracy: 0.001,
 			"measuring the gutter during a draw is fine; resizing it there re-tiles the "
 				+ "scroll view underneath the draw"
+		)
+	}
+
+	/// The gutter is sized when the text is set, not after its first draw. Sizing it a
+	/// turn later changed the text view's width once more, which with wrapping on threw
+	/// away the layout of every line, a multi-megabyte one included (#106).
+	func testSettingTextSizesTheGutterRightAway() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		let initial = gutter.ruleThickness
+
+		textView.setPlainText(longDocument(lines: 12_000))
+
+		XCTAssertGreaterThan(
+			gutter.ruleThickness, initial + 0.5,
+			"a five-digit document should widen the gutter without waiting for a draw"
+		)
+	}
+
+	/// A resize an edit queued must not undo a newer size. Typing the 100th line queues a
+	/// widening; a reload to a short file before that turn comes sizes the gutter for the
+	/// new text, and the queued resize used to put the old width back afterwards.
+	func testAQueuedResizeDoesNotUndoANewerSize() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		textView.setPlainText((1...99).map { "\($0)" }.joined(separator: "\n"))
+		let twoDigits = gutter.ruleThickness
+
+		let storage = try XCTUnwrap(textView.textStorage)
+		storage.replaceCharacters(in: NSRange(location: storage.length, length: 0), with: "\n100")
+		textView.setPlainText("one\ntwo")
+		drainHighlightPasses()
+
+		XCTAssertEqual(
+			gutter.ruleThickness, twoDigits, accuracy: 0.5,
+			"the resize queued for 100 lines widened the gutter of a two-line file"
+		)
+	}
+
+	/// A font change sizes the gutter right away too, through the path the app takes.
+	func testAFontChangeSizesTheGutterRightAway() throws {
+		let (_, textView) = makeEditor()
+		textView.showsLineNumberGutter = true
+		let gutter = try ruler(of: textView)
+		textView.setPlainText(longDocument(lines: 5))
+		let before = gutter.ruleThickness
+
+		textView.editorFont = NSFont.monospacedSystemFont(ofSize: 40, weight: .regular)
+
+		XCTAssertGreaterThan(
+			gutter.ruleThickness, before + 0.5,
+			"a much larger font should widen the gutter without waiting for a draw"
 		)
 	}
 
